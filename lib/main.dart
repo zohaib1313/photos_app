@@ -8,6 +8,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await UserDefaults.getPref();
   // await HiveDb.clearDb();
-  debugRepaintRainbowEnabled = (true);
+//  debugRepaintRainbowEnabled = (true);
   runApp(const MyApplication());
 }
