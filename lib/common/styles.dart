@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppColor {
-  static const primaryBlueColor = Color(0xff0088FF);
+  static var primaryColor = deepPurple;
   static const primaryBlueDarkColor = Color(0xff0088FF);
   static const blackColor = Color(0xff1C2340);
   static const orangeColor = Color(0xffFF7266);

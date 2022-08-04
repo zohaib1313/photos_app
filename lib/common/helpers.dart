@@ -47,7 +47,6 @@ myAppBar(
     actions: actions ?? [],
     automaticallyImplyLeading: goBack,
     backgroundColor: backGroundColor,
-    foregroundColor: Colors.transparent,
     title: Text(
       title ?? "",
       style: AppTextStyles.textStyleBoldBodyMedium,

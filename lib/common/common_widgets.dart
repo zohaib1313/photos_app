@@ -187,8 +187,8 @@ class MyTextField extends StatelessWidget {
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(50.r),
-            borderSide: BorderSide(
-                color: focusBorderColor ?? AppColor.primaryBlueColor),
+            borderSide:
+                BorderSide(color: focusBorderColor ?? AppColor.primaryColor),
           ),
         ),
       ),
@@ -251,7 +251,7 @@ class Button extends StatelessWidget {
                     ),
               borderRadius:
                   BorderRadius.all(Radius.circular(cornerRadius ?? 50.r)),
-              color: color ?? AppColor.primaryBlueColor),
+              color: color ?? AppColor.primaryColor),
           child: Center(
               child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -472,8 +472,8 @@ class _NetworkCircularImageState extends State<NetworkCircularImage> {
       ),
       placeholder: (context, url) => CircleAvatar(
         radius: widget.radius,
-        child: const CircularProgressIndicator(
-          color: AppColor.primaryBlueColor,
+        child: CircularProgressIndicator(
+          color: AppColor.primaryColor,
         ),
       ),
       // progressIndicatorBuilder: (BuildContext context, String url,

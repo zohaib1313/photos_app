@@ -1,5 +1,6 @@
 import 'package:circle_nav_bar/circle_nav_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:photos_app/controllers/dashboard_controller.dart';
 import '../../../../common/loading_widget.dart';
@@ -12,6 +13,7 @@ class DashboardPage extends GetView<DashBoardController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: GetX<DashBoardController>(
         initState: (state) {},
         builder: (_) {
@@ -19,9 +21,12 @@ class DashboardPage extends GetView<DashBoardController> {
             child: Stack(
               alignment: Alignment.bottomCenter,
               children: [
-                IndexedStack(
-                    index: controller.selectedIndex.value,
-                    children: controller.viewsList),
+                Padding(
+                  padding: EdgeInsets.only(bottom: 85.h),
+                  child: IndexedStack(
+                      index: controller.selectedIndex.value,
+                      children: controller.viewsList),
+                ),
                 CircleNavBar(
                   activeIcons: [
                     Icon(Icons.home, color: controller.activeColor),
@@ -36,8 +41,8 @@ class DashboardPage extends GetView<DashBoardController> {
                     Icon(Icons.settings, color: controller.inActiveColor),
                   ],
                   color: Colors.white,
-                  height: 60,
-                  circleWidth: 50,
+                  height: 80.h,
+                  circleWidth: 75.h,
                   initIndex: 0,
                   onChanged: (v) {
                     controller.selectedIndex.value = v;
