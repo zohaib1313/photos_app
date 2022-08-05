@@ -15,7 +15,7 @@ class AppColor {
   static const greyColor = Colors.grey;
   static const green = Colors.green;
 
-  static const deepPurple = Color(0xff7F47FA);
+  static const deepPurple = yellowColor;
   static const yellowColor = Color(0xffFFC107);
 }
 

@@ -1,11 +1,14 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:photos_app/common/common_widgets.dart';
+import 'package:photos_app/common/spaces_boxes.dart';
 import '../common/styles.dart';
 import '../my_application.dart';
 
 class AppPopUps {
   static bool isDialogShowing = true;
+
   static Future<bool> showConfirmDialog({
     onSubmit,
     required String title,
@@ -80,6 +83,65 @@ class AppPopUps {
           () {
             // Get.back();
           },
+    ).show();
+  }
+
+  static Future<void> showOneInputDialog(
+      {String? title, String? description, required onSubmit}) {
+    TextEditingController controller = TextEditingController();
+    return AwesomeDialog(
+      context: myContext!,
+      animType: AnimType.SCALE,
+      dialogType: DialogType.NO_HEADER,
+      dismissOnTouchOutside: false,
+      body: Container(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(title ?? "Title",
+                style: AppTextStyles.textStyleBoldBodyMedium),
+            vSpace,
+            Text(description ?? "Enter Value",
+                style: AppTextStyles.textStyleBoldBodyMedium),
+            vSpace,
+            MyTextField(
+              controller: controller,
+              hintText: 'Enter here...',
+            ),
+            vSpace,
+            Row(
+              children: [
+                hSpace,
+                Expanded(
+                  child: Button(
+                    buttonText: 'Cancel',
+                    color: AppColor.redColor,
+                    onTap: () {
+                      Navigator.pop(myContext!);
+                    },
+                  ),
+                ),
+                hSpace,
+                Expanded(
+                  child: Button(
+                    buttonText: 'Ok',
+                    color: AppColor.green,
+                    onTap: () {
+                      if (controller.text.isNotEmpty) {
+                        onSubmit(controller.text.trim());
+                        Navigator.pop(myContext!);
+                      }
+                    },
+                  ),
+                ),
+                hSpace,
+              ],
+            )
+          ],
+        ),
+      ),
     ).show();
   }
 

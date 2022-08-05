@@ -7,6 +7,7 @@ class MyMenuItem {
   bool isPrivate;
   bool isPinned;
   bool isFolder;
+  String? path;
   List<MyMenuItem> subItemList = [];
 
 //<editor-fold desc="Data Methods">
@@ -18,7 +19,8 @@ class MyMenuItem {
     this.isPrivate = false,
     this.isPinned = false,
     this.isFolder = false,
-    this.subItemList = const [],
+    this.path,
+    required this.subItemList,
   });
 
   @override
@@ -32,6 +34,7 @@ class MyMenuItem {
           isPrivate == other.isPrivate &&
           isPinned == other.isPinned &&
           isFolder == other.isFolder &&
+          path == other.path &&
           subItemList == other.subItemList);
 
   @override
@@ -42,6 +45,7 @@ class MyMenuItem {
       isPrivate.hashCode ^
       isPinned.hashCode ^
       isFolder.hashCode ^
+      path.hashCode ^
       subItemList.hashCode;
 
   @override
@@ -53,6 +57,7 @@ class MyMenuItem {
         ' isPrivate: $isPrivate,' +
         ' isPinned: $isPinned,' +
         ' isFolder: $isFolder,' +
+        ' path: $path,' +
         ' subItemList: $subItemList,' +
         '}';
   }
@@ -64,6 +69,7 @@ class MyMenuItem {
     bool? isPrivate,
     bool? isPinned,
     bool? isFolder,
+    String? path,
     List<MyMenuItem>? subItemList,
   }) {
     return MyMenuItem(
@@ -73,6 +79,7 @@ class MyMenuItem {
       isPrivate: isPrivate ?? this.isPrivate,
       isPinned: isPinned ?? this.isPinned,
       isFolder: isFolder ?? this.isFolder,
+      path: path ?? this.path,
       subItemList: subItemList ?? this.subItemList,
     );
   }
@@ -85,6 +92,7 @@ class MyMenuItem {
       'isPrivate': this.isPrivate,
       'isPinned': this.isPinned,
       'isFolder': this.isFolder,
+      'path': this.path,
       'subItemList': this.subItemList,
     };
   }
@@ -97,6 +105,7 @@ class MyMenuItem {
       isPrivate: map['isPrivate'] as bool,
       isPinned: map['isPinned'] as bool,
       isFolder: map['isFolder'] as bool,
+      path: map['path'] as String,
       subItemList: map['subItemList'] as List<MyMenuItem>,
     );
   }

@@ -13,4 +13,6 @@ class AppConstants {
 
   static String placeHolderIcon =
       "https://openweathermap.org/img/wn/10d@2x.png";
+
+  static final List<String> imageFilesExtension = ['png', 'jpg', 'jpeg'];
 }

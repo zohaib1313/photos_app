@@ -6,73 +6,54 @@ import 'package:get/get.dart';
 import 'package:photos_app/common/helpers.dart';
 import 'package:photos_app/common/styles.dart';
 import 'package:photos_app/controllers/home_page_controller.dart';
-import 'package:photos_app/pages/home_page/folder_view_page.dart';
+import 'package:photos_app/models/my_folder_model.dart';
 import '../../../../common/loading_widget.dart';
-import '../../common/my_search_bar.dart';
 import '../../common/spaces_boxes.dart';
-import '../../models/my_folder_model.dart';
+import '../../controllers/folder_view_page_controller.dart';
 
-class HomePage extends GetView<HomePageController> {
-  HomePage({Key? key}) : super(key: key);
-  static const id = '/HomePage';
+class FolderViewPage extends GetView<HomePageController> {
+  const FolderViewPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: myAppBar(title: 'Hello, John doe', actions: [
-        MyAnimSearchBar(
-          width: context.width * 0.8,
-          onSuffixTap: () {
-            controller.searchController.clear();
-          },
-          closeSearchOnSuffixTap: true,
-          textController: controller.searchController,
-        ),
-        hSpace,
-        const Icon(Icons.notification_important_outlined),
-        hSpace,
-        hSpace,
-      ]),
-      body: GetX<HomePageController>(
-        initState: (state) {},
-        builder: (_) {
-          return SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
+    return WillPopScope(
+      onWillPop: () {
+        return controller.closeLastFolder();
+      },
+      child: Obx(() {
+        return Scaffold(
+          appBar: myAppBar(
+              onBacKTap: () async {
+                if (await controller.closeLastFolder()) {
+                  Get.back();
+                }
+              },
+              goBack: true,
+              title: controller.foldersStack.isNotEmpty
+                  ? controller.foldersStack.last.name ?? '-'
+                  : "-"),
+          body: SafeArea(
               child: Stack(
-                children: [
-                  CustomScrollView(
-                    physics: const BouncingScrollPhysics(),
-                    slivers: [
-                      SliverList(
-                        delegate: SliverChildListDelegate(
-                          [
-                            vSpace,
-                            getCard(
-                                myFolderModel:
-                                    controller.pinnedMenuFolder.value,
-                                context: context),
-                            vSpace,
-                            getCard(
-                                myFolderModel: controller.sharedMenuItem.value,
-                                context: context),
-                            vSpace,
-                            getCard(
-                                myFolderModel: controller.privateMenuItem.value,
-                                context: context),
-                            vSpace,
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  if (controller.isLoading.isTrue) LoadingWidget(),
-                ],
-              ),
-            ),
-          );
-        },
-      ),
+            children: [
+              if (controller.foldersStack.isNotEmpty)
+                Column(
+                  children: [
+                    Container(
+                        padding: const EdgeInsets.all(6),
+                        color: AppColor.alphaGrey,
+                        child: Text(controller.foldersStack.last.path ?? '-',
+                            style: AppTextStyles.textStyleNormalBodyXSmall)),
+                    vSpace,
+                    getCard(
+                        myFolderModel: controller.foldersStack.last,
+                        context: context)
+                  ],
+                ),
+              if (controller.isLoading.isTrue) LoadingWidget(),
+            ],
+          )),
+        );
+      }),
     );
   }
 
