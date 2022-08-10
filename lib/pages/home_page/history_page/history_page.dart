@@ -15,7 +15,7 @@ class HistoryPage extends GetView<HistoryController> {
     return Scaffold(
       appBar: myAppBar(goBack: true, title: 'History', actions: [
         MyAnimSearchBar(
-          width: context.width * 0.8,
+          width: context.width,
           onSuffixTap: () {
             controller.searchController.clear();
           },

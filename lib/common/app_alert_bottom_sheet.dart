@@ -13,7 +13,7 @@ class AppBottomSheets {
   AppBottomSheets._internal();
 
   static showAppAlertBottomSheet(
-      {isDismissable,
+      {bool isDismissable = true,
       required Widget child,
       required BuildContext context,
       String title = '',
