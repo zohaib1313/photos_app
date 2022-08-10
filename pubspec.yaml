@@ -33,6 +33,7 @@ dependencies:
   focused_menu: ^1.0.5
   file_picker: ^5.0.1
   url_launcher: ^6.1.5
+  image_picker:
 
 
 

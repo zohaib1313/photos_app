@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import 'package:photos_app/common/helpers.dart';
 import 'package:photos_app/common/styles.dart';
 import 'package:photos_app/controllers/home_page_controller.dart';
-import 'package:photos_app/models/my_folder_model.dart';
+import 'package:photos_app/models/my_menu_item_model.dart';
 import '../../../../common/loading_widget.dart';
 import '../../common/spaces_boxes.dart';
 import '../../controllers/folder_view_page_controller.dart';

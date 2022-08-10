@@ -7,10 +7,11 @@ import 'package:photos_app/common/helpers.dart';
 import 'package:photos_app/common/styles.dart';
 import 'package:photos_app/controllers/home_page_controller.dart';
 import 'package:photos_app/pages/home_page/folder_view_page.dart';
+import 'package:photos_app/pages/notifications/notifications_page.dart';
 import '../../../../common/loading_widget.dart';
 import '../../common/my_search_bar.dart';
 import '../../common/spaces_boxes.dart';
-import '../../models/my_folder_model.dart';
+import '../../models/my_menu_item_model.dart';
 
 class HomePage extends GetView<HomePageController> {
   HomePage({Key? key}) : super(key: key);
@@ -29,7 +30,11 @@ class HomePage extends GetView<HomePageController> {
           textController: controller.searchController,
         ),
         hSpace,
-        const Icon(Icons.notification_important_outlined),
+        InkWell(
+            onTap: () {
+              Get.toNamed(NotificationsPage.id);
+            },
+            child: const Icon(Icons.notification_important_outlined)),
         hSpace,
         hSpace,
       ]),

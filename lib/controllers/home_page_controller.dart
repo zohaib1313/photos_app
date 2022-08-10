@@ -9,13 +9,13 @@ import 'package:get/get.dart';
 import 'package:photos_app/common/app_pop_ups.dart';
 import 'package:photos_app/common/app_utils.dart';
 import 'package:photos_app/common/constants.dart';
-import 'package:photos_app/models/my_folder_model.dart';
+import 'package:photos_app/models/my_menu_item_model.dart';
 import 'package:photos_app/my_application.dart';
 import 'package:photos_app/pages/home_page/folder_view_page.dart';
 import 'package:uuid/uuid.dart';
 
 import '../common/helpers.dart';
-import '../models/my_folder_model.dart';
+import '../models/my_menu_item_model.dart';
 
 class HomePageController extends GetxController {
   RxBool isLoading = false.obs;

@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:photos_app/models/my_folder_model.dart';
+import 'package:photos_app/models/my_menu_item_model.dart';
 
 class FolderViewPageController extends GetxController {
   RxBool isLoading = false.obs;
