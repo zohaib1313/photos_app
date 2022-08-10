@@ -3,17 +3,22 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:focused_menu/focused_menu.dart';
 import 'package:focused_menu/modals.dart';
 import 'package:get/get.dart';
+import 'package:photos_app/common/app_utils.dart';
 import 'package:photos_app/common/helpers.dart';
 import 'package:photos_app/common/styles.dart';
 import 'package:photos_app/controllers/home_page_controller.dart';
+import 'package:photos_app/pages/home_page/checklist_page/checklist_page.dart';
 import 'package:photos_app/pages/home_page/folder_view_page.dart';
+import 'package:photos_app/pages/home_page/history_page/history_page.dart';
+import 'package:photos_app/pages/home_page/reminders/reminders_page.dart';
 import 'package:photos_app/pages/notifications/notifications_page.dart';
 import '../../../../common/loading_widget.dart';
 import '../../common/my_search_bar.dart';
 import '../../common/spaces_boxes.dart';
 import '../../models/my_menu_item_model.dart';
+import 'home_page_views_mixin.dart';
 
-class HomePage extends GetView<HomePageController> {
+class HomePage extends GetView<HomePageController> with HomePageViewsMixin {
   HomePage({Key? key}) : super(key: key);
   static const id = '/HomePage';
 
@@ -49,22 +54,155 @@ class HomePage extends GetView<HomePageController> {
                   CustomScrollView(
                     physics: const BouncingScrollPhysics(),
                     slivers: [
+                      SliverAppBar(
+                        pinned: false,
+                        floating: true,
+                        backgroundColor: Colors.transparent,
+                        collapsedHeight: 210.h,
+                        flexibleSpace: FlexibleSpaceBar(
+                          centerTitle: true,
+                          title: getFolderCard(
+                              myFolderModel: controller.pinnedMenuFolder.value,
+                              controller: controller,
+                              context: context),
+                        ),
+                      ),
                       SliverList(
                         delegate: SliverChildListDelegate(
                           [
+                            SizedBox(
+                              height: 400.h,
+                              child: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  Expanded(
+                                    child: getMainCards(
+                                        onTap: () {
+                                          controller.openFolder(
+                                              item: controller
+                                                  .privateMenuItem.value);
+                                        },
+                                        context: context,
+                                        title: 'Private',
+                                        color: AppColor.primaryColor,
+                                        textColor: AppColor.whiteColor,
+                                        icon: const Icon(
+                                            Icons.private_connectivity,
+                                            size: 50,
+                                            color: AppColor.whiteColor)),
+                                  ),
+                                  hSpace,
+                                  Expanded(
+                                    child: Column(
+                                      children: [
+                                        Expanded(
+                                          child: getMainCards(
+                                              onTap: () {
+                                                controller.openFolder(
+                                                    item: controller
+                                                        .sharedMenuItem.value);
+                                              },
+                                              context: context,
+                                              title: 'Shared',
+                                              color: AppColor.primaryColor,
+                                              textColor: AppColor.whiteColor,
+                                              icon: const Icon(
+                                                  Icons.broadcast_on_personal,
+                                                  size: 50,
+                                                  color: AppColor.whiteColor)),
+                                        ),
+                                        vSpace,
+                                        Expanded(
+                                          child: getMainCards(
+                                              onTap: () {
+                                                controller.openFolder(
+                                                    item: controller
+                                                        .receivedMenuItem
+                                                        .value);
+                                              },
+                                              context: context,
+                                              title: 'Received',
+                                              color: AppColor.primaryColor,
+                                              textColor: AppColor.whiteColor,
+                                              icon: const Icon(
+                                                  Icons.move_to_inbox,
+                                                  size: 50,
+                                                  color: AppColor.whiteColor)),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                             vSpace,
-                            getCard(
-                                myFolderModel:
-                                    controller.pinnedMenuFolder.value,
-                                context: context),
+                            SizedBox(
+                              height: 100,
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: getMainCards(
+                                        onTap: () {
+                                          Get.toNamed(HistoryPage.id);
+                                        },
+                                        context: context,
+                                        title: 'History',
+                                        textColor: AppColor.whiteColor,
+                                        color: AppColor.primaryColor,
+                                        icon: const Icon(Icons.history,
+                                            size: 40,
+                                            color: AppColor.whiteColor)),
+                                  ),
+                                  hSpace,
+                                  Expanded(
+                                    child: getMainCards(
+                                        onTap: () {
+                                          Get.toNamed(ReminderPage.id);
+                                        },
+                                        context: context,
+                                        title: 'Reminders',
+                                        textColor: AppColor.whiteColor,
+                                        color: AppColor.primaryColor,
+                                        icon: const Icon(Icons.remember_me,
+                                            size: 40,
+                                            color: AppColor.whiteColor)),
+                                  ),
+                                  hSpace,
+                                  Expanded(
+                                    child: getMainCards(
+                                        onTap: () {
+                                          Get.toNamed(CheckListPage.id);
+                                        },
+                                        context: context,
+                                        title: 'Check list',
+                                        textColor: AppColor.whiteColor,
+                                        color: AppColor.primaryColor,
+                                        icon: const Icon(Icons.check_box,
+                                            size: 40,
+                                            color: AppColor.whiteColor)),
+                                  ),
+                                ],
+                              ),
+                            ),
                             vSpace,
-                            getCard(
-                                myFolderModel: controller.sharedMenuItem.value,
-                                context: context),
+                            SizedBox(
+                              height: 100,
+                              child: getMainCards(
+                                  onTap: () {
+                                    AppUtils.showPicker(
+                                        context: context,
+                                        onComplete: (file) {});
+                                  },
+                                  context: context,
+                                  title: 'Camera',
+                                  textColor: AppColor.whiteColor,
+                                  color: AppColor.green,
+                                  icon: const Icon(Icons.camera_alt_rounded,
+                                      size: 40, color: AppColor.whiteColor)),
+                            ),
                             vSpace,
-                            getCard(
-                                myFolderModel: controller.privateMenuItem.value,
-                                context: context),
+                            vSpace,
+                            vSpace,
                             vSpace,
                           ],
                         ),
@@ -79,162 +217,5 @@ class HomePage extends GetView<HomePageController> {
         },
       ),
     );
-  }
-
-  Widget getCard(
-      {required MyMenuItem myFolderModel, required BuildContext context}) {
-    return _getFocusedMenu(
-        item: myFolderModel,
-        context: context,
-        child: Card(
-          color: AppColor.alphaGrey,
-          child: Container(
-            height: 180.h,
-            padding: const EdgeInsets.all(8),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(myFolderModel.name ?? '-',
-                    style: AppTextStyles.textStyleBoldBodyMedium),
-                vSpace,
-                myFolderModel.subItemList.isEmpty
-                    ? Expanded(
-                        child: _getFocusedMenu(
-                          item: myFolderModel,
-                          context: context,
-                          child: Container(
-                            decoration: BoxDecoration(
-                                color: AppColor.primaryColor.withOpacity(0.3),
-                                borderRadius: BorderRadius.circular(12)),
-                            child: const Center(
-                              child: Icon(Icons.add),
-                            ),
-                          ),
-                        ),
-                      )
-                    : Expanded(
-                        child: ListView.builder(
-                          itemCount: myFolderModel.subItemList.length,
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (context, index) {
-                            MyMenuItem item =
-                                myFolderModel.subItemList.elementAt(index);
-                            return getItemView(item: item, context: context);
-                          },
-                        ),
-                      ),
-              ],
-            ),
-          ),
-        ));
-  }
-
-  getItemView({required MyMenuItem item, required BuildContext context}) {
-    return _getFocusedMenu(
-        item: item,
-        context: context,
-        child: Card(
-          child: Container(
-            padding: const EdgeInsets.all(4),
-            width: 550.w,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Flexible(
-                  child: Column(
-                    children: [
-                      Flexible(
-                        child: item.icon ??
-                            Icon(item.isFolder ? Icons.folder : Icons.file_copy,
-                                color: AppColor.deepPurple, size: 16),
-                      ),
-                      if (item.isFolder)
-                        Text(
-                          '(${item.subItemList.length})',
-                          style: AppTextStyles.textStyleNormalBodyXSmall,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                    ],
-                  ),
-                ),
-                Text(
-                  '${item.name}',
-                  style: AppTextStyles.textStyleBoldBodyXSmall,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
-            ),
-          ),
-        ));
-  }
-
-  Widget _getFocusedMenu(
-      {required MyMenuItem item,
-      required BuildContext context,
-      required Widget child}) {
-    return FocusedMenuHolder(
-        menuWidth: MediaQuery.of(context).size.width * 0.50,
-        blurSize: 5.0,
-        menuItemExtent: 45,
-        menuBoxDecoration: const BoxDecoration(
-            color: Colors.grey,
-            borderRadius: BorderRadius.all(Radius.circular(15.0))),
-        duration: const Duration(milliseconds: 100),
-        animateMenuItems: true,
-        blurBackgroundColor: Colors.black54,
-        openWithTap: true,
-        // Open Focused-Menu on Tap rather than Long Press
-        menuOffset: 10.0,
-        // Offset value to show menuItem from the selected item
-        bottomOffsetHeight: 80.0,
-        // Offset height to consider, for showing the menu item ( for example bottom navigation bar), so that the popup menu will be shown on top of selected item.
-        menuItems: <FocusedMenuItem>[
-          // Add Each FocusedMenuItem  for Menu Options
-          FocusedMenuItem(
-              title: Text("Open", style: AppTextStyles.textStyleBoldBodySmall),
-              trailingIcon: const Icon(Icons.open_in_new),
-              onPressed: () {
-                item.isFolder
-                    ? controller.openFolder(item: item)
-                    : controller.openFile(item: item);
-              }),
-          if (item.isFolder)
-            FocusedMenuItem(
-                title: Text("Add New File",
-                    style: AppTextStyles.textStyleBoldBodySmall),
-                trailingIcon:
-                    const Icon(Icons.file_copy_outlined, color: AppColor.green),
-                onPressed: () {
-                  controller.addNewFile(item: item);
-                }),
-          if (item.isFolder)
-            FocusedMenuItem(
-                title: Text("Add New Folder",
-                    style: AppTextStyles.textStyleBoldBodySmall),
-                trailingIcon: Icon(Icons.folder, color: AppColor.primaryColor),
-                onPressed: () {
-                  /// ///////////.............................adding new folder///////////.............................
-                  controller.addNewFolder(item: item);
-                }),
-          FocusedMenuItem(
-              title: Text("Share", style: AppTextStyles.textStyleBoldBodySmall),
-              trailingIcon: const Icon(Icons.share),
-              onPressed: () {}),
-          FocusedMenuItem(
-              title: Text("Delete",
-                  style: AppTextStyles.textStyleBoldBodySmall
-                      .copyWith(color: Colors.redAccent)),
-              trailingIcon: const Icon(
-                Icons.delete,
-                color: Colors.redAccent,
-              ),
-              onPressed: () {}),
-        ],
-        onPressed: () {},
-        child: child);
   }
 }

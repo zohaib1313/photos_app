@@ -2,20 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppColor {
-  static var primaryColor = deepPurple;
-  static const primaryBlueDarkColor = Color(0xff0088FF);
+  static const primaryColor = Color(0xff0d88ea);
+  static const primaryBlueDarkColor = Color(0xff0070cc);
   static const blackColor = Color(0xff1C2340);
   static const orangeColor = Color(0xffFF7266);
   static const greenColor = Color(0xff2CC78C);
   static const accentColor = Color(0xff13CAC3);
   static const redColor = Colors.red;
-
   static const alphaGrey = Color(0xffF5F3F3);
   static const whiteColor = Colors.white;
   static const greyColor = Colors.grey;
-  static const green = Colors.green;
-
-  static const deepPurple = yellowColor;
+  static const green = greenColor;
   static const yellowColor = Color(0xffFFC107);
 }
 

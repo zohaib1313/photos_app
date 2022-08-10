@@ -12,7 +12,7 @@ class DashBoardController extends GetxController {
 
   RxInt selectedIndex = 0.obs;
 
-  final Color activeColor = AppColor.deepPurple;
+  final Color activeColor = AppColor.primaryColor;
   final Color inActiveColor = AppColor.greyColor;
 
   final List<Widget> viewsList = [

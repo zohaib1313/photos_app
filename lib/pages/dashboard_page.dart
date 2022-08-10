@@ -67,7 +67,7 @@ class DashboardPage extends GetView<DashBoardController> {
                       bottomRight: Radius.circular(24),
                       bottomLeft: Radius.circular(24),
                     ),
-                    shadowColor: AppColor.deepPurple,
+                    shadowColor: AppColor.primaryColor,
                     elevation: 10,
                   ),
                 ],

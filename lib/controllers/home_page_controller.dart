@@ -24,22 +24,29 @@ class HomePageController extends GetxController {
 
   Rx<MyMenuItem> pinnedMenuFolder = MyMenuItem(
       id: '1',
-      name: 'Pinned menu',
+      name: 'Pinned',
       isFolder: true,
-      path: 'Pinned menu',
+      path: 'Pinned',
       subItemList: []).obs;
 
   var sharedMenuItem = MyMenuItem(
       id: '2',
-      name: 'Shared menu',
-      path: 'Shared menu',
+      name: 'Shared',
+      path: 'Shared',
       isFolder: true,
       subItemList: []).obs;
 
   var privateMenuItem = MyMenuItem(
       id: '3',
-      name: 'Private menu',
-      path: 'Private menu',
+      name: 'Private',
+      path: 'Private',
+      isFolder: true,
+      subItemList: []).obs;
+
+  var receivedMenuItem = MyMenuItem(
+      id: '4',
+      name: 'Received',
+      path: 'Received',
       isFolder: true,
       subItemList: []).obs;
 
