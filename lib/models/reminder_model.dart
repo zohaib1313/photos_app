@@ -2,7 +2,8 @@ class ReminderModel {
   String? id;
   String? message;
   int? timeStamp;
-  bool? isActive = true;
+  bool? isDone = false;
+  bool? isSoundOn = false;
 
 //<editor-fold desc="Data Methods">
 
@@ -10,7 +11,8 @@ class ReminderModel {
     this.id,
     this.message,
     this.timeStamp,
-    this.isActive,
+    this.isDone,
+    this.isSoundOn,
   });
 
   @override
@@ -21,11 +23,16 @@ class ReminderModel {
           id == other.id &&
           message == other.message &&
           timeStamp == other.timeStamp &&
-          isActive == other.isActive);
+          isDone == other.isDone &&
+          isSoundOn == other.isSoundOn);
 
   @override
   int get hashCode =>
-      id.hashCode ^ message.hashCode ^ timeStamp.hashCode ^ isActive.hashCode;
+      id.hashCode ^
+      message.hashCode ^
+      timeStamp.hashCode ^
+      isDone.hashCode ^
+      isSoundOn.hashCode;
 
   @override
   String toString() {
@@ -33,7 +40,8 @@ class ReminderModel {
         ' id: $id,' +
         ' message: $message,' +
         ' timeStamp: $timeStamp,' +
-        ' isActive: $isActive,' +
+        ' isDone: $isDone,' +
+        ' isSoundOn: $isSoundOn,' +
         '}';
   }
 
@@ -41,13 +49,15 @@ class ReminderModel {
     String? id,
     String? message,
     int? timeStamp,
-    bool? isActive,
+    bool? isDone,
+    bool? isSoundOn,
   }) {
     return ReminderModel(
       id: id ?? this.id,
       message: message ?? this.message,
       timeStamp: timeStamp ?? this.timeStamp,
-      isActive: isActive ?? this.isActive,
+      isDone: isDone ?? this.isDone,
+      isSoundOn: isSoundOn ?? this.isSoundOn,
     );
   }
 
@@ -56,7 +66,8 @@ class ReminderModel {
       'id': this.id,
       'message': this.message,
       'timeStamp': this.timeStamp,
-      'isActive': this.isActive,
+      'isDone': this.isDone,
+      'isSoundOn': this.isSoundOn,
     };
   }
 
@@ -65,7 +76,8 @@ class ReminderModel {
       id: map['id'] as String,
       message: map['message'] as String,
       timeStamp: map['timeStamp'] as int,
-      isActive: map['isActive'] as bool,
+      isDone: map['isDone'] as bool,
+      isSoundOn: map['isSoundOn'] as bool,
     );
   }
 

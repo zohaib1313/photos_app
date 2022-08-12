@@ -11,17 +11,20 @@ class ReminderController extends GetxController {
   RxList<ReminderModel> reminderList = <ReminderModel>[
     ReminderModel(
         id: '1',
-        isActive: true,
+        isDone: false,
+        isSoundOn: false,
         message: 'Get a product from amazon',
         timeStamp: DateTime.now().millisecondsSinceEpoch),
     ReminderModel(
         id: '2',
-        isActive: true,
+        isDone: false,
+        isSoundOn: false,
         message: 'dummy task',
         timeStamp: DateTime.now().millisecondsSinceEpoch),
     ReminderModel(
         id: '3',
-        isActive: true,
+        isDone: true,
+        isSoundOn: false,
         message: AppConstants.loreumIpsum,
         timeStamp: DateTime.now().millisecondsSinceEpoch),
   ].obs;

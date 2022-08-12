@@ -7,12 +7,10 @@ import 'package:photos_app/controllers/notification_controller.dart';
 import 'package:photos_app/controllers/profile_page_controller.dart';
 import 'package:photos_app/controllers/reminder_controller.dart';
 import 'package:photos_app/pages/dashboard_page.dart';
-import 'package:photos_app/pages/home_page/checklist_page/checklist_page.dart';
 import 'package:photos_app/pages/home_page/history_page/history_page.dart';
 import 'package:photos_app/pages/home_page/reminders/reminders_page.dart';
 import 'package:photos_app/pages/notifications/notifications_page.dart';
 
-import '../controllers/check_list_controller.dart';
 import '../controllers/settings_page_controller.dart';
 
 appRoutes() {
@@ -56,13 +54,5 @@ appRoutes() {
         binding: BindingsBuilder(() {
           Get.lazyPut<ReminderController>(() => ReminderController());
         })),
-
-    ///check list///
-    GetPage(
-        name: CheckListPage.id,
-        page: () => CheckListPage(),
-        binding: BindingsBuilder(() {
-          Get.lazyPut<CheckListController>(() => CheckListController());
-        }))
   ];
 }

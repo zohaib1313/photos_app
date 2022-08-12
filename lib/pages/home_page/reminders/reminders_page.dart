@@ -63,21 +63,39 @@ class ReminderPage extends GetView<ReminderController> {
 
   Widget getReminderCard({required ReminderModel item}) {
     return Card(
-      child: ListTile(
+      child: CheckboxListTile(
         contentPadding: const EdgeInsets.all(4),
         title: Text(DateFormat('hh:mm-MM:yyyy').format(DateTime.now()),
             style: AppTextStyles.textStyleBoldBodyXSmall),
-        subtitle: Text(item.message ?? '-',
-            maxLines: 3,
-            overflow: TextOverflow.ellipsis,
-            style: AppTextStyles.textStyleNormalBodySmall),
-        trailing: InkWell(
+        isThreeLine: true,
+        secondary: InkWell(
+            onTap: () {
+              ///edit reminder....
+            },
+            child: const Icon(Icons.edit)),
+        subtitle: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(item.message ?? '-',
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+                style: AppTextStyles.textStyleNormalBodySmall),
+          ],
+        ),
+        value: item.isDone ?? false,
+        onChanged: (bool? value) {
+          item.isDone = value;
+          controller.isLoading.toggle();
+          controller.isLoading.toggle();
+        },
+        /*  trailing: InkWell(
           onTap: () {},
           child: const CircleAvatar(
             radius: 14,
             child: Icon(Icons.edit, color: AppColor.whiteColor, size: 14),
           ),
-        ),
+        ),*/
       ),
     );
   }
@@ -170,7 +188,7 @@ class ReminderPage extends GetView<ReminderController> {
                 if (controller
                     .reminderAddMessageTextController.text.isNotEmpty) {
                   controller.reminderList.add(ReminderModel(
-                      isActive: true,
+                      isDone: true,
                       id: '',
                       message: controller.reminderAddMessageTextController.text,
                       timeStamp: controller
