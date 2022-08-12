@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:photos_app/common/app_alert_bottom_sheet.dart';
 import 'package:photos_app/common/app_pop_ups.dart';
-import 'package:photos_app/common/app_utils.dart';
 import 'package:photos_app/common/common_widgets.dart';
 import 'package:photos_app/models/reminder_model.dart';
 import 'package:photos_app/my_application.dart';
