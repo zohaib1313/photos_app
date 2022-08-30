@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:photos_app/common/styles.dart';
+import 'package:photos_app/common/user_defaults.dart';
 import 'package:photos_app/controllers/home_page_controller.dart';
 import 'package:photos_app/controllers/settings_page_controller.dart';
+import 'package:photos_app/pages/login_page/login_page.dart';
 import '../../../../common/loading_widget.dart';
 import '../../common/spaces_boxes.dart';
 
@@ -59,7 +61,10 @@ class SettingsPage extends GetView<SettingsPageController> {
                         _getRowItem(
                             icon: Icon(Icons.logout_outlined),
                             title: "Logout",
-                            onTap: () {}),
+                            onTap: () {
+                              UserDefaults.clearAll();
+                              Get.offAndToNamed(LoginPage.id);
+                            }),
                         vSpace,
                       ],
                     ),

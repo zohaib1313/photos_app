@@ -6,6 +6,7 @@ import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:get/get_state_manager/src/simple/get_view.dart';
 import 'package:photos_app/common/extension.dart';
 import 'package:photos_app/pages/dashboard_page.dart';
+import 'package:photos_app/pages/sign_up/sign_up_page.dart';
 
 import '../../../../common/common_widgets.dart';
 import '../../../../common/loading_widget.dart';
@@ -96,6 +97,8 @@ class LoginPage extends GetView<LoginController> {
                             textColor: AppColor.whiteColor,
                             color: AppColor.primaryBlueDarkColor,
                             onTap: () async {
+                              //todo
+                              Get.offAndToNamed(DashboardPage.id);
                               if (controller.formKey.currentState!.validate()) {
                                 FocusManager.instance.primaryFocus?.unfocus();
                                 controller.login(
@@ -120,7 +123,7 @@ class LoginPage extends GetView<LoginController> {
                           ),
                           InkWell(
                             onTap: () {
-                              // Get.offNamed(SignupPage.id);
+                              Get.offNamed(SignupPage.id);
                             },
                             child: Text(
                               "Sign up",

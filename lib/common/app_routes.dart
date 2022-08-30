@@ -7,11 +7,13 @@ import 'package:photos_app/controllers/login_controller.dart';
 import 'package:photos_app/controllers/notification_controller.dart';
 import 'package:photos_app/controllers/profile_page_controller.dart';
 import 'package:photos_app/controllers/reminder_controller.dart';
+import 'package:photos_app/controllers/signup_controller.dart';
 import 'package:photos_app/pages/dashboard_page.dart';
 import 'package:photos_app/pages/home_page/history_page/history_page.dart';
 import 'package:photos_app/pages/home_page/reminders/reminders_page.dart';
 import 'package:photos_app/pages/login_page/login_page.dart';
 import 'package:photos_app/pages/notifications/notifications_page.dart';
+import 'package:photos_app/pages/sign_up/sign_up_page.dart';
 
 import '../controllers/settings_page_controller.dart';
 
@@ -22,6 +24,13 @@ appRoutes() {
         page: () => LoginPage(),
         binding: BindingsBuilder(() {
           Get.lazyPut<LoginController>(() => LoginController());
+        })),
+
+    GetPage(
+        name: SignupPage.id,
+        page: () => SignupPage(),
+        binding: BindingsBuilder(() {
+          Get.lazyPut<SignupController>(() => SignupController());
         })),
 
     GetPage(

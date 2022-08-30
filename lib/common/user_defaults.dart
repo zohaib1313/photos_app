@@ -7,8 +7,11 @@ class UserDefaults {
   static SharedPreferences? sharedPreferences;
   static SharedPreferences? mapPreference;
 
+  static Future<bool?> clearAll() async {
+    return await sharedPreferences?.clear();
+  }
+
   static Future<SharedPreferences?> getPref() async {
-    sharedPreferences ??= await SharedPreferences.getInstance();
     sharedPreferences ??= await SharedPreferences.getInstance();
     return sharedPreferences;
   }
