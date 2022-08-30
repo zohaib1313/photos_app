@@ -87,4 +87,6 @@ class SignupController extends GetxController {
       return Future.value(null);
     });
   }
+
+  void setValuesForUpdate(UserModel userModel) {}
 }

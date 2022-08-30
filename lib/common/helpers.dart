@@ -12,7 +12,7 @@ void printWrapped(String text) {
 }
 
 String formatDateTime(DateTime? dateTime) {
-  return DateFormat('dd-MM-yyyy').format(dateTime ?? DateTime.now());
+  return DateFormat('dd-MM-yyyy hh:mm a').format(dateTime ?? DateTime.now());
 }
 
 String getHourFromUnixTime({required int? unixDateTime}) {

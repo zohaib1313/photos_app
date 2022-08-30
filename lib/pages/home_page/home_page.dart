@@ -4,7 +4,9 @@ import 'package:get/get.dart';
 import 'package:photos_app/common/app_utils.dart';
 import 'package:photos_app/common/helpers.dart';
 import 'package:photos_app/common/styles.dart';
+import 'package:photos_app/common/user_defaults.dart';
 import 'package:photos_app/controllers/home_page_controller.dart';
+import 'package:photos_app/notifications/awsome_notification.dart';
 import 'package:photos_app/pages/home_page/history_page/history_page.dart';
 import 'package:photos_app/pages/home_page/reminders/reminders_page.dart';
 
@@ -21,24 +23,29 @@ class HomePage extends GetView<HomePageController> with HomePageViewsMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: myAppBar(title: 'Hello, John doe', actions: [
-        MyAnimSearchBar(
-          width: context.width * 0.8,
-          onSuffixTap: () {
-            controller.searchController.clear();
-          },
-          closeSearchOnSuffixTap: true,
-          textController: controller.searchController,
-        ),
-        hSpace,
-        InkWell(
-            onTap: () {
-              Get.toNamed(NotificationsPage.id);
-            },
-            child: const Icon(Icons.notification_important_outlined)),
-        hSpace,
-        hSpace,
-      ]),
+      appBar: myAppBar(
+          title: 'Hello, ${UserDefaults.getUserSession()?.username ?? ''}',
+          actions: [
+            MyAnimSearchBar(
+              width: context.width * 0.8,
+              onSuffixTap: () {
+                controller.searchController.clear();
+              },
+              closeSearchOnSuffixTap: true,
+              textController: controller.searchController,
+            ),
+            hSpace,
+            InkWell(
+                onTap: () {
+                  //     Get.toNamed(NotificationsPage.id);
+                  AwesomeNotification.scheduleNotification(
+                      id: 13,
+                      scheduleTime: DateTime.now().add(Duration(seconds: 10)));
+                },
+                child: const Icon(Icons.notification_important_outlined)),
+            hSpace,
+            hSpace,
+          ]),
       body: GetX<HomePageController>(
         initState: (state) {},
         builder: (_) {

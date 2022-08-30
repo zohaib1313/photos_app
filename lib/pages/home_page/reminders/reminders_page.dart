@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:photos_app/common/app_alert_bottom_sheet.dart';
 import 'package:photos_app/common/app_pop_ups.dart';
 import 'package:photos_app/common/common_widgets.dart';
-import 'package:photos_app/models/reminder_model.dart';
+
 import 'package:photos_app/my_application.dart';
 
 import '../../../../common/loading_widget.dart';
@@ -14,6 +14,7 @@ import '../../../common/my_search_bar.dart';
 import '../../../common/spaces_boxes.dart';
 import '../../../common/styles.dart';
 import '../../../controllers/reminder_controller.dart';
+import '../../../models/reminder_response_model.dart';
 
 class ReminderPage extends GetView<ReminderController> {
   const ReminderPage({Key? key}) : super(key: key);
@@ -39,19 +40,23 @@ class ReminderPage extends GetView<ReminderController> {
         ),
       ]),
       body: GetX<ReminderController>(
-        initState: (state) {},
+        initState: (state) {
+          controller.getReminders();
+        },
         builder: (_) {
           return SafeArea(
             child: Stack(
               children: [
                 ListView.builder(
-                    itemCount: controller.reminderList.length,
-                    physics: const BouncingScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      ReminderModel reminderItem =
-                          controller.reminderList.elementAt(index);
-                      return getReminderCard(item: reminderItem);
-                    }),
+                  itemCount: controller.reminderList.length,
+                  controller: controller.listViewController,
+                  physics: const BouncingScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    ReminderModel? reminderItem =
+                        controller.reminderList.elementAt(index);
+                    return getReminderCard(item: reminderItem!);
+                  },
+                ),
                 if (controller.isLoading.isTrue) LoadingWidget(),
               ],
             ),
@@ -63,12 +68,13 @@ class ReminderPage extends GetView<ReminderController> {
 
   Widget getReminderCard({required ReminderModel item}) {
     return Card(
-      child: CheckboxListTile(
+      margin: const EdgeInsets.all(4),
+      child: ListTile(
         contentPadding: const EdgeInsets.all(4),
-        title: Text(DateFormat('hh:mm-MM:yyyy').format(DateTime.now()),
+        title: Text(formatDateTime(DateTime.tryParse(item.reminderTime!)),
             style: AppTextStyles.textStyleBoldBodyXSmall),
         isThreeLine: true,
-        secondary: InkWell(
+        leading: InkWell(
             onTap: () {
               ///edit reminder....
             },
@@ -77,18 +83,12 @@ class ReminderPage extends GetView<ReminderController> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(item.message ?? '-',
+            Text(item.description ?? '-',
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
                 style: AppTextStyles.textStyleNormalBodySmall),
           ],
         ),
-        value: item.isDone ?? false,
-        onChanged: (bool? value) {
-          item.isDone = value;
-          controller.isLoading.toggle();
-          controller.isLoading.toggle();
-        },
         /*  trailing: InkWell(
           onTap: () {},
           child: const CircleAvatar(
@@ -187,13 +187,6 @@ class ReminderPage extends GetView<ReminderController> {
               onTap: () {
                 if (controller
                     .reminderAddMessageTextController.text.isNotEmpty) {
-                  controller.reminderList.add(ReminderModel(
-                      isDone: true,
-                      id: '',
-                      message: controller.reminderAddMessageTextController.text,
-                      timeStamp: controller
-                          .pickedDateTime.value?.microsecondsSinceEpoch
-                          .toInt()));
                   Get.back();
                   AppPopUps.showSnackBar(
                       message: 'Reminder added', context: myContext!);

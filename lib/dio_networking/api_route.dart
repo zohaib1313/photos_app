@@ -30,6 +30,27 @@ class APIRoute implements APIRouteConfigurable {
           data: body,
           method: APIMethod.post,
         );
+      case APIType.getReminders:
+        return RequestOptions(
+          path: ApiConstants.reminder,
+          headers: headers,
+          queryParameters: body,
+          method: APIMethod.get,
+        );
+      case APIType.createReminder:
+        return RequestOptions(
+          path: ApiConstants.reminder,
+          headers: headers,
+          data: body,
+          method: APIMethod.post,
+        );
+      case APIType.updateReminder:
+        return RequestOptions(
+          path: "${ApiConstants.registerUser}/${body['id']}",
+          headers: headers,
+          data: body,
+          method: APIMethod.put,
+        );
 
       default:
         return RequestOptions(
