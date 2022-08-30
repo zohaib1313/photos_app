@@ -5,6 +5,7 @@ import 'package:get/get_state_manager/src/rx_flutter/rx_getx_widget.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:get/get_state_manager/src/simple/get_view.dart';
 import 'package:photos_app/common/extension.dart';
+import 'package:photos_app/models/user_model.dart';
 import 'package:photos_app/pages/dashboard_page.dart';
 import 'package:photos_app/pages/sign_up/sign_up_page.dart';
 
@@ -13,7 +14,6 @@ import '../../../../common/loading_widget.dart';
 import '../../../../common/styles.dart';
 import '../../common/spaces_boxes.dart';
 import '../../controllers/login_controller.dart';
-import '../../models/user_login_response_model.dart';
 
 class LoginPage extends GetView<LoginController> {
   LoginPage({Key? key}) : super(key: key);
@@ -57,15 +57,20 @@ class LoginPage extends GetView<LoginController> {
                           vSpace,
                           vSpace,
                           MyTextField(
-                              controller: controller.emailController,
-                              hintText: "Email",
-                              contentPadding: 20 /* context.height * 0.04*/,
-                              focusBorderColor: AppColor.primaryBlueDarkColor,
-                              textColor: AppColor.blackColor,
-                              hintColor: AppColor.blackColor,
-                              fillColor: AppColor.alphaGrey,
-                              validator: (String? value) =>
-                                  value!.toValidEmail()),
+                            controller: controller.emailController,
+                            hintText: "User name",
+                            contentPadding: 20 /* context.height * 0.04*/,
+                            focusBorderColor: AppColor.primaryBlueDarkColor,
+                            textColor: AppColor.blackColor,
+                            hintColor: AppColor.blackColor,
+                            fillColor: AppColor.alphaGrey,
+                            validator: (String? value) {
+                              if ((value ?? '').isEmpty) {
+                                return 'Required';
+                              }
+                              return null;
+                            },
+                          ),
                           vSpace,
                           Obx(
                             () => MyTextField(
@@ -98,17 +103,15 @@ class LoginPage extends GetView<LoginController> {
                             color: AppColor.primaryBlueDarkColor,
                             onTap: () async {
                               //todo
-                              Get.offAndToNamed(DashboardPage.id);
+
                               if (controller.formKey.currentState!.validate()) {
                                 FocusManager.instance.primaryFocus?.unfocus();
                                 controller.login(
                                   email: controller.emailController.text.trim(),
                                   password:
                                       controller.passwordController.text.trim(),
-                                  completion: (UserLoginResponseModel?
-                                      userLoginResponseModel) {
-                                    Get.offAndToNamed(DashboardPage.id);
-                                  },
+                                  completion:
+                                      (UserModel? userLoginResponseModel) {},
                                 );
                               }
                             },

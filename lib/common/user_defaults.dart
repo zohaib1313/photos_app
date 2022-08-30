@@ -1,6 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
+import '../models/user_model.dart';
 import 'helpers.dart';
 
 class UserDefaults {
@@ -14,14 +15,6 @@ class UserDefaults {
   static Future<SharedPreferences?> getPref() async {
     sharedPreferences ??= await SharedPreferences.getInstance();
     return sharedPreferences;
-  }
-
-  static Future<bool> saveWeatherUnit(String value) async {
-    return await sharedPreferences?.setString('weatherUnit', value) ?? false;
-  }
-
-  static Future<String?> getWeatherUnit() async {
-    return sharedPreferences?.getString('weatherUnit');
   }
 
   static String? getApiToken() {
@@ -38,5 +31,23 @@ class UserDefaults {
 
   static String? getCurrentUserId() {
     return sharedPreferences?.getString('userId');
+  }
+
+  static Future<bool?> saveUserSession(UserModel userModel) async {
+    String user = json.encode(userModel.toJson());
+    setCurrentUserId(userModel.id!.toString());
+    setApiToken(userModel.token ?? '');
+    return await getPref().then((value) => value?.setString('userData', user));
+  }
+
+  static UserModel? getUserSession() {
+    UserModel? user;
+    if (sharedPreferences!.getString('userData') != null) {
+      Map<String, dynamic> json =
+          jsonDecode(sharedPreferences!.getString('userData')!);
+      user = UserModel.fromJson(json);
+      printWrapped(user.toString());
+    }
+    return user;
   }
 }

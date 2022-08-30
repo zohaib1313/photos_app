@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:photos_app/common/extension.dart';
+import 'package:photos_app/pages/dashboard_page.dart';
 
 import '../../../../common/loading_widget.dart';
 import '../../../../common/spaces_boxes.dart';
@@ -14,7 +14,6 @@ import '../../common/app_utils.dart';
 import '../../common/common_widgets.dart';
 import '../../common/styles.dart';
 import '../../controllers/signup_controller.dart';
-import '../../my_application.dart';
 import '../login_page/login_page.dart';
 import 'sign_up_widgets.dart';
 
@@ -59,16 +58,26 @@ class SignupPage extends GetView<SignupController> with SignupWidgetsMixin {
                               ),
                               vSpace,
                               vSpace,
+                              Text(
+                                'SIGN UP',
+                                style: AppTextStyles.textStyleBoldSubTitleLarge
+                                    .copyWith(fontSize: 50),
+                              ),
+                              vSpace,
+                              vSpace,
                               getTextField(
+                                  validate: true,
                                   hintText: 'User name',
                                   controller: controller.usernameController),
                               vSpace,
                               getTextField(
+                                  validate: true,
                                   hintText: 'First name',
                                   controller: controller.firstNameController),
                               vSpace,
                               getTextField(
                                   hintText: 'Last name',
+                                  validate: true,
                                   controller: controller.lastNameController),
                               vSpace,
                               getTextField(
@@ -79,22 +88,18 @@ class SignupPage extends GetView<SignupController> with SignupWidgetsMixin {
                                   }),
                               vSpace,
                               getTextField(
-                                  hintText: 'CNIC xxxx-xxxxxx-x',
-                                  inputType: TextInputType.number,
-                                  controller: controller.cnicController,
-                                  inputFormatters: [
-                                    /*      MaskTextInputFormatter(
-                                    mask: '#####-#######-#',
-                                    filter: {"#": RegExp(r'[0-9]')},
-                                    type: MaskAutoCompletionType.lazy)*/
-                                  ],
-                                  validator: (String? value) {
-                                    return value.toString().toValidateCnic();
-                                  }),
+                                  hintText: 'City',
+                                  controller: controller.cityController,
+                                  validate: true),
+                              vSpace,
+                              getTextField(
+                                  hintText: 'Address',
+                                  controller: controller.addressController,
+                                  validate: true),
                               vSpace,
                               getTextField(
                                   inputType: TextInputType.phone,
-                                  hintText: 'Phone +92 (xxx) xxxxxxx',
+                                  hintText: 'Phone(xxx) xxxxxxx',
                                   inputFormatters: [
                                     /*MaskTextInputFormatter(
                                     mask: '+## (###) #######',
@@ -156,21 +161,23 @@ class SignupPage extends GetView<SignupController> with SignupWidgetsMixin {
                                     }),
                               ),
                               vSpace,
-                              if (controller.isSignUpAsAgency.value)
-                                showAgencySignupInfoForm(),
+                              vSpace,
                               vSpace,
                               Button(
-                                buttonText: "Register".tr,
+                                buttonText: "Register",
                                 padding: 16,
                                 textColor: AppColor.whiteColor,
                                 color: AppColor.primaryBlueDarkColor,
                                 onTap: () {
                                   controller.registerAction(
-                                      mainCompletion: (String message) {
+                                      completion: (String message) {
                                     AppPopUps.showDialogContent(
                                         title: 'Success',
                                         onOkPress: () {
-                                          Get.back();
+                                          Get.offAndToNamed(DashboardPage.id);
+                                        },
+                                        onCancelPress: () {
+                                          Get.offAndToNamed(DashboardPage.id);
                                         },
                                         description: message,
                                         dialogType: DialogType.SUCCES);
@@ -215,80 +222,6 @@ class SignupPage extends GetView<SignupController> with SignupWidgetsMixin {
               ),
             );
           }),
-    );
-  }
-
-  showAgencySignupInfoForm() {
-    return Form(
-      key: controller.agencyInfoFormKey,
-      child: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 100.w),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  vSpace,
-                  Text(
-                    'Company Information',
-                    style: AppTextStyles.textStyleBoldBodyMedium,
-                  ),
-                  vSpace,
-                  Text(
-                    'Company logo',
-                    style: AppTextStyles.textStyleNormalBodySmall,
-                  ),
-                  Align(
-                    alignment: Alignment.center,
-                    child: GestureDetector(
-                      onTap: () async {
-                        AppUtils.showPicker(
-                          context: myContext!,
-                          onComplete: (File? file) {
-                            if (file != null) {
-                              controller.agencyLogo.value = file;
-                            }
-                          },
-                        );
-                      },
-                      child: getImageWidget(controller.agencyLogo),
-                    ),
-                  ),
-                  vSpace,
-                ],
-              ),
-            ),
-          ),
-          vSpace,
-          getTextField(
-              hintText: 'Company Name',
-              controller: controller.companyNameController),
-          vSpace,
-          getTextField(
-              hintText: 'Company email',
-              controller: controller.companyMailController,
-              validator: (String? value) {
-                return value?.toValidEmail();
-              }),
-          vSpace,
-          getTextField(
-              hintText: 'Company Fax',
-              controller: controller.companyFaxController),
-          vSpace,
-          getTextField(
-              hintText: 'Company Description',
-              controller: controller.companyDescription),
-          vSpace,
-          vSpace,
-          vSpace,
-          vSpace,
-          vSpace,
-          vSpace,
-        ],
-      ),
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:photos_app/models/user_model.dart';
 import 'package:uuid/uuid.dart';
 import 'dart:async';
 import 'dart:convert' show json;
@@ -8,11 +9,13 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import '../common/app_pop_ups.dart';
+import '../common/helpers.dart';
+import '../common/user_defaults.dart';
 import '../dio_networking/api_client.dart';
 import '../dio_networking/api_response.dart';
 import '../dio_networking/api_route.dart';
 import '../dio_networking/app_apis.dart';
-import '../models/user_login_response_model.dart';
+import '../pages/dashboard_page.dart';
 
 class LoginController extends GetxController {
   var isLoading = false.obs;
@@ -27,19 +30,10 @@ class LoginController extends GetxController {
   login(
       {required completion,
       required String email,
-      String provider = '',
       required String password}) async {
     isLoading.value = true;
 
-    Map<String, dynamic> body;
-    if (provider.isEmpty) {
-      body = {
-        "email": email,
-        "password": password,
-      };
-    } else {
-      body = {"email": email, "u_uid": password, "provider": provider};
-    }
+    Map<String, dynamic> body = {"username": email, "password": password};
 
     var client = APIClient(isCache: false, baseUrl: ApiConstants.baseUrl);
     client
@@ -49,24 +43,22 @@ class LoginController extends GetxController {
               APIType.loginUser,
               body: body,
             ),
-            create: () => APIResponse<UserLoginResponseModel>(
-                create: () => UserLoginResponseModel()),
+            create: () => APIResponse<UserModel>(create: () => UserModel()),
             apiFunction: login)
-        .then((response) {
-      /*    UserLoginResponseModel? userLoginResponseModel = response.response?.data;
-      if (userLoginResponseModel != null) {
-        UserDefaults.setApiToken(userLoginResponseModel.token ?? '');
-        UserDefaults.setIsAdmin(userLoginResponseModel.isAdmin ?? false);
+        .then((response) async {
+      UserModel? userModel = response.response?.data;
+      printWrapped("registering user response ${userModel.toString()}");
 
-        ///getting user detail from different api
-        _getUserDetails(
-            id: userLoginResponseModel.id.toString(),
-            onComplete: (UserModel user) {
-              UserDefaults.saveUserSession(user);
-              isLoading.value = false;
-              completion(userLoginResponseModel);
-            });
-      }*/
+      if (userModel != null) {
+        await UserDefaults.saveUserSession(userModel);
+        completion(userModel);
+        Get.offAndToNamed(DashboardPage.id);
+      } else {
+        AppPopUps.showDialogContent(
+            title: 'Error',
+            description: 'Failed to signin',
+            dialogType: DialogType.ERROR);
+      }
     }).catchError((error) {
       isLoading.value = false;
       AppPopUps.showDialogContent(

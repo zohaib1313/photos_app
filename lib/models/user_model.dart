@@ -1,4 +1,4 @@
-import '../dio_networking/decodable.dart';
+import 'package:photos_app/dio_networking/decodable.dart';
 
 class UserModel implements Decodeable {
   int? id;
@@ -10,21 +10,11 @@ class UserModel implements Decodeable {
   String? country;
   String? photo;
   int? userType;
-  String? cnic;
   String? phoneNumber;
   String? token;
   String? fullName;
   String? city;
-  String? area;
-  bool? isInvited;
-  bool? isPasswordChanged;
-  String? nationality;
-  String? languages;
   String? createdAt;
-  num? balance;
-  String? company;
-  int? activeListingCount;
-  int? totalListings;
 
   UserModel(
       {this.id,
@@ -36,21 +26,11 @@ class UserModel implements Decodeable {
       this.country,
       this.photo,
       this.userType,
-      this.cnic,
       this.phoneNumber,
       this.token,
       this.fullName,
       this.city,
-      this.area,
-      this.isInvited,
-      this.isPasswordChanged,
-      this.nationality,
-      this.languages,
-      this.createdAt,
-      this.balance,
-      this.company,
-      this.activeListingCount,
-      this.totalListings});
+      this.createdAt});
 
   UserModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -62,21 +42,11 @@ class UserModel implements Decodeable {
     country = json['country'];
     photo = json['photo'];
     userType = json['user_type'];
-    cnic = json['cnic'];
     phoneNumber = json['phone_number'];
     token = json['token'];
     fullName = json['full_name'];
     city = json['city'];
-    area = json['area'];
-    isInvited = json['is_invited'];
-    isPasswordChanged = json['is_password_changed'];
-    nationality = json['nationality'];
-    languages = json['languages'];
     createdAt = json['created_at'];
-    balance = json['balance'];
-    company = json['company'];
-    activeListingCount = json['active_listing_count'];
-    totalListings = json['total_listings'];
   }
 
   Map<String, dynamic> toJson() {
@@ -90,21 +60,11 @@ class UserModel implements Decodeable {
     data['country'] = this.country;
     data['photo'] = this.photo;
     data['user_type'] = this.userType;
-    data['cnic'] = this.cnic;
     data['phone_number'] = this.phoneNumber;
     data['token'] = this.token;
     data['full_name'] = this.fullName;
     data['city'] = this.city;
-    data['area'] = this.area;
-    data['is_invited'] = this.isInvited;
-    data['is_password_changed'] = this.isPasswordChanged;
-    data['nationality'] = this.nationality;
-    data['languages'] = this.languages;
     data['created_at'] = this.createdAt;
-    data['balance'] = this.balance;
-    data['company'] = this.company;
-    data['active_listing_count'] = this.activeListingCount;
-    data['total_listings'] = this.totalListings;
     return data;
   }
 
@@ -119,21 +79,16 @@ class UserModel implements Decodeable {
     country = json['country'];
     photo = json['photo'];
     userType = json['user_type'];
-    cnic = json['cnic'];
     phoneNumber = json['phone_number'];
     token = json['token'];
     fullName = json['full_name'];
     city = json['city'];
-    area = json['area'];
-    isInvited = json['is_invited'];
-    isPasswordChanged = json['is_password_changed'];
-    nationality = json['nationality'];
-    languages = json['languages'];
     createdAt = json['created_at'];
-    balance = json['balance'];
-    company = json['company'];
-    activeListingCount = json['active_listing_count'];
-    totalListings = json['total_listings'];
     return this;
+  }
+
+  @override
+  String toString() {
+    return 'UserModel{id: $id, username: $username, email: $email, firstName: $firstName, lastName: $lastName, address: $address, country: $country, photo: $photo, userType: $userType, phoneNumber: $phoneNumber, token: $token, fullName: $fullName, city: $city, createdAt: $createdAt}';
   }
 }
