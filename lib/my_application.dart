@@ -39,7 +39,7 @@ class _MyApplicationState extends State<MyApplication>
       builder: (_, __) => GetMaterialApp(
         getPages: appRoutes(),
         fallbackLocale: const Locale('en', 'US'),
-        title: 'Weather app',
+        title: 'photos app',
         localizationsDelegates: const [
           DefaultCupertinoLocalizations.delegate,
           DefaultMaterialLocalizations.delegate,

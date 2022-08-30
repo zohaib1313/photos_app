@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:photos_app/pages/dashboard_page.dart';
+import 'package:photos_app/pages/login_page/login_page.dart';
 import '../common/constants.dart';
 import '../common/styles.dart';
 
@@ -24,7 +25,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void gotoRelevantScreenOnUserType() async {
-    Get.offNamed(DashboardPage.id);
+    Get.offNamed(LoginPage.id);
   }
 
   @override

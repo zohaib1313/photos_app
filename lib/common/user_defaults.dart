@@ -20,4 +20,20 @@ class UserDefaults {
   static Future<String?> getWeatherUnit() async {
     return sharedPreferences?.getString('weatherUnit');
   }
+
+  static String? getApiToken() {
+    return sharedPreferences?.getString('ApiToken');
+  }
+
+  static setApiToken(String value) async {
+    return await sharedPreferences?.setString('ApiToken', "token $value");
+  }
+
+  static setCurrentUserId(String value) {
+    return sharedPreferences?.setString('userId', value);
+  }
+
+  static String? getCurrentUserId() {
+    return sharedPreferences?.getString('userId');
+  }
 }

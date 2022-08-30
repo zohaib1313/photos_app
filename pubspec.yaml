@@ -35,7 +35,8 @@ dependencies:
   url_launcher: ^6.1.5
   image_picker:
   flutter_datetime_picker: ^1.5.1
-
+  dio_cache_interceptor: ^3.0.1
+  dio_cache_interceptor_hive_store: ^3.0.1
 
 
 
