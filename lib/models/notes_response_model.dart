@@ -1,21 +1,21 @@
 import 'package:photos_app/dio_networking/decodable.dart';
 
-class RemindersResponseModel implements Decodeable {
+class NotesResponseModel implements Decodeable {
   int? count;
   String? next;
   String? previous;
-  List<ReminderModel>? results;
+  List<NotesModel>? results;
 
-  RemindersResponseModel({this.count, this.next, this.previous, this.results});
+  NotesResponseModel({this.count, this.next, this.previous, this.results});
 
-  RemindersResponseModel.fromJson(Map<String, dynamic> json) {
+  NotesResponseModel.fromJson(Map<String, dynamic> json) {
     count = json['count'];
     next = json['next'];
     previous = json['previous'];
     if (json['results'] != null) {
-      results = <ReminderModel>[];
+      results = <NotesModel>[];
       json['results'].forEach((v) {
-        results!.add(new ReminderModel.fromJson(v));
+        results!.add(new NotesModel.fromJson(v));
       });
     }
   }
@@ -37,43 +37,47 @@ class RemindersResponseModel implements Decodeable {
     next = json['next'];
     previous = json['previous'];
     if (json['results'] != null) {
-      results = <ReminderModel>[];
+      results = <NotesModel>[];
       json['results'].forEach((v) {
-        results!.add(new ReminderModel.fromJson(v));
+        results!.add(new NotesModel.fromJson(v));
       });
     }
     return this;
   }
 }
 
-class ReminderModel implements Decodeable {
+class NotesModel implements Decodeable {
   int? id;
-  String? description;
-  String? reminderTime;
+  String? name;
+  String? content;
   String? createdAt;
+  String? updatedAt;
   int? userFk;
 
-  ReminderModel(
+  NotesModel(
       {this.id,
-      this.description,
-      this.reminderTime,
+      this.name,
+      this.content,
       this.createdAt,
+      this.updatedAt,
       this.userFk});
 
-  ReminderModel.fromJson(Map<String, dynamic> json) {
+  NotesModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    description = json['description'];
-    reminderTime = json['reminder_time'];
+    name = json['name'];
+    content = json['content'];
     createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
     userFk = json['user_fk'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
-    data['description'] = this.description;
-    data['reminder_time'] = this.reminderTime;
+    data['name'] = this.name;
+    data['content'] = this.content;
     data['created_at'] = this.createdAt;
+    data['updated_at'] = this.updatedAt;
     data['user_fk'] = this.userFk;
     return data;
   }
@@ -81,9 +85,10 @@ class ReminderModel implements Decodeable {
   @override
   decode(json) {
     id = json['id'];
-    description = json['description'];
-    reminderTime = json['reminder_time'];
+    name = json['name'];
+    content = json['content'];
     createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
     userFk = json['user_fk'];
     return this;
   }

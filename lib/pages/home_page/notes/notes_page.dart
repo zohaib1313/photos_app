@@ -3,8 +3,8 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:photos_app/common/app_alert_bottom_sheet.dart';
 import 'package:photos_app/common/app_pop_ups.dart';
-import 'package:photos_app/common/app_utils.dart';
 import 'package:photos_app/common/common_widgets.dart';
+import 'package:photos_app/models/notes_response_model.dart';
 import 'package:photos_app/my_application.dart';
 
 import '../../../../common/loading_widget.dart';
@@ -12,12 +12,11 @@ import '../../../common/helpers.dart';
 import '../../../common/my_search_bar.dart';
 import '../../../common/spaces_boxes.dart';
 import '../../../common/styles.dart';
-import '../../../controllers/reminder_controller.dart';
-import '../../../models/reminder_response_model.dart';
+import '../../../controllers/notes_controller.dart';
 
-class ReminderPage extends GetView<ReminderController> {
-  const ReminderPage({Key? key}) : super(key: key);
-  static const id = '/ReminderPage';
+class NotesPage extends GetView<NotesController> {
+  const NotesPage({Key? key}) : super(key: key);
+  static const id = '/NotesPage';
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +27,7 @@ class ReminderPage extends GetView<ReminderController> {
           _showBottomSheet();
         },
       ),
-      appBar: myAppBar(goBack: true, title: 'Reminders', actions: [
+      appBar: myAppBar(goBack: true, title: 'Notes', actions: [
         MyAnimSearchBar(
           width: context.width,
           onSuffixTap: () {
@@ -38,16 +37,16 @@ class ReminderPage extends GetView<ReminderController> {
           textController: controller.searchController,
         ),
       ]),
-      body: GetX<ReminderController>(
+      body: GetX<NotesController>(
         initState: (state) {
-          controller.getReminders();
+          controller.getNotes();
         },
         builder: (_) {
           return SafeArea(
             child: Stack(
               children: [
                 ((controller.isLoading.value == false &&
-                        controller.reminderList.isEmpty))
+                        controller.notesList.isEmpty))
                     ? Center(
                         child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -57,9 +56,7 @@ class ReminderPage extends GetView<ReminderController> {
                               style: AppTextStyles.textStyleBoldBodyMedium),
                           InkWell(
                             onTap: () {
-                              controller.reminderList.clear();
-                              controller.filteredItemList.clear();
-                              controller.getReminders(showAlert: true);
+                              controller.getNotes(showAlert: true);
                             },
                             child: Text(
                               "Refresh",
@@ -73,19 +70,20 @@ class ReminderPage extends GetView<ReminderController> {
                       ))
                     : RefreshIndicator(
                         onRefresh: () {
-                          controller.reminderList.clear();
+                          print('on refresh');
+                          controller.notesList.clear();
                           controller.filteredItemList.clear();
-                          controller.getReminders(showAlert: true);
-                          return Future.delayed(const Duration(seconds: 2));
+                          controller.getNotes(showAlert: true);
+                          return Future.delayed(const Duration(seconds: 1));
                         },
                         child: ListView.builder(
                           itemCount: controller.filteredItemList.length,
                           controller: controller.listViewController,
                           physics: const AlwaysScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
-                            ReminderModel? reminderItem =
+                            NotesModel? model =
                                 controller.filteredItemList.elementAt(index);
-                            return getReminderCard(item: reminderItem!);
+                            return getNotesCard(item: model!);
                           },
                         ),
                       ),
@@ -98,19 +96,12 @@ class ReminderPage extends GetView<ReminderController> {
     );
   }
 
-  Widget getReminderCard({required ReminderModel item}) {
-    DateTime dt = DateTime.parse(item.reminderTime!);
-    DateTime now = DateTime.now();
-
-    bool isPast = DateTime(dt.year, dt.month, dt.day, dt.hour, dt.minute)
-        .isBefore(DateTime(now.year, now.month, now.day, now.hour, now.minute));
-
+  Widget getNotesCard({required NotesModel item}) {
     return Card(
       margin: const EdgeInsets.all(4),
-      color: isPast ? AppColor.alphaGrey : AppColor.yellowColor,
       child: ListTile(
         contentPadding: const EdgeInsets.all(4),
-        title: Text(formatDateTime(DateTime.tryParse(item.reminderTime!)),
+        title: Text(item.name ?? '-',
             style: AppTextStyles.textStyleBoldBodyXSmall),
         leading: InkWell(
             onTap: () {
@@ -121,84 +112,53 @@ class ReminderPage extends GetView<ReminderController> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(item.description ?? '-',
+            Text(item.content ?? '-',
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
                 style: AppTextStyles.textStyleNormalBodySmall),
           ],
         ),
-        /*  trailing: InkWell(
-          onTap: () {},
-          child: const CircleAvatar(
-            radius: 14,
-            child: Icon(Icons.edit, color: AppColor.whiteColor, size: 14),
-          ),
-        ),*/
+        trailing: Text(
+          formatDateTime(DateTime.tryParse(item.createdAt ?? '')),
+          style: AppTextStyles.textStyleNormalBodyXSmall,
+          maxLines: 1,
+        ),
       ),
     );
   }
 
   void _showBottomSheet() {
-    controller.pickedDateTime.value = null;
-
-    controller.reminderAddMessageTextController.clear();
+    controller.notesContentController.clear();
     AppBottomSheets.showAppAlertBottomSheet(
         isFull: true,
         isDismissable: false,
-        title: 'Add new reminder',
+        title: 'Add new note',
         context: myContext!,
         child: Column(
           children: [
             vSpace,
-
-            ///date
-            Container(
-              padding: const EdgeInsets.all(4),
-              color: AppColor.alphaGrey,
-              child: Row(
-                children: [
-                  Obx(() {
-                    return Expanded(
-                        child: Text(DateFormat('dd-MM-yyyy hh:mm a').format(
-                            controller.pickedDateTime.value ??
-                                DateTime.now())));
-                  }),
-                  hSpace,
-                  TextButton(
-                      onPressed: () {
-                        AppUtils.showDatePicker(
-                            onComplete: (DateTime dateTime) {
-                          AppUtils.showTimePicker(
-                              onCompletePickTime: (DateTime time) {
-                            controller.pickedDateTime.value = combineDateTime(
-                                dateTime, time.hour, time.minute, time.second);
-                          });
-                        });
-                      },
-                      child: const Text(
-                        'Pick',
-                        style: TextStyle(color: Colors.blue),
-                      )),
-                ],
-              ),
+            MyTextField(
+              hintText: 'Name',
+              leftPadding: 0,
+              rightPadding: 0,
+              controller: controller.notesNameController,
             ),
             vSpace,
             MyTextField(
-              hintText: 'Add your message here...',
+              hintText: 'Add your content here...',
               leftPadding: 0,
               rightPadding: 0,
               minLines: 4,
               maxLines: 7,
-              controller: controller.reminderAddMessageTextController,
+              controller: controller.notesContentController,
             ),
             vSpace,
             Button(
-              buttonText: 'Add Reminder',
+              buttonText: 'Add Note',
               onTap: () {
-                if ((controller
-                        .reminderAddMessageTextController.text.isNotEmpty) &&
-                    (controller.pickedDateTime.value != null)) {
-                  controller.addReminder();
+                if ((controller.notesContentController.text.isNotEmpty) &&
+                    (controller.notesNameController.text.isNotEmpty)) {
+                  controller.addNotes();
                 } else {
                   AppPopUps.showDialogContent(
                       title: 'Alert', description: 'Enter all fields');

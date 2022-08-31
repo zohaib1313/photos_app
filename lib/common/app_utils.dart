@@ -12,6 +12,23 @@ import 'package:photos_app/my_application.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'helpers.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:photos_app/common/app_alert_bottom_sheet.dart';
+import 'package:photos_app/common/app_pop_ups.dart';
+import 'package:photos_app/common/common_widgets.dart';
+
+import 'package:photos_app/my_application.dart';
+
+import '../../../../common/loading_widget.dart';
+import '../../../common/helpers.dart';
+import '../../../common/my_search_bar.dart';
+import '../../../common/spaces_boxes.dart';
+import '../../../common/styles.dart';
+import '../../../controllers/reminder_controller.dart';
+import '../../../models/reminder_response_model.dart';
 
 class AppUtils {
   static Future<List<PlatformFile>?> pickMultipleFiles() async {
@@ -150,5 +167,25 @@ class AppUtils {
     }
 
     return;
+  }
+
+  static void showDatePicker(
+      {required Null Function(DateTime dateTime) onComplete}) {
+    DatePicker.showDatePicker(myContext!,
+        showTitleActions: true,
+        minTime: DateTime.now(),
+        maxTime: DateTime(2050, 6, 7),
+        onChanged: (date) {}, onConfirm: (DateTime? date) {
+      onComplete(date ?? DateTime.now());
+    }, currentTime: DateTime.now(), locale: LocaleType.en);
+  }
+
+  static void showTimePicker(
+      {required Null Function(DateTime dateTime) onCompletePickTime}) {
+    DatePicker.showTime12hPicker(myContext!,
+        showTitleActions: true,
+        onChanged: (date) {}, onConfirm: (DateTime? date) {
+      onCompletePickTime(date ?? DateTime.now());
+    }, currentTime: DateTime.now(), locale: LocaleType.en);
   }
 }

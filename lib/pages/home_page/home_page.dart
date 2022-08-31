@@ -8,12 +8,12 @@ import 'package:photos_app/common/user_defaults.dart';
 import 'package:photos_app/controllers/home_page_controller.dart';
 import 'package:photos_app/notifications/awsome_notification.dart';
 import 'package:photos_app/pages/home_page/history_page/history_page.dart';
+import 'package:photos_app/pages/home_page/notes/notes_page.dart';
 import 'package:photos_app/pages/home_page/reminders/reminders_page.dart';
 
 import '../../../../common/loading_widget.dart';
 import '../../common/my_search_bar.dart';
 import '../../common/spaces_boxes.dart';
-import '../notifications/notifications_page.dart';
 import 'home_page_views_mixin.dart';
 
 class HomePage extends GetView<HomePageController> with HomePageViewsMixin {
@@ -186,6 +186,20 @@ class HomePage extends GetView<HomePageController> with HomePageViewsMixin {
                                   ),*/
                                 ],
                               ),
+                            ),
+                            vSpace,
+                            SizedBox(
+                              height: 100,
+                              child: getMainCards(
+                                  onTap: () {
+                                    Get.toNamed(NotesPage.id);
+                                  },
+                                  context: context,
+                                  title: 'Notes',
+                                  textColor: AppColor.whiteColor,
+                                  color: AppColor.primaryColor,
+                                  icon: const Icon(Icons.note_alt,
+                                      size: 40, color: AppColor.whiteColor)),
                             ),
                             vSpace,
                             SizedBox(

@@ -15,6 +15,11 @@ String formatDateTime(DateTime? dateTime) {
   return DateFormat('dd-MM-yyyy hh:mm a').format(dateTime ?? DateTime.now());
 }
 
+/// Sets the hour and minute of a [DateTime] from a [TimeOfDay].
+DateTime combineDateTime(DateTime date, int? hour, int? minute, int? seconds) =>
+    DateTime(
+        date.year, date.month, date.day, hour ?? 0, minute ?? 0, seconds ?? 0);
+
 String getHourFromUnixTime({required int? unixDateTime}) {
   return DateFormat('hh a').format(
       DateTime.fromMillisecondsSinceEpoch((unixDateTime ?? 00000) * 1000));

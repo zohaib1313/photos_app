@@ -52,6 +52,28 @@ class APIRoute implements APIRouteConfigurable {
           method: APIMethod.put,
         );
 
+      case APIType.getNotes:
+        return RequestOptions(
+          path: ApiConstants.notes,
+          headers: headers,
+          queryParameters: body,
+          method: APIMethod.get,
+        );
+      case APIType.createNotes:
+        return RequestOptions(
+          path: ApiConstants.notes,
+          headers: headers,
+          data: body,
+          method: APIMethod.post,
+        );
+      case APIType.updateNotes:
+        return RequestOptions(
+          path: "${ApiConstants.notes}/${body['id']}",
+          headers: headers,
+          data: body,
+          method: APIMethod.put,
+        );
+
       default:
         return RequestOptions(
           path: ApiConstants.loginUser,
