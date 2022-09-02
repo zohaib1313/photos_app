@@ -7,6 +7,8 @@ enum APIType {
   getNotes,
   createNotes,
   updateNotes,
+  getMyData,
+  postMyData,
 }
 
 class ApiConstants {
@@ -18,4 +20,5 @@ class ApiConstants {
   static const registerUser = 'users/user/';
   static const reminder = '/users/reminder/';
   static const notes = '/users/notes/';
+  static const getMyData = '/users/my-data/';
 }

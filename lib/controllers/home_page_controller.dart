@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -9,18 +10,31 @@ import 'package:get/get.dart';
 import 'package:photos_app/common/app_pop_ups.dart';
 import 'package:photos_app/common/app_utils.dart';
 import 'package:photos_app/common/constants.dart';
+import 'package:photos_app/models/my_data_model.dart';
 import 'package:photos_app/models/my_menu_item_model.dart';
+import 'package:photos_app/models/my_model_response_model.dart';
 import 'package:photos_app/my_application.dart';
 import 'package:photos_app/pages/home_page/folder_view_page.dart';
 import 'package:uuid/uuid.dart';
 
 import '../common/helpers.dart';
+import '../common/user_defaults.dart';
+import '../dio_networking/api_client.dart';
+import '../dio_networking/api_response.dart';
+import '../dio_networking/api_route.dart';
+import '../dio_networking/app_apis.dart';
 import '../models/my_menu_item_model.dart';
+import '../models/user_model.dart';
 
 class HomePageController extends GetxController {
   RxBool isLoading = false.obs;
 
   TextEditingController searchController = TextEditingController();
+  int pageToLoad = 1;
+  bool hasNewPage = false;
+
+  RxList<MyDataModel?> myDataList = <MyDataModel?>[].obs;
+  RxList<MyDataModel?> filteredItemList = <MyDataModel?>[].obs;
 
   Rx<MyMenuItem> pinnedMenuFolder = MyMenuItem(
       id: '1',
@@ -129,5 +143,51 @@ class HomePageController extends GetxController {
     if (!item.isFolder && item.path != null) {
       AppUtils.openFile(File(item.path!));
     }
+  }
+
+  void loadFolders({bool showAlert = false}) {
+    UserModel? user = UserDefaults.getUserSession();
+
+    Map<String, dynamic> body = {'page': pageToLoad.toString()};
+    isLoading.value = true;
+    var client = APIClient(isCache: false, baseUrl: ApiConstants.baseUrl);
+    client
+        .request(
+            route: APIRoute(
+              APIType.getReminders,
+              body: body,
+            ),
+            create: () => APIResponse<MyDataModelResponseModel>(
+                create: () => MyDataModelResponseModel()),
+            apiFunction: loadFolders)
+        .then((response) {
+      isLoading.value = false;
+      MyDataModelResponseModel? model = response.response?.data;
+
+      if ((model?.results?.length ?? 0) > 0) {
+        if ((model?.next ?? '').isNotEmpty) {
+          pageToLoad++;
+          hasNewPage = true;
+        } else {
+          hasNewPage = false;
+        }
+        myDataList.addAll(model?.results ?? []);
+        filteredItemList.addAll(myDataList);
+      } else {
+        if (showAlert) {
+          AppPopUps.showDialogContent(
+              title: 'Alert',
+              description: 'No result found',
+              dialogType: DialogType.INFO);
+        }
+      }
+    }).catchError((error) {
+      isLoading.value = false;
+      AppPopUps.showDialogContent(
+          title: 'Error',
+          description: error.toString(),
+          dialogType: DialogType.ERROR);
+      return Future.value(null);
+    });
   }
 }

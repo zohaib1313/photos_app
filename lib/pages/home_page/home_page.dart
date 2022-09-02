@@ -47,7 +47,9 @@ class HomePage extends GetView<HomePageController> with HomePageViewsMixin {
             hSpace,
           ]),
       body: GetX<HomePageController>(
-        initState: (state) {},
+        initState: (state) {
+          controller.loadFolders();
+        },
         builder: (_) {
           return SafeArea(
             child: Padding(
