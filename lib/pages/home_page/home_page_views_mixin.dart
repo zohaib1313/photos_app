@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:photos_app/common/helpers.dart';
 import 'package:photos_app/common/styles.dart';
 import 'package:photos_app/controllers/home_page_controller.dart';
+import 'package:photos_app/models/my_data_model.dart';
 import 'package:photos_app/models/my_menu_item_model.dart';
 
 import '../../../../common/loading_widget.dart';
@@ -16,7 +17,7 @@ import '../../models/my_menu_item_model.dart';
 
 mixin HomePageViewsMixin {
   Widget getFolderCard(
-      {required MyMenuItem myFolderModel,
+      {required MyDataModel myFolderModel,
       required HomePageController controller,
       required BuildContext context}) {
     return getFocusedMenu(
@@ -34,7 +35,7 @@ mixin HomePageViewsMixin {
                 Text(myFolderModel.name ?? '-',
                     style: AppTextStyles.textStyleBoldBodyMedium),
                 vSpace,
-                myFolderModel.subItemList.isEmpty
+                myFolderModel.subFolder.isEmpty
                     ? Expanded(
                         child: getFocusedMenu(
                           item: myFolderModel,
@@ -53,11 +54,11 @@ mixin HomePageViewsMixin {
                       )
                     : Expanded(
                         child: ListView.builder(
-                          itemCount: myFolderModel.subItemList.length,
+                          itemCount: myFolderModel.subFolder.length,
                           scrollDirection: Axis.horizontal,
                           itemBuilder: (context, index) {
-                            MyMenuItem item =
-                                myFolderModel.subItemList.elementAt(index);
+                            MyDataModel item =
+                                myFolderModel.subFolder.elementAt(index);
                             return getItemView(
                                 item: item,
                                 context: context,
@@ -73,7 +74,7 @@ mixin HomePageViewsMixin {
   }
 
   getItemView(
-      {required MyMenuItem item,
+      {required MyDataModel item,
       required HomePageController controller,
       required BuildContext context}) {
     return getFocusedMenu(
@@ -91,13 +92,16 @@ mixin HomePageViewsMixin {
                   child: Column(
                     children: [
                       Flexible(
-                        child: item.icon ??
-                            Icon(item.isFolder ? Icons.folder : Icons.file_copy,
-                                color: AppColor.primaryColor, size: 16),
+                        child: Icon(
+                            (item.type == 'folder')
+                                ? Icons.folder
+                                : Icons.file_copy,
+                            color: AppColor.yellowColor,
+                            size: 16),
                       ),
-                      if (item.isFolder)
+                      if (item.type == 'folder')
                         Text(
-                          '(${item.subItemList.length})',
+                          '(${item.subFolder.length})',
                           style: AppTextStyles.textStyleNormalBodyXSmall,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -119,7 +123,7 @@ mixin HomePageViewsMixin {
   }
 
   Widget getFocusedMenu(
-      {required MyMenuItem item,
+      {required MyDataModel item,
       required BuildContext context,
       required HomePageController controller,
       required Widget child}) {
@@ -145,11 +149,11 @@ mixin HomePageViewsMixin {
               title: Text("Open", style: AppTextStyles.textStyleBoldBodySmall),
               trailingIcon: const Icon(Icons.open_in_new),
               onPressed: () {
-                item.isFolder
+                item.type == 'folder'
                     ? controller.openFolder(item: item)
                     : controller.openFile(item: item);
               }),
-          if (item.isFolder)
+          if (item.type == 'folder')
             FocusedMenuItem(
                 title: Text("Add New File",
                     style: AppTextStyles.textStyleBoldBodySmall),
@@ -158,14 +162,14 @@ mixin HomePageViewsMixin {
                 onPressed: () {
                   controller.addNewFile(item: item);
                 }),
-          if (item.isFolder)
+          if (item.type == 'folder')
             FocusedMenuItem(
                 title: Text("Add New Folder",
                     style: AppTextStyles.textStyleBoldBodySmall),
                 trailingIcon: Icon(Icons.folder, color: AppColor.primaryColor),
                 onPressed: () {
                   /// ///////////.............................adding new folder///////////.............................
-                  controller.addNewFolder(item: item);
+                  //   controller.addNewFolder(item: item);
                 }),
           FocusedMenuItem(
               title: Text("Share", style: AppTextStyles.textStyleBoldBodySmall),

@@ -48,7 +48,7 @@ class HomePage extends GetView<HomePageController> with HomePageViewsMixin {
           ]),
       body: GetX<HomePageController>(
         initState: (state) {
-          controller.loadFolders();
+          controller.loadPrivateFolder();
         },
         builder: (_) {
           return SafeArea(
@@ -59,7 +59,7 @@ class HomePage extends GetView<HomePageController> with HomePageViewsMixin {
                   CustomScrollView(
                     physics: const BouncingScrollPhysics(),
                     slivers: [
-                      SliverAppBar(
+                      /*   SliverAppBar(
                         pinned: false,
                         floating: true,
                         backgroundColor: Colors.transparent,
@@ -71,7 +71,7 @@ class HomePage extends GetView<HomePageController> with HomePageViewsMixin {
                               controller: controller,
                               context: context),
                         ),
-                      ),
+                      ),*/
                       SliverList(
                         delegate: SliverChildListDelegate(
                           [
@@ -83,9 +83,12 @@ class HomePage extends GetView<HomePageController> with HomePageViewsMixin {
                                   Expanded(
                                     child: getMainCards(
                                         onTap: () {
-                                          controller.openFolder(
-                                              item: controller
-                                                  .privateMenuItem.value);
+                                          if (controller
+                                              .privateDataList.isNotEmpty) {
+                                            controller.openFolder(
+                                                item: controller
+                                                    .privateDataList.first!);
+                                          }
                                         },
                                         context: context,
                                         title: 'Private',
@@ -103,9 +106,9 @@ class HomePage extends GetView<HomePageController> with HomePageViewsMixin {
                                         Expanded(
                                           child: getMainCards(
                                               onTap: () {
-                                                controller.openFolder(
+                                                /* controller.openFolder(
                                                     item: controller
-                                                        .sharedMenuItem.value);
+                                                        .sharedMenuItem.value);*/
                                               },
                                               context: context,
                                               title: 'Shared',
@@ -120,10 +123,10 @@ class HomePage extends GetView<HomePageController> with HomePageViewsMixin {
                                         Expanded(
                                           child: getMainCards(
                                               onTap: () {
-                                                controller.openFolder(
+                                                /*controller.openFolder(
                                                     item: controller
                                                         .receivedMenuItem
-                                                        .value);
+                                                        .value);*/
                                               },
                                               context: context,
                                               title: 'Received',

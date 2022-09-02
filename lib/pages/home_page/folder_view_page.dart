@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:photos_app/common/helpers.dart';
 import 'package:photos_app/common/styles.dart';
 import 'package:photos_app/controllers/home_page_controller.dart';
+import 'package:photos_app/models/my_data_model.dart';
 import 'package:photos_app/models/my_menu_item_model.dart';
 
 import '../../../../common/loading_widget.dart';
@@ -32,67 +33,77 @@ class FolderViewPage extends GetView<HomePageController>
               },
               goBack: true,
               title: controller.foldersStack.isNotEmpty
-                  ? controller.foldersStack.last.name ?? '-'
-                  : "-"),
+                  ? controller.foldersStack.last.name
+                  : '-'),
           body: SafeArea(
-              child: Stack(
-            children: [
-              if (controller.foldersStack.isNotEmpty)
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
+            child: Stack(
+              children: [
+                if (controller.foldersStack.isNotEmpty)
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
                         padding: const EdgeInsets.all(6),
                         color: AppColor.alphaGrey,
-                        child: Text(controller.foldersStack.last.path ?? '-',
-                            style: AppTextStyles.textStyleNormalBodyXSmall)),
-                    vSpace,
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ListView.builder(
-                          physics: const BouncingScrollPhysics(),
-                          itemCount:
-                              controller.foldersStack.last.subItemList.length,
-                          itemBuilder: (context, index) {
-                            MyMenuItem innerItem =
-                                controller.foldersStack.last.subItemList[index];
-                            return SizedBox(
-                              height: 120.h,
-                              child: getItemView(
-                                  item: innerItem,
-                                  controller: controller,
-                                  context: context),
-                            );
-                          },
-                        ),
+                        child: Text(_getPath(),
+                            style: AppTextStyles.textStyleNormalBodyXSmall),
                       ),
-                    )
-                  ],
-                ),
-              if (controller.foldersStack.isNotEmpty)
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: getFocusedMenu(
-                        item: controller.foldersStack.last,
-                        context: context,
-                        controller: controller,
-                        child: const CircleAvatar(
-                            radius: 26,
-                            child: Icon(
-                              Icons.add,
-                              size: 30,
-                            ))),
+                      vSpace,
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ListView.builder(
+                            physics: const BouncingScrollPhysics(),
+                            itemCount:
+                                controller.foldersStack.last.subFolder.length,
+                            itemBuilder: (context, index) {
+                              MyDataModel innerItem =
+                                  controller.foldersStack.last.subFolder[index];
+                              return SizedBox(
+                                height: 120.h,
+                                child: getItemView(
+                                    item: innerItem,
+                                    controller: controller,
+                                    context: context),
+                              );
+                            },
+                          ),
+                        ),
+                      )
+                    ],
                   ),
-                ),
-              if (controller.isLoading.isTrue) LoadingWidget(),
-            ],
-          )),
+                if (controller.foldersStack.isNotEmpty)
+                  Align(
+                    alignment: Alignment.bottomRight,
+                    child: Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: getFocusedMenu(
+                          item: controller.foldersStack.last,
+                          context: context,
+                          controller: controller,
+                          child: const CircleAvatar(
+                              radius: 26,
+                              child: Icon(
+                                Icons.add,
+                                size: 30,
+                              ))),
+                    ),
+                  ),
+                if (controller.isLoading.isTrue) LoadingWidget(),
+              ],
+            ),
+          ),
         );
       }),
     );
+  }
+
+  _getPath() {
+    String path = '';
+    for (final element in controller.foldersStack) {
+      path = "$path/${element.name}";
+    }
+    return path;
   }
 }

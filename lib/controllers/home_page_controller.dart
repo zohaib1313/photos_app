@@ -12,7 +12,7 @@ import 'package:photos_app/common/app_utils.dart';
 import 'package:photos_app/common/constants.dart';
 import 'package:photos_app/models/my_data_model.dart';
 import 'package:photos_app/models/my_menu_item_model.dart';
-import 'package:photos_app/models/my_model_response_model.dart';
+import 'package:photos_app/models/my_data_response_model.dart';
 import 'package:photos_app/my_application.dart';
 import 'package:photos_app/pages/home_page/folder_view_page.dart';
 import 'package:uuid/uuid.dart';
@@ -33,8 +33,8 @@ class HomePageController extends GetxController {
   int pageToLoad = 1;
   bool hasNewPage = false;
 
-  RxList<MyDataModel?> myDataList = <MyDataModel?>[].obs;
-  RxList<MyDataModel?> filteredItemList = <MyDataModel?>[].obs;
+  RxList<MyDataModel?> privateDataList = <MyDataModel?>[].obs;
+  RxList<MyDataModel?> privateFilteredItemList = <MyDataModel?>[].obs;
 
   Rx<MyMenuItem> pinnedMenuFolder = MyMenuItem(
       id: '1',
@@ -47,13 +47,6 @@ class HomePageController extends GetxController {
       id: '2',
       name: 'Shared',
       path: 'Shared',
-      isFolder: true,
-      subItemList: []).obs;
-
-  var privateMenuItem = MyMenuItem(
-      id: '3',
-      name: 'Private',
-      path: 'Private',
       isFolder: true,
       subItemList: []).obs;
 
@@ -81,7 +74,7 @@ class HomePageController extends GetxController {
         });
   }
 
-  void addNewFile({required MyMenuItem item}) async {
+  void addNewFile({required MyDataModel item}) async {
     try {
       List<PlatformFile>? files = await AppUtils.pickMultipleFiles();
       if (files != null) {
@@ -93,13 +86,13 @@ class HomePageController extends GetxController {
         printWrapped(file.extension.toString());
         printWrapped(file.name.toString());*/
           Widget? icon = _getFileIcon(file: file);
-          item.subItemList.add(MyMenuItem(
+          /*item.subFolder.add(MyMenuItem(
               name: file.name,
               isFolder: false,
               path: file.path,
               id: const Uuid().v4(),
               icon: icon,
-              subItemList: []));
+              subItemList: []));*/
         }
         isLoading.value = false;
       }
@@ -122,9 +115,9 @@ class HomePageController extends GetxController {
     }
   }
 
-  RxList<MyMenuItem> foldersStack = <MyMenuItem>[].obs;
+  RxList<MyDataModel> foldersStack = <MyDataModel>[].obs;
 
-  openFolder({required MyMenuItem item}) {
+  openFolder({required MyDataModel item}) {
     if (foldersStack.isEmpty) {
       foldersStack.add(item);
       Get.to(const FolderViewPage(), preventDuplicates: false);
@@ -139,13 +132,13 @@ class HomePageController extends GetxController {
     return Future.value(foldersStack.isEmpty);
   }
 
-  openFile({required MyMenuItem item}) {
-    if (!item.isFolder && item.path != null) {
-      AppUtils.openFile(File(item.path!));
+  openFile({required MyDataModel item}) {
+    if (!(item.type == 'folder') && item.name != null) {
+      AppUtils.openFile(File(item.name ?? ''));
     }
   }
 
-  void loadFolders({bool showAlert = false}) {
+  void loadPrivateFolder({bool showAlert = false}) {
     UserModel? user = UserDefaults.getUserSession();
 
     Map<String, dynamic> body = {'page': pageToLoad.toString()};
@@ -154,12 +147,12 @@ class HomePageController extends GetxController {
     client
         .request(
             route: APIRoute(
-              APIType.getReminders,
+              APIType.getMyData,
               body: body,
             ),
             create: () => APIResponse<MyDataModelResponseModel>(
                 create: () => MyDataModelResponseModel()),
-            apiFunction: loadFolders)
+            apiFunction: loadPrivateFolder)
         .then((response) {
       isLoading.value = false;
       MyDataModelResponseModel? model = response.response?.data;
@@ -171,8 +164,9 @@ class HomePageController extends GetxController {
         } else {
           hasNewPage = false;
         }
-        myDataList.addAll(model?.results ?? []);
-        filteredItemList.addAll(myDataList);
+
+        privateDataList.addAll(model?.results ?? []);
+        privateFilteredItemList.addAll(privateDataList);
       } else {
         if (showAlert) {
           AppPopUps.showDialogContent(

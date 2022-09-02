@@ -33,11 +33,11 @@ class ProfilePage extends GetView<ProfilePageController>
                     child: Column(
                       children: [
                         vSpace,
-                        NetworkCircularImage(
+                        /*NetworkCircularImage(
                           url:
                               "${ApiConstants.baseUrl}${UserDefaults.getUserSession()?.photo}",
                           radius: 60,
-                        ),
+                        ),*/
                         vSpace,
                         vSpace,
                         getTextField(
