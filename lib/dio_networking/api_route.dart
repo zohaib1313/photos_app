@@ -75,7 +75,21 @@ class APIRoute implements APIRouteConfigurable {
         );
       case APIType.getMyData:
         return RequestOptions(
-          path: ApiConstants.getMyData,
+          path: ApiConstants.getPrivateData,
+          headers: headers,
+          data: body,
+          method: APIMethod.get,
+        );
+      case APIType.getSharedData:
+        return RequestOptions(
+          path: ApiConstants.getSharedData,
+          headers: headers,
+          data: body,
+          method: APIMethod.get,
+        );
+      case APIType.getReceivedData:
+        return RequestOptions(
+          path: ApiConstants.getReceivedData,
           headers: headers,
           data: body,
           method: APIMethod.get,

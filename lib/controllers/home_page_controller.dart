@@ -33,29 +33,16 @@ class HomePageController extends GetxController {
   int pageToLoad = 1;
   bool hasNewPage = false;
 
+  RxList<MyDataModel> foldersStack = <MyDataModel>[].obs;
+
   RxList<MyDataModel?> privateDataList = <MyDataModel?>[].obs;
   RxList<MyDataModel?> privateFilteredItemList = <MyDataModel?>[].obs;
 
-  Rx<MyMenuItem> pinnedMenuFolder = MyMenuItem(
-      id: '1',
-      name: 'Pinned',
-      isFolder: true,
-      path: 'Pinned',
-      subItemList: []).obs;
+  RxList<MyDataModel?> sharedDataList = <MyDataModel?>[].obs;
+  RxList<MyDataModel?> sharedFilteredItemList = <MyDataModel?>[].obs;
 
-  var sharedMenuItem = MyMenuItem(
-      id: '2',
-      name: 'Shared',
-      path: 'Shared',
-      isFolder: true,
-      subItemList: []).obs;
-
-  var receivedMenuItem = MyMenuItem(
-      id: '4',
-      name: 'Received',
-      path: 'Received',
-      isFolder: true,
-      subItemList: []).obs;
+  RxList<MyDataModel?> receivedDataList = <MyDataModel?>[].obs;
+  RxList<MyDataModel?> receivedFilteredItemList = <MyDataModel?>[].obs;
 
   void addNewFolder({required MyMenuItem item}) async {
     await AppPopUps.showOneInputDialog(
@@ -115,8 +102,6 @@ class HomePageController extends GetxController {
     }
   }
 
-  RxList<MyDataModel> foldersStack = <MyDataModel>[].obs;
-
   openFolder({required MyDataModel item}) {
     if (foldersStack.isEmpty) {
       foldersStack.add(item);
@@ -167,6 +152,100 @@ class HomePageController extends GetxController {
 
         privateDataList.addAll(model?.results ?? []);
         privateFilteredItemList.addAll(privateDataList);
+      } else {
+        if (showAlert) {
+          AppPopUps.showDialogContent(
+              title: 'Alert',
+              description: 'No result found',
+              dialogType: DialogType.INFO);
+        }
+      }
+    }).catchError((error) {
+      isLoading.value = false;
+      AppPopUps.showDialogContent(
+          title: 'Error',
+          description: error.toString(),
+          dialogType: DialogType.ERROR);
+      return Future.value(null);
+    });
+  }
+
+  void loadSharedFolder({bool showAlert = false}) {
+    UserModel? user = UserDefaults.getUserSession();
+
+    Map<String, dynamic> body = {'page': pageToLoad.toString()};
+    isLoading.value = true;
+    var client = APIClient(isCache: false, baseUrl: ApiConstants.baseUrl);
+    client
+        .request(
+            route: APIRoute(
+              APIType.getSharedData,
+              body: body,
+            ),
+            create: () => APIResponse<MyDataModelResponseModel>(
+                create: () => MyDataModelResponseModel()),
+            apiFunction: loadSharedFolder)
+        .then((response) {
+      isLoading.value = false;
+      MyDataModelResponseModel? model = response.response?.data;
+
+      if ((model?.results?.length ?? 0) > 0) {
+        if ((model?.next ?? '').isNotEmpty) {
+          pageToLoad++;
+          hasNewPage = true;
+        } else {
+          hasNewPage = false;
+        }
+
+        sharedDataList.addAll(model?.results ?? []);
+        sharedFilteredItemList.addAll(sharedDataList);
+      } else {
+        if (showAlert) {
+          AppPopUps.showDialogContent(
+              title: 'Alert',
+              description: 'No result found',
+              dialogType: DialogType.INFO);
+        }
+      }
+    }).catchError((error) {
+      isLoading.value = false;
+      AppPopUps.showDialogContent(
+          title: 'Error',
+          description: error.toString(),
+          dialogType: DialogType.ERROR);
+      return Future.value(null);
+    });
+  }
+
+  void loadReceivedFolder({bool showAlert = false}) {
+    UserModel? user = UserDefaults.getUserSession();
+
+    Map<String, dynamic> body = {'page': pageToLoad.toString()};
+    isLoading.value = true;
+    var client = APIClient(isCache: false, baseUrl: ApiConstants.baseUrl);
+    client
+        .request(
+            route: APIRoute(
+              APIType.getSharedData,
+              body: body,
+            ),
+            create: () => APIResponse<MyDataModelResponseModel>(
+                create: () => MyDataModelResponseModel()),
+            apiFunction: loadReceivedFolder)
+        .then((response) {
+      isLoading.value = false;
+      MyDataModelResponseModel? model = response.response?.data;
+
+      if ((model?.results?.length ?? 0) > 0) {
+        if ((model?.next ?? '').isNotEmpty) {
+          pageToLoad++;
+          hasNewPage = true;
+        } else {
+          hasNewPage = false;
+        }
+
+        receivedDataList.addAll(model?.results ?? []);
+        receivedFilteredItemList.addAll(receivedDataList);
       } else {
         if (showAlert) {
           AppPopUps.showDialogContent(
