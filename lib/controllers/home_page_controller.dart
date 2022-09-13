@@ -232,7 +232,7 @@ class HomePageController extends GetxController {
             create: () => APIResponse<MyDataModelResponseModel>(
                 create: () => MyDataModelResponseModel()),
             apiFunction: loadReceivedFolder)
-        .then((response) {
+         .then((response) {
       isLoading.value = false;
       MyDataModelResponseModel? model = response.response?.data;
 

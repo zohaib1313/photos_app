@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:photos_app/common/common_widgets.dart';
 import 'package:photos_app/common/helpers.dart';
-import 'package:photos_app/common/user_defaults.dart';
 import 'package:photos_app/controllers/profile_page_controller.dart';
-import 'package:photos_app/dio_networking/app_apis.dart';
 
 import '../../../../common/loading_widget.dart';
 import '../../common/spaces_boxes.dart';
@@ -53,40 +50,10 @@ class ProfilePage extends GetView<ProfilePageController>
                             controller: controller.firstNameController),
                         vSpace,
                         getTextField(
-                            hintText: 'Last name',
-                            validate: true,
-                            enabled: controller.isUpdateModeOn.value,
-                            controller: controller.lastNameController),
-                        vSpace,
-                        getTextField(
                             hintText: 'Email',
                             enabled: controller.isUpdateModeOn.value,
                             controller: controller.emailController,
                             validate: true),
-                        vSpace,
-                        getTextField(
-                            hintText: 'City',
-                            enabled: controller.isUpdateModeOn.value,
-                            controller: controller.cityController,
-                            validate: true),
-                        vSpace,
-                        getTextField(
-                            hintText: 'Address',
-                            enabled: controller.isUpdateModeOn.value,
-                            controller: controller.addressController,
-                            validate: true),
-                        vSpace,
-                        getTextField(
-                            inputType: TextInputType.phone,
-                            hintText: 'Phone(xxx) xxxxxxx',
-                            enabled: controller.isUpdateModeOn.value,
-                            inputFormatters: [
-                              /*MaskTextInputFormatter(
-                                    mask: '+## (###) #######',
-                                    filter: {"#": RegExp(r'[0-9]')},
-                                    type: MaskAutoCompletionType.lazy)*/
-                            ],
-                            controller: controller.phoneController),
                         vSpace,
                       ],
                     ),
