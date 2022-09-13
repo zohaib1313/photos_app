@@ -6,6 +6,7 @@ import 'package:photos_app/common/helpers.dart';
 import 'package:photos_app/common/styles.dart';
 import 'package:photos_app/common/user_defaults.dart';
 import 'package:photos_app/controllers/home_page_controller.dart';
+import 'package:photos_app/models/my_data_model.dart';
 import 'package:photos_app/notifications/awsome_notification.dart';
 import 'package:photos_app/pages/home_page/history_page/history_page.dart';
 import 'package:photos_app/pages/home_page/notes/notes_page.dart';
@@ -47,9 +48,7 @@ class HomePage extends GetView<HomePageController> with HomePageViewsMixin {
             hSpace,
           ]),
       body: GetX<HomePageController>(
-        initState: (state) {
-          controller.loadPrivateFolder();
-        },
+        initState: (state) {},
         builder: (_) {
           return SafeArea(
             child: Padding(
@@ -83,12 +82,16 @@ class HomePage extends GetView<HomePageController> with HomePageViewsMixin {
                                   Expanded(
                                     child: getMainCards(
                                         onTap: () {
-                                          if (controller
-                                              .privateDataList.isNotEmpty) {
-                                            controller.openFolder(
-                                                item: controller
-                                                    .privateDataList.first!);
-                                          }
+                                          controller.loadPrivateFolder(
+                                              userId: UserDefaults
+                                                      .getCurrentUserId() ??
+                                                  '',
+                                              onComplete: (List<MyDataModel>
+                                                  myDataModelList) {
+                                                controller.openFolder(
+                                                    item:
+                                                        myDataModelList.first);
+                                              });
                                         },
                                         context: context,
                                         title: 'Private',

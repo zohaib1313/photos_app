@@ -2,7 +2,8 @@ import 'package:photos_app/dio_networking/decodable.dart';
 
 class MyDataModel implements Decodeable {
   int? id;
-  int? parentFk;
+
+/*  int? parentFk;*/
   int? userFk;
   String? name;
   String? docFile;
@@ -12,7 +13,7 @@ class MyDataModel implements Decodeable {
   MyDataModel(
       {this.id,
       this.name,
-      this.parentFk,
+      //this.parentFk,
       this.userFk,
       this.docFile,
       this.subFolder = const [],
@@ -21,7 +22,7 @@ class MyDataModel implements Decodeable {
   MyDataModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
-    parentFk = json['parent_fk'];
+    //parentFk = json['parent_fk'];
     userFk = json['user_fk'];
     docFile = json['doc_file'];
     if (json['sub_folder'] != null) {
@@ -37,7 +38,7 @@ class MyDataModel implements Decodeable {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['name'] = this.name;
-    data['parent_fk'] = this.parentFk;
+//    data['parent_fk'] = this.parentFk;
     data['user_fk'] = this.userFk;
     data['doc_file'] = this.docFile;
     if (this.subFolder != null) {
@@ -51,7 +52,7 @@ class MyDataModel implements Decodeable {
   decode(json) {
     id = json['id'];
     name = json['name'];
-    parentFk = json['parent_fk'];
+    //parentFk = json['parent_fk'];
     userFk = json['user_fk'];
     docFile = json['doc_file'];
     if (json['sub_folder'] != null) {
@@ -66,6 +67,6 @@ class MyDataModel implements Decodeable {
 
   @override
   String toString() {
-    return 'MyDataModel{id: $id, name: $name, parentFk: $parentFk, userFk: $userFk, docFile: $docFile, type: $type, subFolder: $subFolder}';
+    return 'MyDataModel{id: $id, name: $name, userFk: $userFk, docFile: $docFile, type: $type, subFolder: $subFolder}';
   }
 }

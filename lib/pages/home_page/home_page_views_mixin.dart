@@ -13,6 +13,7 @@ import 'package:photos_app/models/my_menu_item_model.dart';
 import '../../../../common/loading_widget.dart';
 import '../../common/spaces_boxes.dart';
 
+import '../../common/user_defaults.dart';
 import '../../models/my_menu_item_model.dart';
 
 mixin HomePageViewsMixin {
@@ -99,13 +100,13 @@ mixin HomePageViewsMixin {
                             color: AppColor.yellowColor,
                             size: 16),
                       ),
-                      if (item.type == 'folder')
-                        Text(
-                          '(${item.subFolder.length})',
-                          style: AppTextStyles.textStyleNormalBodyXSmall,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
+                      /*if (item.type == 'folder')*/
+                      Text(
+                        '(id=${item.id})',
+                        style: AppTextStyles.textStyleNormalBodyXSmall,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ],
                   ),
                 ),
@@ -150,10 +151,18 @@ mixin HomePageViewsMixin {
               trailingIcon: const Icon(Icons.open_in_new),
               onPressed: () {
                 item.type == 'folder'
-                    ? controller.openFolder(item: item)
+                    ? {
+                        controller.loadPrivateFolder(
+                            parentId: item.id.toString(),
+                            userId: UserDefaults.getCurrentUserId() ?? '',
+                            onComplete: (List<MyDataModel> myDataModelList) {
+                              controller.openFolder(
+                                  item: myDataModelList.first);
+                            })
+                      }
                     : controller.openFile(item: item);
               }),
-          if (item.type == 'folder')
+          /*  if (item.type == 'folder')
             FocusedMenuItem(
                 title: Text("Add New File",
                     style: AppTextStyles.textStyleBoldBodySmall),
@@ -170,7 +179,7 @@ mixin HomePageViewsMixin {
                 onPressed: () {
                   /// ///////////.............................adding new folder///////////.............................
                   //   controller.addNewFolder(item: item);
-                }),
+                }),*/
           FocusedMenuItem(
               title: Text("Share", style: AppTextStyles.textStyleBoldBodySmall),
               trailingIcon: const Icon(Icons.share),

@@ -79,15 +79,17 @@ class FolderViewPage extends GetView<HomePageController>
                     child: Padding(
                       padding: const EdgeInsets.all(20.0),
                       child: getFocusedMenu(
-                          item: controller.foldersStack.last,
-                          context: context,
-                          controller: controller,
-                          child: const CircleAvatar(
-                              radius: 26,
-                              child: Icon(
-                                Icons.add,
-                                size: 30,
-                              ))),
+                        item: controller.foldersStack.last,
+                        context: context,
+                        controller: controller,
+                        child: const CircleAvatar(
+                          radius: 26,
+                          child: Icon(
+                            Icons.add,
+                            size: 30,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 if (controller.isLoading.isTrue) LoadingWidget(),

@@ -28,15 +28,13 @@ import '../models/user_model.dart';
 
 class HomePageController extends GetxController {
   RxBool isLoading = false.obs;
+  UserModel? user = UserDefaults.getUserSession();
 
   TextEditingController searchController = TextEditingController();
   int pageToLoad = 1;
   bool hasNewPage = false;
 
   RxList<MyDataModel> foldersStack = <MyDataModel>[].obs;
-
-  RxList<MyDataModel?> privateDataList = <MyDataModel?>[].obs;
-  RxList<MyDataModel?> privateFilteredItemList = <MyDataModel?>[].obs;
 
   RxList<MyDataModel?> sharedDataList = <MyDataModel?>[].obs;
   RxList<MyDataModel?> sharedFilteredItemList = <MyDataModel?>[].obs;
@@ -103,13 +101,14 @@ class HomePageController extends GetxController {
   }
 
   openFolder({required MyDataModel item}) {
+    print("***********opening folder***********");
+    print(item.id);
     if (foldersStack.isEmpty) {
       foldersStack.add(item);
-      Get.to(const FolderViewPage(), preventDuplicates: false);
+      Get.to(() => const FolderViewPage(), preventDuplicates: false);
     } else {
       foldersStack.add(item);
     }
-    printWrapped(foldersStack.length.toString());
   }
 
   Future<bool> closeLastFolder() {
@@ -123,10 +122,17 @@ class HomePageController extends GetxController {
     }
   }
 
-  void loadPrivateFolder({bool showAlert = false}) {
-    UserModel? user = UserDefaults.getUserSession();
-
-    Map<String, dynamic> body = {'page': pageToLoad.toString()};
+  void loadPrivateFolder({
+    bool showAlert = false,
+    String parentId = '',
+    String userId = '',
+    required onComplete,
+  }) {
+    Map<String, dynamic> body = {
+      'page': pageToLoad.toString(),
+      'user_id': userId,
+      'parent_id': parentId,
+    };
     isLoading.value = true;
     var client = APIClient(isCache: false, baseUrl: ApiConstants.baseUrl);
     client
@@ -149,9 +155,16 @@ class HomePageController extends GetxController {
         } else {
           hasNewPage = false;
         }
+        List<MyDataModel> myDateModelList = model?.results ?? [];
 
-        privateDataList.addAll(model?.results ?? []);
-        privateFilteredItemList.addAll(privateDataList);
+        if (myDateModelList.isNotEmpty) {
+          onComplete(myDateModelList);
+        } else {
+          AppPopUps.showDialogContent(
+              title: 'Alert',
+              description: 'Folder is empty add new file or folder',
+              dialogType: DialogType.INFO);
+        }
       } else {
         if (showAlert) {
           AppPopUps.showDialogContent(
@@ -232,7 +245,7 @@ class HomePageController extends GetxController {
             create: () => APIResponse<MyDataModelResponseModel>(
                 create: () => MyDataModelResponseModel()),
             apiFunction: loadReceivedFolder)
-         .then((response) {
+        .then((response) {
       isLoading.value = false;
       MyDataModelResponseModel? model = response.response?.data;
 

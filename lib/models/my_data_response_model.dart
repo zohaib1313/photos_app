@@ -42,7 +42,7 @@ class MyDataModelResponseModel implements Decodeable {
     if (json['results'] != null) {
       results = <MyDataModel>[];
       json['results'].forEach((v) {
-        results!.add(MyDataModel.fromJson(v));
+        results!.add(new MyDataModel.fromJson(v));
       });
     }
     return this;
