@@ -14,6 +14,7 @@ import '../../../common/spaces_boxes.dart';
 import '../../../common/styles.dart';
 import '../../../controllers/reminder_controller.dart';
 import '../../../models/reminder_response_model.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 class ReminderPage extends GetView<ReminderController> {
   const ReminderPage({Key? key}) : super(key: key);
@@ -53,7 +54,7 @@ class ReminderPage extends GetView<ReminderController> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text("No Notes Found",
+                          Text("No Reminder Found",
                               style: AppTextStyles.textStyleBoldBodyMedium),
                           InkWell(
                             onTap: () {
@@ -83,9 +84,7 @@ class ReminderPage extends GetView<ReminderController> {
                           controller: controller.listViewController,
                           physics: const AlwaysScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
-                            ReminderModel? reminderItem =
-                                controller.filteredItemList.elementAt(index);
-                            return getReminderCard(item: reminderItem!);
+                            return getReminderCard(index: index);
                           },
                         ),
                       ),
@@ -98,50 +97,84 @@ class ReminderPage extends GetView<ReminderController> {
     );
   }
 
-  Widget getReminderCard({required ReminderModel item}) {
-    DateTime dt = DateTime.parse(item.reminderTime!);
+  Widget getReminderCard({required int index}) {
+    DateTime dt = DateTime.parse(
+        controller.filteredItemList.elementAt(index)!.reminderTime!);
     DateTime now = DateTime.now();
 
     bool isPast = DateTime(dt.year, dt.month, dt.day, dt.hour, dt.minute)
         .isBefore(DateTime(now.year, now.month, now.day, now.hour, now.minute));
 
-    return Card(
-      margin: const EdgeInsets.all(4),
-      color: isPast ? AppColor.alphaGrey : AppColor.yellowColor,
-      child: ListTile(
-        contentPadding: const EdgeInsets.all(4),
-        title: Text(formatDateTime(DateTime.tryParse(item.reminderTime!)),
-            style: AppTextStyles.textStyleBoldBodyXSmall),
-        leading: InkWell(
-            onTap: () {
-              ///edit reminder....
+    return Slidable(
+      endActionPane: ActionPane(
+        motion: const ScrollMotion(),
+        children: [
+          SlidableAction(
+            // An action can be bigger than the others.
+            flex: 2,
+            onPressed: (x) {
+              _showBottomSheet(index: index);
             },
-            child: const Icon(Icons.edit)),
-        subtitle: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(item.description ?? '-',
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
-                style: AppTextStyles.textStyleNormalBodySmall),
-          ],
-        ),
-        /*  trailing: InkWell(
-          onTap: () {},
-          child: const CircleAvatar(
-            radius: 14,
-            child: Icon(Icons.edit, color: AppColor.whiteColor, size: 14),
+            icon: Icons.update,
+            label: 'Update',
           ),
-        ),*/
+        ],
+      ),
+      startActionPane: ActionPane(
+        motion: const ScrollMotion(),
+        children: [
+          SlidableAction(
+            // An action can be bigger than the others.
+            flex: 2,
+            onPressed: (x) {
+              controller.deleteReminder(index: index);
+            },
+            icon: Icons.delete,
+            label: 'Delete',
+          ),
+        ],
+      ),
+      child: Card(
+        margin: const EdgeInsets.all(4),
+        color: isPast ? AppColor.alphaGrey : AppColor.greenColor,
+        child: ListTile(
+          contentPadding: const EdgeInsets.all(4),
+          title: Text(
+              controller.filteredItemList.elementAt(index)?.description ?? '-',
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
+              style: AppTextStyles.textStyleNormalBodySmall.copyWith(
+                  color: !isPast ? AppColor.whiteColor : AppColor.blackColor)),
+          subtitle: Text(
+              formatDateTime(DateTime.tryParse(
+                  controller.filteredItemList.elementAt(index)?.reminderTime ??
+                      '')),
+              style: AppTextStyles.textStyleNormalBodySmall.copyWith(
+                  color: !isPast ? AppColor.whiteColor : AppColor.blackColor)),
+
+          /*  leading: const Icon(
+            Icons.arrow_back_ios,
+            size: 14,
+          ),
+          trailing: const Icon(
+            Icons.arrow_forward_ios,
+            size: 14,
+          ),*/
+        ),
       ),
     );
   }
 
-  void _showBottomSheet() {
-    controller.pickedDateTime.value = null;
-
-    controller.reminderAddMessageTextController.clear();
+  void _showBottomSheet({int? index}) {
+    if (index == null) {
+      controller.pickedDateTime.value = DateTime.now();
+      controller.reminderAddMessageTextController.clear();
+    } else {
+      controller.pickedDateTime.value = DateTime.tryParse(
+          controller.filteredItemList.elementAt(index)?.reminderTime ?? '');
+      controller.reminderAddMessageTextController.text =
+          controller.filteredItemList.elementAt(index)?.description ?? '';
+    }
     AppBottomSheets.showAppAlertBottomSheet(
         isFull: true,
         isDismissable: false,
@@ -193,12 +226,16 @@ class ReminderPage extends GetView<ReminderController> {
             ),
             vSpace,
             Button(
-              buttonText: 'Add Reminder',
+              buttonText: index != null ? 'Update' : 'Add Reminder',
               onTap: () {
                 if ((controller
                         .reminderAddMessageTextController.text.isNotEmpty) &&
                     (controller.pickedDateTime.value != null)) {
-                  controller.addReminder();
+                  if (index != null) {
+                    controller.updateReminder(index: index);
+                  } else {
+                    controller.addReminder();
+                  }
                 } else {
                   AppPopUps.showDialogContent(
                       title: 'Alert', description: 'Enter all fields');

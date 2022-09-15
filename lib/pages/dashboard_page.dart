@@ -16,12 +16,13 @@ class DashboardPage extends GetView<DashBoardController> {
     return WillPopScope(
       onWillPop: () async {
         return await AppPopUps.showConfirmDialog(
-          title: 'Confirm',
-          message: 'Are you sure to exit from the app',
-          onSubmit: () {
-            Navigator.pop(context, true);
-          },
-        );
+              title: 'Confirm',
+              message: 'Are you sure to exit from the app',
+              onSubmit: () {
+                Navigator.pop(context, true);
+              },
+            ) ??
+            false;
       },
       child: Scaffold(
         resizeToAvoidBottomInset: false,

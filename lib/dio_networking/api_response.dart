@@ -24,7 +24,7 @@ class ResponseWrapper<T> extends GenericObject<T> {
   factory ResponseWrapper.init(
       {Create<Decodeable>? create, Map<String, dynamic>? json}) {
     final wrapper = ResponseWrapper<T>(create: create);
-    printWrapped(wrapper.response.toString());
+
     wrapper.response = wrapper.genericObject(json);
     if (wrapper.response is APIResponse) {
       var finalResponse = wrapper.response as APIResponse;
@@ -91,7 +91,8 @@ class ErrorResponse implements Exception {
   ErrorResponse({this.message});
 
   factory ErrorResponse.fromJson(Map<String, dynamic> json) {
-    return ErrorResponse(message: json['message'] ?? 'Something went wrong');
+    return ErrorResponse(
+        message: json['message'] ?? json['detail'] ?? 'Something went wrong');
   }
 
   @override

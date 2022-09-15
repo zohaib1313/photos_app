@@ -73,8 +73,9 @@ class APIClient implements BaseAPIClient {
 
       if ((error as DioError).type == DioErrorType.connectTimeout) {
         throw 'No Internet Connection';
+      } else {
+        throw 'Something went wrong';
       }
-      throw 'Something went wrong';
     });
 
     final responseData = response?.data;
@@ -83,21 +84,18 @@ class APIClient implements BaseAPIClient {
 
     switch (statusCode) {
       case 422:
-        final errorResponse = ErrorResponse.fromJson(responseData);
-        throw errorResponse;
+        throw ErrorResponse.fromJson(responseData);
 
       case 200:
         var finalResponse =
             ResponseWrapper.init(create: create, json: responseData);
         if (finalResponse.error != null) {
-          final errorResponse = finalResponse.error!;
-          throw errorResponse;
+          throw finalResponse.error!;
         } else {
           return ResponseWrapper.init(create: create, json: responseData);
         }
       default:
-        final errorResponse = ErrorResponse.fromJson(responseData);
-        throw errorResponse;
+        throw ErrorResponse.fromJson(responseData);
     }
   }
 }

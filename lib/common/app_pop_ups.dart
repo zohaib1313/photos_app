@@ -9,7 +9,7 @@ import '../my_application.dart';
 class AppPopUps {
   static bool isDialogShowing = true;
 
-  static Future<bool> showConfirmDialog({
+  static Future<bool?> showConfirmDialog({
     onSubmit,
     required String title,
     required String message,

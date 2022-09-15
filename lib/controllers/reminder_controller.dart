@@ -25,8 +25,6 @@ class ReminderController extends GetxController {
   TextEditingController reminderAddMessageTextController =
       TextEditingController();
 
-//  var pickedDateTime = Rxn<DateTime>().obs;
-
   Rx<DateTime?> pickedDateTime = RxNullable<DateTime?>().setNull();
 
   int pageToLoad = 1;
@@ -83,9 +81,10 @@ class ReminderController extends GetxController {
   }
 
   void getReminders({bool showAlert = false}) {
-    UserModel? user = UserDefaults.getUserSession();
-
-    Map<String, dynamic> body = {'page': pageToLoad.toString()};
+    Map<String, dynamic> body = {
+      'page': pageToLoad.toString(),
+      "user_id": UserDefaults.getCurrentUserId(),
+    };
     isLoading.value = true;
     var client = APIClient(isCache: false, baseUrl: ApiConstants.baseUrl);
     client
@@ -159,7 +158,7 @@ class ReminderController extends GetxController {
       } else {
         AppPopUps.showDialogContent(
             title: 'Error',
-            description: 'Failed to signup',
+            description: 'Failed to add reminder',
             dialogType: DialogType.ERROR);
       }
     }).catchError((error) {
@@ -171,5 +170,98 @@ class ReminderController extends GetxController {
           dialogType: DialogType.ERROR);
       return Future.value(null);
     });
+  }
+
+  void updateReminder({required int index}) {
+    FocusManager.instance.primaryFocus?.unfocus();
+    isLoading.value = true;
+
+    ///to close bottomsheet
+    Get.back();
+    Map<String, dynamic> data = {
+      "id": filteredItemList.elementAt(index)!.id,
+      "description": reminderAddMessageTextController.text.trim(),
+      "reminder_time": pickedDateTime.value?.toIso8601String().toString(),
+    };
+    var client = APIClient(isCache: false, baseUrl: ApiConstants.baseUrl);
+    client
+        .request(
+            needToAuthenticate: true,
+            route: APIRoute(
+              APIType.updateReminder,
+              body: data,
+            ),
+            create: () =>
+                APIResponse<ReminderModel>(create: () => ReminderModel()),
+            apiFunction: updateReminder)
+        .then((response) async {
+      isLoading.value = false;
+      ReminderModel? model = response.response?.data;
+      if (model != null) {
+        reminderList[index] = model;
+        filteredItemList[index] = model;
+      } else {
+        AppPopUps.showDialogContent(
+            title: 'Error',
+            description: 'Failed to update reminder',
+            dialogType: DialogType.ERROR);
+      }
+    }).catchError((error) {
+      print(error);
+      isLoading.value = false;
+      AppPopUps.showDialogContent(
+          title: 'Error',
+          description: error.toString(),
+          dialogType: DialogType.ERROR);
+      return Future.value(null);
+    });
+  }
+
+  void deleteReminder({required int index}) {
+    AppPopUps.showConfirmDialog(
+        title: 'Alert',
+        message: 'Are you sure delete this reminder',
+        onSubmit: () {
+          ///delete with api and also reminder alarm scheduled
+
+          isLoading.value = true;
+
+          ///to close bottomsheet
+          Get.back();
+          Map<String, dynamic> data = {
+            "id": filteredItemList.elementAt(index)?.id
+          };
+          APIClient(isCache: false, baseUrl: ApiConstants.baseUrl)
+              .request(
+                  needToAuthenticate: true,
+                  route: APIRoute(
+                    APIType.deleteReminder,
+                    body: data,
+                  ),
+                  create: () => APIResponse(decoding: false),
+                  apiFunction: deleteReminder)
+              .then((response) async {
+            isLoading.value = false;
+
+            if (response.response?.success ?? false) {
+              AppPopUps.showSnackBar(
+                  message: 'Reminder deleted', context: myContext!);
+              reminderList.removeAt(index);
+              filteredItemList.removeAt(index);
+            } else {
+              AppPopUps.showDialogContent(
+                  title: 'Error',
+                  description: 'Failed to delete',
+                  dialogType: DialogType.ERROR);
+            }
+          }).catchError((error) {
+            isLoading.value = false;
+            AppPopUps.showDialogContent(
+                title: 'Error',
+                description: error.toString(),
+                dialogType: DialogType.ERROR);
+            return Future.value(null);
+          });
+        });
   }
 }

@@ -19,8 +19,10 @@ class MyLogInterceptor extends InterceptorsWrapper {
 
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) {
-    printWrapped(
-        '\n\n\nRESPONSE: ${response.statusCode} \n Response Data: ${response.data}');
+    printWrapped("Response Code");
+    print(response.statusCode);
+    printWrapped("\nResponse Data");
+    print(response.data);
     return super.onResponse(response, handler);
   }
 }

@@ -46,10 +46,17 @@ class APIRoute implements APIRouteConfigurable {
         );
       case APIType.updateReminder:
         return RequestOptions(
-          path: "${ApiConstants.registerUser}/${body['id']}",
+          path: "${ApiConstants.reminder}/${body['id']}/",
           headers: headers,
           data: body,
           method: APIMethod.put,
+        );
+      case APIType.deleteReminder:
+        return RequestOptions(
+          path: "${ApiConstants.reminder}/${body['id']}/",
+          headers: headers,
+          data: body,
+          method: APIMethod.delete,
         );
 
       case APIType.getNotes:

@@ -4,6 +4,7 @@ enum APIType {
   getReminders,
   createReminder,
   updateReminder,
+  deleteReminder,
   getNotes,
   createNotes,
   updateNotes,
