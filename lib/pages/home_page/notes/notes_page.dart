@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:photos_app/common/app_alert_bottom_sheet.dart';
@@ -8,6 +9,7 @@ import 'package:photos_app/models/notes_response_model.dart';
 import 'package:photos_app/my_application.dart';
 
 import '../../../../common/loading_widget.dart';
+import '../../../common/app_utils.dart';
 import '../../../common/helpers.dart';
 import '../../../common/my_search_bar.dart';
 import '../../../common/spaces_boxes.dart';
@@ -56,6 +58,8 @@ class NotesPage extends GetView<NotesController> {
                               style: AppTextStyles.textStyleBoldBodyMedium),
                           InkWell(
                             onTap: () {
+                              controller.notesList.clear();
+                              controller.filteredItemList.clear();
                               controller.getNotes(showAlert: true);
                             },
                             child: Text(
@@ -70,20 +74,17 @@ class NotesPage extends GetView<NotesController> {
                       ))
                     : RefreshIndicator(
                         onRefresh: () {
-                          print('on refresh');
                           controller.notesList.clear();
                           controller.filteredItemList.clear();
                           controller.getNotes(showAlert: true);
-                          return Future.delayed(const Duration(seconds: 1));
+                          return Future.delayed(const Duration(seconds: 2));
                         },
                         child: ListView.builder(
                           itemCount: controller.filteredItemList.length,
                           controller: controller.listViewController,
                           physics: const AlwaysScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
-                            NotesModel? model =
-                                controller.filteredItemList.elementAt(index);
-                            return getNotesCard(item: model!);
+                            return getNotesList(index: index);
                           },
                         ),
                       ),
@@ -96,39 +97,81 @@ class NotesPage extends GetView<NotesController> {
     );
   }
 
-  Widget getNotesCard({required NotesModel item}) {
-    return Card(
-      margin: const EdgeInsets.all(4),
-      child: ListTile(
-        contentPadding: const EdgeInsets.all(4),
-        title: Text(item.name ?? '-',
-            style: AppTextStyles.textStyleBoldBodyXSmall),
-        leading: InkWell(
-            onTap: () {
-              ///edit reminder....
+  Widget getNotesList({required int index}) {
+    return Slidable(
+      endActionPane: ActionPane(
+        motion: const ScrollMotion(),
+        children: [
+          SlidableAction(
+            // An action can be bigger than the others.
+            flex: 2,
+            onPressed: (x) {
+              _showBottomSheet(index: index);
             },
-            child: const Icon(Icons.edit)),
-        subtitle: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(item.content ?? '-',
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
-                style: AppTextStyles.textStyleNormalBodySmall),
-          ],
-        ),
-        trailing: Text(
-          formatDateTime(DateTime.tryParse(item.createdAt ?? '')),
-          style: AppTextStyles.textStyleNormalBodyXSmall,
-          maxLines: 1,
+            icon: Icons.update,
+            label: 'Update',
+          ),
+        ],
+      ),
+      startActionPane: ActionPane(
+        motion: const ScrollMotion(),
+        children: [
+          SlidableAction(
+            // An action can be bigger than the others.
+            flex: 2,
+            onPressed: (x) {
+              controller.deleteReminder(index: index);
+            },
+            icon: Icons.delete,
+            label: 'Delete',
+          ),
+        ],
+      ),
+      child: Card(
+        margin: const EdgeInsets.all(4),
+        color: AppColor.alphaGrey,
+        child: ListTile(
+          contentPadding: const EdgeInsets.all(4),
+          title: Text(controller.filteredItemList.elementAt(index)?.name ?? '-',
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
+              style: AppTextStyles.textStyleNormalBodySmall
+                  .copyWith(color: AppColor.blackColor)),
+          subtitle: Text(
+              controller.filteredItemList.elementAt(index)?.content ?? '-',
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
+              style: AppTextStyles.textStyleNormalBodySmall
+                  .copyWith(color: AppColor.blackColor)),
+          trailing: Text(
+              formatDateTime(DateTime.tryParse(
+                  controller.filteredItemList.elementAt(index)?.content ?? '')),
+              style: AppTextStyles.textStyleNormalBodySmall
+                  .copyWith(color: AppColor.blackColor)),
+
+          /*  leading: const Icon(
+            Icons.arrow_back_ios,
+            size: 14,
+          ),
+          trailing: const Icon(
+            Icons.arrow_forward_ios,
+            size: 14,
+          ),*/
         ),
       ),
     );
   }
 
-  void _showBottomSheet() {
-    controller.notesContentController.clear();
+  void _showBottomSheet({int? index}) {
+    if (index == null) {
+      controller.notesTitleController.clear();
+      controller.notesDescriptionController.clear();
+    } else {
+      controller.notesTitleController.text =
+          controller.filteredItemList.elementAt(index)?.name ?? '';
+      controller.notesDescriptionController.text =
+          controller.filteredItemList.elementAt(index)?.content ?? '';
+    }
     AppBottomSheets.showAppAlertBottomSheet(
         isFull: true,
         isDismissable: false,
@@ -138,30 +181,34 @@ class NotesPage extends GetView<NotesController> {
           children: [
             vSpace,
             MyTextField(
-              hintText: 'Name',
+              hintText: 'Add title...',
               leftPadding: 0,
               rightPadding: 0,
-              controller: controller.notesNameController,
+              controller: controller.notesTitleController,
             ),
             vSpace,
             MyTextField(
-              hintText: 'Add your content here...',
+              hintText: 'Add Content...',
               leftPadding: 0,
               rightPadding: 0,
               minLines: 4,
               maxLines: 7,
-              controller: controller.notesContentController,
+              controller: controller.notesDescriptionController,
             ),
             vSpace,
             Button(
-              buttonText: 'Add Note',
+              buttonText: index != null ? 'Update' : 'Add Note',
               onTap: () {
-                if ((controller.notesContentController.text.isNotEmpty) &&
-                    (controller.notesNameController.text.isNotEmpty)) {
-                  controller.addNotes();
+                if ((controller.notesTitleController.text.isNotEmpty) &&
+                    (controller.notesDescriptionController.text.isNotEmpty)) {
+                  if (index != null) {
+                    controller.updateNotes(index: index);
+                  } else {
+                    controller.AddNotes();
+                  }
                 } else {
-                  AppPopUps.showDialogContent(
-                      title: 'Alert', description: 'Enter all fields');
+                  AppPopUps.showSnackBar(
+                      context: myContext!, message: 'Enter all fields');
                 }
               },
             )

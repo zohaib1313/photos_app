@@ -1,13 +1,17 @@
 enum APIType {
   loginUser,
   registerUser,
+
   getReminders,
   createReminder,
   updateReminder,
   deleteReminder,
+
   getNotes,
   createNotes,
   updateNotes,
+  deleteNotes,
+
   postMyData,
   getMyData,
 }

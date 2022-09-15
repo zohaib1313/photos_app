@@ -23,8 +23,8 @@ class NotesController extends GetxController {
   RxList<NotesModel?> filteredItemList = <NotesModel?>[].obs;
 
   TextEditingController searchController = TextEditingController();
-  TextEditingController notesContentController = TextEditingController();
-  TextEditingController notesNameController = TextEditingController();
+  TextEditingController notesTitleController = TextEditingController();
+  TextEditingController notesDescriptionController = TextEditingController();
 
   int pageToLoad = 1;
   bool hasNewPage = false;
@@ -63,26 +63,11 @@ class NotesController extends GetxController {
     printWrapped(filteredItemList.length.toString());
   }
 
-  bool onScrollNotification(ScrollNotification notification) {
-    if (notification is ScrollEndNotification) {
-      final before = notification.metrics.extentBefore;
-      final max = notification.metrics.maxScrollExtent;
-
-      if (before == max) {
-        printWrapped("end of the page");
-        if (hasNewPage) {
-          getNotes();
-        } // load next page
-        // code here will be called only if scrolled to the very bottom
-      }
-    }
-    return false;
-  }
-
   void getNotes({bool showAlert = false}) {
-    UserModel? user = UserDefaults.getUserSession();
-
-    Map<String, dynamic> body = {'page': pageToLoad.toString()};
+    Map<String, dynamic> body = {
+      'page': pageToLoad.toString(),
+      "user_id": UserDefaults.getCurrentUserId(),
+    };
     isLoading.value = true;
     var client = APIClient(isCache: false, baseUrl: ApiConstants.baseUrl);
     client
@@ -125,15 +110,15 @@ class NotesController extends GetxController {
     });
   }
 
-  void addNotes() {
+  void AddNotes() {
     FocusManager.instance.primaryFocus?.unfocus();
     isLoading.value = true;
 
     ///to close bottomsheet
     Get.back();
     Map<String, dynamic> data = {
-      "content": notesContentController.text.trim(),
-      "name": notesNameController.text.trim(),
+      "name": notesTitleController.text.trim(),
+      "content": notesDescriptionController.text.trim(),
       "user_fk": UserDefaults.getCurrentUserId(),
     };
     var client = APIClient(isCache: false, baseUrl: ApiConstants.baseUrl);
@@ -145,7 +130,7 @@ class NotesController extends GetxController {
               body: data,
             ),
             create: () => APIResponse<NotesModel>(create: () => NotesModel()),
-            apiFunction: addNotes)
+            apiFunction: AddNotes)
         .then((response) async {
       isLoading.value = false;
       NotesModel? model = response.response?.data;
@@ -155,7 +140,7 @@ class NotesController extends GetxController {
       } else {
         AppPopUps.showDialogContent(
             title: 'Error',
-            description: 'Failed to signup',
+            description: 'Failed to add notes',
             dialogType: DialogType.ERROR);
       }
     }).catchError((error) {
@@ -167,5 +152,97 @@ class NotesController extends GetxController {
           dialogType: DialogType.ERROR);
       return Future.value(null);
     });
+  }
+
+  void updateNotes({required int index}) {
+    FocusManager.instance.primaryFocus?.unfocus();
+    isLoading.value = true;
+
+    ///to close bottomsheet
+    Get.back();
+    Map<String, dynamic> data = {
+      "id": filteredItemList.elementAt(index)!.id,
+      "name": notesTitleController.text.trim(),
+      "content": notesDescriptionController.text.trim(),
+    };
+    var client = APIClient(isCache: false, baseUrl: ApiConstants.baseUrl);
+    client
+        .request(
+            needToAuthenticate: true,
+            route: APIRoute(
+              APIType.updateNotes,
+              body: data,
+            ),
+            create: () => APIResponse<NotesModel>(create: () => NotesModel()),
+            apiFunction: updateNotes)
+        .then((response) async {
+      isLoading.value = false;
+      NotesModel? model = response.response?.data;
+      if (model != null) {
+        notesList[index] = model;
+        filteredItemList[index] = model;
+      } else {
+        AppPopUps.showDialogContent(
+            title: 'Error',
+            description: 'Failed to update notes',
+            dialogType: DialogType.ERROR);
+      }
+    }).catchError((error) {
+      print(error);
+      isLoading.value = false;
+      AppPopUps.showDialogContent(
+          title: 'Error',
+          description: error.toString(),
+          dialogType: DialogType.ERROR);
+      return Future.value(null);
+    });
+  }
+
+  void deleteReminder({required int index}) {
+    AppPopUps.showConfirmDialog(
+        title: 'Alert',
+        message: 'Are you sure delete this reminder',
+        onSubmit: () {
+          ///delete with api and also reminder alarm scheduled
+
+          isLoading.value = true;
+
+          ///to close bottomsheet
+          Get.back();
+          Map<String, dynamic> data = {
+            "id": filteredItemList.elementAt(index)?.id
+          };
+          APIClient(isCache: false, baseUrl: ApiConstants.baseUrl)
+              .request(
+                  needToAuthenticate: true,
+                  route: APIRoute(
+                    APIType.deleteReminder,
+                    body: data,
+                  ),
+                  create: () => APIResponse(decoding: false),
+                  apiFunction: deleteReminder)
+              .then((response) async {
+            isLoading.value = false;
+
+            if (response.response?.success ?? false) {
+              AppPopUps.showSnackBar(
+                  message: 'Note deleted', context: myContext!);
+              notesList.removeAt(index);
+              filteredItemList.removeAt(index);
+            } else {
+              AppPopUps.showDialogContent(
+                  title: 'Error',
+                  description: 'Failed to delete',
+                  dialogType: DialogType.ERROR);
+            }
+          }).catchError((error) {
+            isLoading.value = false;
+            AppPopUps.showDialogContent(
+                title: 'Error',
+                description: error.toString(),
+                dialogType: DialogType.ERROR);
+            return Future.value(null);
+          });
+        });
   }
 }

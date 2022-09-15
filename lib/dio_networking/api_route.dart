@@ -75,10 +75,17 @@ class APIRoute implements APIRouteConfigurable {
         );
       case APIType.updateNotes:
         return RequestOptions(
-          path: "${ApiConstants.notes}/${body['id']}",
+          path: "${ApiConstants.notes}/${body['id']}/",
           headers: headers,
           data: body,
           method: APIMethod.put,
+        );
+      case APIType.deleteNotes:
+        return RequestOptions(
+          path: "${ApiConstants.notes}/${body['id']}/",
+          headers: headers,
+          data: body,
+          method: APIMethod.delete,
         );
       case APIType.getMyData:
         return RequestOptions(

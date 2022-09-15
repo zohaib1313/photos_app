@@ -237,8 +237,8 @@ class ReminderPage extends GetView<ReminderController> {
                     controller.addReminder();
                   }
                 } else {
-                  AppPopUps.showDialogContent(
-                      title: 'Alert', description: 'Enter all fields');
+                  AppPopUps.showSnackBar(
+                      context: myContext!, message: 'Enter all fields');
                 }
               },
             )
