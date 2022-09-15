@@ -153,11 +153,14 @@ mixin HomePageViewsMixin {
                 item.type == 'folder'
                     ? {
                         controller.loadPrivateFolder(
-                            parentId: item.id.toString(),
-                            userId: UserDefaults.getCurrentUserId() ?? '',
-                            onComplete: (List<MyDataModel> myDataModelList) {
-                              controller.openFolder(
-                                  item: myDataModelList.first);
+                            model: item,
+                            subListItem: (List<MyDataModel>? myDataModelList) {
+                              item.subFolder.clear();
+                              if (myDataModelList != null) {
+                                item.subFolder.addAll(myDataModelList);
+                              }
+
+                              controller.openFolder(item: item);
                             })
                       }
                     : controller.openFile(item: item);
@@ -193,6 +196,46 @@ mixin HomePageViewsMixin {
                 color: Colors.redAccent,
               ),
               onPressed: () {}),
+        ],
+        onPressed: () {},
+        child: child);
+  }
+
+  Widget getFocusedMenuForCreateFolderFile(
+      {required MyDataModel item,
+      required BuildContext context,
+      required HomePageController controller,
+      required Widget child}) {
+    return FocusedMenuHolder(
+        menuWidth: MediaQuery.of(context).size.width * 0.50,
+        blurSize: 5.0,
+        menuItemExtent: 45,
+        menuBoxDecoration: const BoxDecoration(
+            color: Colors.grey,
+            borderRadius: BorderRadius.all(Radius.circular(15.0))),
+        duration: const Duration(milliseconds: 100),
+        animateMenuItems: true,
+        blurBackgroundColor: Colors.black54,
+        openWithTap: true,
+        // Open Focused-Menu on Tap rather than Long Press
+        menuOffset: 10.0,
+        // Offset value to show menuItem from the selected item
+        bottomOffsetHeight: 80.0,
+        // Offset height to consider, for showing the menu item ( for example bottom navigation bar), so that the popup menu will be shown on top of selected item.
+        menuItems: <FocusedMenuItem>[
+          FocusedMenuItem(
+              title: Text("File", style: AppTextStyles.textStyleBoldBodySmall),
+              trailingIcon: const Icon(Icons.file_copy),
+              onPressed: () {
+                controller.addNewFile(item: item, context: context);
+              }),
+          FocusedMenuItem(
+              title:
+                  Text("Folder", style: AppTextStyles.textStyleBoldBodySmall),
+              trailingIcon: const Icon(Icons.folder),
+              onPressed: () {
+                controller.addNewFolder(item: item);
+              }),
         ],
         onPressed: () {},
         child: child);

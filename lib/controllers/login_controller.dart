@@ -33,7 +33,7 @@ class LoginController extends GetxController {
       required String password}) async {
     isLoading.value = true;
 
-    Map<String, dynamic> body = {"username": email, "password": password};
+    Map<String, dynamic> body = {"email": email, "password": password};
 
     var client = APIClient(isCache: false, baseUrl: ApiConstants.baseUrl);
     client

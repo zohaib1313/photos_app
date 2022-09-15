@@ -3,7 +3,8 @@ import 'package:photos_app/dio_networking/decodable.dart';
 class MyDataModel implements Decodeable {
   int? id;
 
-/*  int? parentFk;*/
+  int? parentFkId;
+
   int? userFk;
   String? name;
   String? docFile;
@@ -13,7 +14,7 @@ class MyDataModel implements Decodeable {
   MyDataModel(
       {this.id,
       this.name,
-      //this.parentFk,
+      this.parentFkId,
       this.userFk,
       this.docFile,
       this.subFolder = const [],
@@ -22,13 +23,19 @@ class MyDataModel implements Decodeable {
   MyDataModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
-    //parentFk = json['parent_fk'];
+    if (json['parent_fk'] != null) {
+      if (json['parent_fk'].runtimeType == int) {
+        parentFkId = json['parent_fk'];
+      } else {
+        parentFkId = json['parent_fk']['id'];
+      }
+    }
     userFk = json['user_fk'];
     docFile = json['doc_file'];
     if (json['sub_folder'] != null) {
       subFolder = <MyDataModel>[];
       json['sub_folder'].forEach((v) {
-        subFolder!.add(new MyDataModel.fromJson(v));
+        subFolder.add(new MyDataModel.fromJson(v));
       });
     }
     type = json['type'];
@@ -38,7 +45,7 @@ class MyDataModel implements Decodeable {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['name'] = this.name;
-//    data['parent_fk'] = this.parentFk;
+    data['parent_fk'] = this.parentFkId;
     data['user_fk'] = this.userFk;
     data['doc_file'] = this.docFile;
     if (this.subFolder != null) {
@@ -52,7 +59,13 @@ class MyDataModel implements Decodeable {
   decode(json) {
     id = json['id'];
     name = json['name'];
-    //parentFk = json['parent_fk'];
+    if (json['parent_fk'] != null) {
+      if (json['parent_fk'].runtimeType == int) {
+        parentFkId = json['parent_fk'];
+      } else {
+        parentFkId = json['parent_fk']['id'];
+      }
+    }
     userFk = json['user_fk'];
     docFile = json['doc_file'];
     if (json['sub_folder'] != null) {

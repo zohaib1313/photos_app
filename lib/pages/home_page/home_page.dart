@@ -83,14 +83,19 @@ class HomePage extends GetView<HomePageController> with HomePageViewsMixin {
                                     child: getMainCards(
                                         onTap: () {
                                           controller.loadPrivateFolder(
-                                              userId: UserDefaults
-                                                      .getCurrentUserId() ??
-                                                  '',
-                                              onComplete: (List<MyDataModel>
-                                                  myDataModelList) {
-                                                controller.openFolder(
-                                                    item:
-                                                        myDataModelList.first);
+                                              model: MyDataModel(
+                                                userFk: int.tryParse(
+                                                  UserDefaults
+                                                          .getCurrentUserId() ??
+                                                      '',
+                                                ),
+                                              ),
+                                              subListItem: (List<MyDataModel>?
+                                                  dataModel) {
+                                                if (dataModel != null) {
+                                                  controller.openFolder(
+                                                      item: dataModel.first);
+                                                }
                                               });
                                         },
                                         context: context,

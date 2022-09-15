@@ -78,7 +78,7 @@ class FolderViewPage extends GetView<HomePageController>
                     alignment: Alignment.bottomRight,
                     child: Padding(
                       padding: const EdgeInsets.all(20.0),
-                      child: getFocusedMenu(
+                      child: getFocusedMenuForCreateFolderFile(
                         item: controller.foldersStack.last,
                         context: context,
                         controller: controller,

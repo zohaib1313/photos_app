@@ -7,10 +7,8 @@ enum APIType {
   getNotes,
   createNotes,
   updateNotes,
-  getMyData,
-  getSharedData,
-  getReceivedData,
   postMyData,
+  getMyData,
 }
 
 class ApiConstants {
@@ -22,7 +20,6 @@ class ApiConstants {
   static const registerUser = 'users/user/';
   static const reminder = '/users/reminder/';
   static const notes = '/users/notes/';
-  static const getPrivateData = '/users/my-data/';
-  static const getSharedData = '/users/shared-data/';
-  static const getReceivedData = getPrivateData;
+  static const myData = '/users/my-data/';
+  static const sharedData = '/users/shared-data/';
 }

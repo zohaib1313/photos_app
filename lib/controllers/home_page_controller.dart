@@ -1,83 +1,106 @@
 import 'dart:io';
-import 'dart:math';
 
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:path/path.dart';
 import 'package:photos_app/common/app_pop_ups.dart';
 import 'package:photos_app/common/app_utils.dart';
 import 'package:photos_app/common/constants.dart';
 import 'package:photos_app/models/my_data_model.dart';
-import 'package:photos_app/models/my_menu_item_model.dart';
-import 'package:photos_app/models/my_data_response_model.dart';
 import 'package:photos_app/my_application.dart';
 import 'package:photos_app/pages/home_page/folder_view_page.dart';
-import 'package:uuid/uuid.dart';
 
-import '../common/helpers.dart';
 import '../common/user_defaults.dart';
-import '../dio_networking/api_client.dart';
-import '../dio_networking/api_response.dart';
-import '../dio_networking/api_route.dart';
-import '../dio_networking/app_apis.dart';
-import '../models/my_menu_item_model.dart';
 import '../models/user_model.dart';
+import 'network_repo_controller_mixin.dart';
 
-class HomePageController extends GetxController {
-  RxBool isLoading = false.obs;
+class HomePageController extends GetxController
+    with NetworkContentControllerMixin {
   UserModel? user = UserDefaults.getUserSession();
 
   TextEditingController searchController = TextEditingController();
-  int pageToLoad = 1;
-  bool hasNewPage = false;
 
   RxList<MyDataModel> foldersStack = <MyDataModel>[].obs;
 
-  RxList<MyDataModel?> sharedDataList = <MyDataModel?>[].obs;
-  RxList<MyDataModel?> sharedFilteredItemList = <MyDataModel?>[].obs;
-
-  RxList<MyDataModel?> receivedDataList = <MyDataModel?>[].obs;
-  RxList<MyDataModel?> receivedFilteredItemList = <MyDataModel?>[].obs;
-
-  void addNewFolder({required MyMenuItem item}) async {
+  void addNewFolder({required MyDataModel item}) async {
+    print("adding new folder on ${item.toString()}");
     await AppPopUps.showOneInputDialog(
         title: 'Enter Folder Name',
-        description: 'enter folder name to create',
-        onSubmit: (value) {
-          isLoading.value = true;
-          final folderId = const Uuid().v4();
-          item.subItemList.add(MyMenuItem(
-              id: folderId,
-              name: value,
-              path: "${item.path}/$value",
-              isFolder: true,
-              subItemList: []));
-          isLoading.value = false;
+        description: 'Enter folder name to create',
+        onSubmit: (folderName) {
+          addNewFolderFile(
+              name: folderName,
+              parentId: item.id.toString(),
+              userId: UserDefaults.getCurrentUserId().toString(),
+              onSuccess: () {
+                loadPrivateFolder(
+                    model: item,
+                    subListItem: (List<MyDataModel>? dataList) {
+                      ///list of current folder
+                      if (dataList != null) {
+                        item.subFolder.clear();
+                        item.subFolder.addAll(dataList);
+                        refreshCurrentViewList(item);
+                      }
+                    });
+              });
         });
   }
 
-  void addNewFile({required MyDataModel item}) async {
+  void addNewFile(
+      {required MyDataModel item, required BuildContext context}) async {
     try {
+      AppUtils.showPicker(
+          context: context,
+          onComplete: (File? file) {
+            if (file != null) {
+              isLoading.value = true;
+
+              addNewFolderFile(
+                  name: basename(file.path),
+                  parentId: item.id.toString(),
+                  filePath: file.path.toString(),
+                  userId: UserDefaults.getCurrentUserId().toString(),
+                  onSuccess: () {
+                    loadPrivateFolder(
+                        model: item,
+                        subListItem: (List<MyDataModel>? dataList) {
+                          ///list of current folder
+                          if (dataList != null) {
+                            item.subFolder.clear();
+                            item.subFolder.addAll(dataList);
+                            refreshCurrentViewList(item);
+                          }
+                        });
+                  });
+            }
+          });
+    } catch (e) {
+      isLoading.value = false;
+      AppPopUps.showSnackBar(
+          message: 'Failed to add file', context: myContext!);
+    }
+
+    /* try {
       List<PlatformFile>? files = await AppUtils.pickMultipleFiles();
       if (files != null) {
         isLoading.value = true;
 
         for (var file in files) {
-//       File fileOwn= File(file.path!);
-          /*      printWrapped(file.path.toString());
+      File fileOwn= File(file.path!);
+                printWrapped(file.path.toString());
         printWrapped(file.extension.toString());
-        printWrapped(file.name.toString());*/
+        printWrapped(file.name.toString());
           Widget? icon = _getFileIcon(file: file);
-          /*item.subFolder.add(MyMenuItem(
+          item.subFolder.add(MyMenuItem(
               name: file.name,
               isFolder: false,
               path: file.path,
               id: const Uuid().v4(),
               icon: icon,
-              subItemList: []));*/
+              subItemList: []));
         }
         isLoading.value = false;
       }
@@ -85,7 +108,7 @@ class HomePageController extends GetxController {
       isLoading.value = false;
       AppPopUps.showSnackBar(
           message: 'Failed to add file', context: myContext!);
-    }
+    }*/
   }
 
   Widget? _getFileIcon({required PlatformFile file}) {
@@ -122,158 +145,10 @@ class HomePageController extends GetxController {
     }
   }
 
-  void loadPrivateFolder({
-    bool showAlert = false,
-    String parentId = '',
-    String userId = '',
-    required onComplete,
-  }) {
-    Map<String, dynamic> body = {
-      'page': pageToLoad.toString(),
-      'user_id': userId,
-      'parent_id': parentId,
-    };
-    isLoading.value = true;
-    var client = APIClient(isCache: false, baseUrl: ApiConstants.baseUrl);
-    client
-        .request(
-            route: APIRoute(
-              APIType.getMyData,
-              body: body,
-            ),
-            create: () => APIResponse<MyDataModelResponseModel>(
-                create: () => MyDataModelResponseModel()),
-            apiFunction: loadPrivateFolder)
-        .then((response) {
-      isLoading.value = false;
-      MyDataModelResponseModel? model = response.response?.data;
-
-      if ((model?.results?.length ?? 0) > 0) {
-        if ((model?.next ?? '').isNotEmpty) {
-          pageToLoad++;
-          hasNewPage = true;
-        } else {
-          hasNewPage = false;
-        }
-        List<MyDataModel> myDateModelList = model?.results ?? [];
-
-        if (myDateModelList.isNotEmpty) {
-          onComplete(myDateModelList);
-        } else {
-          AppPopUps.showDialogContent(
-              title: 'Alert',
-              description: 'Folder is empty add new file or folder',
-              dialogType: DialogType.INFO);
-        }
-      } else {
-        if (showAlert) {
-          AppPopUps.showDialogContent(
-              title: 'Alert',
-              description: 'No result found',
-              dialogType: DialogType.INFO);
-        }
-      }
-    }).catchError((error) {
-      isLoading.value = false;
-      AppPopUps.showDialogContent(
-          title: 'Error',
-          description: error.toString(),
-          dialogType: DialogType.ERROR);
-      return Future.value(null);
-    });
-  }
-
-  void loadSharedFolder({bool showAlert = false}) {
-    UserModel? user = UserDefaults.getUserSession();
-
-    Map<String, dynamic> body = {'page': pageToLoad.toString()};
-    isLoading.value = true;
-    var client = APIClient(isCache: false, baseUrl: ApiConstants.baseUrl);
-    client
-        .request(
-            route: APIRoute(
-              APIType.getSharedData,
-              body: body,
-            ),
-            create: () => APIResponse<MyDataModelResponseModel>(
-                create: () => MyDataModelResponseModel()),
-            apiFunction: loadSharedFolder)
-        .then((response) {
-      isLoading.value = false;
-      MyDataModelResponseModel? model = response.response?.data;
-
-      if ((model?.results?.length ?? 0) > 0) {
-        if ((model?.next ?? '').isNotEmpty) {
-          pageToLoad++;
-          hasNewPage = true;
-        } else {
-          hasNewPage = false;
-        }
-
-        sharedDataList.addAll(model?.results ?? []);
-        sharedFilteredItemList.addAll(sharedDataList);
-      } else {
-        if (showAlert) {
-          AppPopUps.showDialogContent(
-              title: 'Alert',
-              description: 'No result found',
-              dialogType: DialogType.INFO);
-        }
-      }
-    }).catchError((error) {
-      isLoading.value = false;
-      AppPopUps.showDialogContent(
-          title: 'Error',
-          description: error.toString(),
-          dialogType: DialogType.ERROR);
-      return Future.value(null);
-    });
-  }
-
-  void loadReceivedFolder({bool showAlert = false}) {
-    UserModel? user = UserDefaults.getUserSession();
-
-    Map<String, dynamic> body = {'page': pageToLoad.toString()};
-    isLoading.value = true;
-    var client = APIClient(isCache: false, baseUrl: ApiConstants.baseUrl);
-    client
-        .request(
-            route: APIRoute(
-              APIType.getSharedData,
-              body: body,
-            ),
-            create: () => APIResponse<MyDataModelResponseModel>(
-                create: () => MyDataModelResponseModel()),
-            apiFunction: loadReceivedFolder)
-        .then((response) {
-      isLoading.value = false;
-      MyDataModelResponseModel? model = response.response?.data;
-
-      if ((model?.results?.length ?? 0) > 0) {
-        if ((model?.next ?? '').isNotEmpty) {
-          pageToLoad++;
-          hasNewPage = true;
-        } else {
-          hasNewPage = false;
-        }
-
-        receivedDataList.addAll(model?.results ?? []);
-        receivedFilteredItemList.addAll(receivedDataList);
-      } else {
-        if (showAlert) {
-          AppPopUps.showDialogContent(
-              title: 'Alert',
-              description: 'No result found',
-              dialogType: DialogType.INFO);
-        }
-      }
-    }).catchError((error) {
-      isLoading.value = false;
-      AppPopUps.showDialogContent(
-          title: 'Error',
-          description: error.toString(),
-          dialogType: DialogType.ERROR);
-      return Future.value(null);
-    });
+  void refreshCurrentViewList(MyDataModel item) {
+    if (foldersStack.isNotEmpty) {
+      foldersStack.removeLast();
+      foldersStack.add(item);
+    }
   }
 }

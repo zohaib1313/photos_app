@@ -25,6 +25,7 @@ class SignupPage extends GetView<SignupController> with SignupWidgetsMixin {
 
   @override
   Widget build(BuildContext context) {
+//    controller.isLoading.value = false;
     return Scaffold(
       body: GetX<SignupController>(initState: (state) {
         if (userModel != null) {
@@ -172,19 +173,24 @@ class SignupPage extends GetView<SignupController> with SignupWidgetsMixin {
                             textColor: AppColor.whiteColor,
                             color: AppColor.primaryBlueDarkColor,
                             onTap: () {
-                              controller.registerAction(
-                                  completion: (String message) {
-                                AppPopUps.showDialogContent(
-                                    title: 'Success',
-                                    onOkPress: () {
-                                      Get.offAndToNamed(DashboardPage.id);
-                                    },
-                                    onCancelPress: () {
-                                      Get.offAndToNamed(DashboardPage.id);
-                                    },
-                                    description: message,
-                                    dialogType: DialogType.SUCCES);
-                              });
+                              if (controller.profileImage.value != null) {
+                                controller.registerAction(
+                                    completion: (String message) {
+                                  AppPopUps.showDialogContent(
+                                      title: 'Success',
+                                      onOkPress: () {
+                                        Get.offAndToNamed(DashboardPage.id);
+                                      },
+                                      onCancelPress: () {
+                                        Get.offAndToNamed(DashboardPage.id);
+                                      },
+                                      description: message,
+                                      dialogType: DialogType.SUCCES);
+                                });
+                              } else {
+                                AppPopUps.showSnackBar(
+                                    message: 'select image', context: context);
+                              }
                             },
                           ),
                           vSpace,
