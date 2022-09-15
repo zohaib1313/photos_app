@@ -4,7 +4,10 @@ import 'package:photos_app/common/helpers.dart';
 import 'package:photos_app/controllers/profile_page_controller.dart';
 
 import '../../../../common/loading_widget.dart';
+import '../../common/common_widgets.dart';
 import '../../common/spaces_boxes.dart';
+import '../../common/user_defaults.dart';
+import '../../dio_networking/app_apis.dart';
 import '../sign_up/sign_up_widgets.dart';
 
 class ProfilePage extends GetView<ProfilePageController>
@@ -30,11 +33,16 @@ class ProfilePage extends GetView<ProfilePageController>
                     child: Column(
                       children: [
                         vSpace,
-                        /*NetworkCircularImage(
+                        NetworkCircularImage(
                           url:
-                              "${ApiConstants.baseUrl}${UserDefaults.getUserSession()?.photo}",
+                              "https://memory-app34.herokuapp.com${UserDefaults.getUserSession()?.photo}",
                           radius: 60,
-                        ),*/
+                        ),
+                        vSpace,
+                        vSpace,
+                        vSpace,
+                        vSpace,
+                        vSpace,
                         vSpace,
                         vSpace,
                         getTextField(
@@ -42,6 +50,12 @@ class ProfilePage extends GetView<ProfilePageController>
                             enabled: controller.isUpdateModeOn.value,
                             hintText: 'User name',
                             controller: controller.usernameController),
+                        vSpace,
+                        getTextField(
+                            validate: true,
+                            enabled: controller.isUpdateModeOn.value,
+                            hintText: 'Age',
+                            controller: controller.userAgeController),
                         vSpace,
                         getTextField(
                             validate: true,
