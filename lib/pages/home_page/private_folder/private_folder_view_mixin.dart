@@ -3,22 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:focused_menu/focused_menu.dart';
 import 'package:focused_menu/modals.dart';
-import 'package:get/get.dart';
-import 'package:photos_app/common/helpers.dart';
 import 'package:photos_app/common/styles.dart';
 import 'package:photos_app/controllers/home_page_controller.dart';
-import 'package:photos_app/controllers/private_folder_controller.dart';
-import 'package:photos_app/controllers/shared_folder_controller.dart';
 import 'package:photos_app/models/my_data_model.dart';
-import 'package:photos_app/models/my_menu_item_model.dart';
 
-import '../../../../common/loading_widget.dart';
 import '../../../common/spaces_boxes.dart';
 
 mixin PrivateFolderViewMixin {
   Widget getFolderCard(
       {required MyDataModel myFolderModel,
-      required PrivateFolderController controller,
+      required HomePageController controller,
       required BuildContext context}) {
     return getFocusedMenu(
         item: myFolderModel,
@@ -75,7 +69,7 @@ mixin PrivateFolderViewMixin {
 
   getFolderFileView(
       {required MyDataModel item,
-      required PrivateFolderController controller,
+      required HomePageController controller,
       required BuildContext context}) {
     return getFocusedMenu(
         item: item,
@@ -125,7 +119,7 @@ mixin PrivateFolderViewMixin {
   Widget getFocusedMenu(
       {required MyDataModel item,
       required BuildContext context,
-      required PrivateFolderController controller,
+      required HomePageController controller,
       required Widget child}) {
     return FocusedMenuHolder(
         menuWidth: MediaQuery.of(context).size.width * 0.50,
@@ -203,7 +197,7 @@ mixin PrivateFolderViewMixin {
   Widget focusMenueForFab(
       {required MyDataModel item,
       required BuildContext context,
-      required PrivateFolderController controller,
+      required HomePageController controller,
       required Widget child}) {
     return FocusedMenuHolder(
         menuWidth: MediaQuery.of(context).size.width * 0.50,

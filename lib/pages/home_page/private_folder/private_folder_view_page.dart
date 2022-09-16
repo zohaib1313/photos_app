@@ -13,112 +13,94 @@ import 'package:photos_app/pages/home_page/private_folder/private_folder_view_mi
 import '../../../../../common/loading_widget.dart';
 import '../../../common/spaces_boxes.dart';
 import '../../../common/user_defaults.dart';
-import '../../../controllers/private_folder_controller.dart';
 import '../home_page_views_mixin.dart';
 
-class PrivateFolderViewPage extends GetView<PrivateFolderController>
+class PrivateFolderViewPage extends GetView<HomePageController>
     with PrivateFolderViewMixin {
   const PrivateFolderViewPage({Key? key}) : super(key: key);
   static const id = '/PrivateFolderViewPage';
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-        onWillPop: () {
-          return controller.closeLastFolder();
-        },
-        child: GetX<PrivateFolderController>(
-          initState: (_) {
-            controller.loadPrivateFolder(
-                model: MyDataModel(
-                  userFk: int.tryParse(
-                    UserDefaults.getCurrentUserId() ?? '',
-                  ),
-                ),
-                subListItem: (List<MyDataModel>? dataModel) {
-                  if (dataModel != null) {
-                    controller.openFolder(item: dataModel.first);
-                  }
-                });
-          },
-          builder: (logic) {
-            return Scaffold(
-              appBar: myAppBar(
-                  onBacKTap: () async {
-                    if (await controller.closeLastFolder()) {
-                      Get.back();
-                    }
-                  },
-                  goBack: true,
-                  title: controller.privateFoldersStack.isNotEmpty
-                      ? controller.privateFoldersStack.last.name
-                      : '-'),
-              body: SafeArea(
-                child: Stack(
+    print("folder stack in private folder view");
+    print(controller.privateFoldersStack.length.toString());
+    return WillPopScope(onWillPop: () {
+      return controller.closeLastFolder();
+    }, child: Obx(() {
+      return Scaffold(
+        appBar: myAppBar(
+            onBacKTap: () async {
+              if (await controller.closeLastFolder()) {
+                Get.back();
+              }
+            },
+            goBack: true,
+            title: controller.privateFoldersStack.isNotEmpty
+                ? controller.privateFoldersStack.last.name
+                : '-'),
+        body: SafeArea(
+          child: Stack(
+            children: [
+              if (controller.privateFoldersStack.isNotEmpty)
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (controller.privateFoldersStack.isNotEmpty)
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(6),
-                            color: AppColor.alphaGrey,
-                            child: Text(_getPath(),
-                                style: AppTextStyles.textStyleNormalBodyXSmall),
-                          ),
-                          vSpace,
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: ListView.builder(
-                                physics: const BouncingScrollPhysics(),
-                                itemCount: controller
-                                    .privateFoldersStack.last.subFolder.length,
-                                itemBuilder: (context, index) {
-                                  MyDataModel innerItem = controller
-                                      .privateFoldersStack
-                                      .last
-                                      .subFolder[index];
-                                  return SizedBox(
-                                    height: 120.h,
-                                    child: getFolderFileView(
-                                        item: innerItem,
-                                        controller: controller,
-                                        context: context),
-                                  );
-                                },
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    if (controller.privateFoldersStack.isNotEmpty)
-                      Align(
-                        alignment: Alignment.bottomRight,
-                        child: Padding(
-                          padding: const EdgeInsets.all(20.0),
-                          child: focusMenueForFab(
-                            item: controller.privateFoldersStack.last,
-                            context: context,
-                            controller: controller,
-                            child: const CircleAvatar(
-                              radius: 26,
-                              child: Icon(
-                                Icons.add,
-                                size: 30,
-                              ),
-                            ),
-                          ),
+                    Container(
+                      padding: const EdgeInsets.all(6),
+                      color: AppColor.alphaGrey,
+                      child: Text(_getPath(),
+                          style: AppTextStyles.textStyleNormalBodyXSmall),
+                    ),
+                    vSpace,
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ListView.builder(
+                          physics: const BouncingScrollPhysics(),
+                          itemCount: controller
+                              .privateFoldersStack.last.subFolder.length,
+                          itemBuilder: (context, index) {
+                            MyDataModel innerItem = controller
+                                .privateFoldersStack.last.subFolder[index];
+                            return SizedBox(
+                              height: 120.h,
+                              child: getFolderFileView(
+                                  item: innerItem,
+                                  controller: controller,
+                                  context: context),
+                            );
+                          },
                         ),
                       ),
-                    if (controller.isLoading.isTrue) LoadingWidget(),
+                    )
                   ],
                 ),
-              ),
-            );
-          },
-        ));
+              if (controller.privateFoldersStack.isNotEmpty)
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: focusMenueForFab(
+                      item: controller.privateFoldersStack.last,
+                      context: context,
+                      controller: controller,
+                      child: const CircleAvatar(
+                        radius: 26,
+                        child: Icon(
+                          Icons.add,
+                          size: 30,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              if (controller.isLoading.isTrue) LoadingWidget(),
+            ],
+          ),
+        ),
+      );
+    }));
   }
 
   _getPath() {

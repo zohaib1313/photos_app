@@ -54,6 +54,11 @@ class SharedReceivedDataResponseModel implements Decodeable {
     }
     return this;
   }
+
+  @override
+  String toString() {
+    return 'SharedReceivedDataResponseModel{count: $count, next: $next, previous: $previous, sharedReceivedDataModelList: $sharedReceivedDataModelList}';
+  }
 }
 
 class SharedReceivedDataModel extends Decodeable {
@@ -119,5 +124,10 @@ class SharedReceivedDataModel extends Decodeable {
         ? new MyDataModel.fromJson(json['content_fk'])
         : null;
     return this;
+  }
+
+  @override
+  String toString() {
+    return 'SharedReceivedDataModel{id: $id, createdAt: $createdAt, updatedAt: $updatedAt, sharedByFk: $sharedByFk, sharedWithFk: $sharedWithFk, contentFk: $contentFk}';
   }
 }

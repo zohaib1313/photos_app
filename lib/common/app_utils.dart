@@ -47,24 +47,24 @@ class AppUtils {
 
   static void openFile(File file) async {
     final String filePath = file.absolute.path;
-    final Uri uri = Uri.file(filePath);
-    printWrapped(file.path);
-
+    /* final Uri uri = Uri.file(filePath);
+    printWrapped(file.path);*/
+/*
     printWrapped("xxxxx");
 
     printWrapped(file.absolute.path);
-/*printWrapped('opening file');
+*/ /*printWrapped('opening file');
 
     if (!File(uri.toFilePath()).existsSync()) {
       printWrapped('uri doesn exists');
       AppPopUps.showSnackBar(
           message: 'File does not exists', context: myContext!);
-    }*/
+    }*/ /*
     if (!await launchUrl(uri)) {
       printWrapped('failed to launc url');
 
       AppPopUps.showSnackBar(message: "Can't open file", context: myContext!);
-    }
+    }*/
   }
 
   static String readTimestamp(int timestamp) {

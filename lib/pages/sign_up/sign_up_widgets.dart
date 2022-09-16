@@ -47,8 +47,7 @@ mixin SignupWidgetsMixin {
             ? CircleAvatar(
                 radius: 70, backgroundImage: Image.file(file.value!).image)
             : (networkImage != ''
-                ? NetworkCircularImage(
-                    radius: 70, url: "${ApiConstants.baseUrl}$networkImage")
+                ? NetworkCircularImage(radius: 70, url: networkImage ?? '')
                 : const CircleAvatar(
                     radius: 70,
                     backgroundImage:

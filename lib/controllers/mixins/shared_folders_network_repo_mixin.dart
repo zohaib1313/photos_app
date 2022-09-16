@@ -13,7 +13,8 @@ mixin SharedDataNetworkRepoMixin on GetxController {
   int pageToLoad = 1;
   bool hasNewPage = false;
   RxBool isLoading = false.obs;
-  RxList<SharedReceivedDataModel> sharedDataModelList =
+
+  RxList<SharedReceivedDataModel> sharedFolderStack =
       <SharedReceivedDataModel>[].obs;
 
   void loadSharedData({
@@ -41,10 +42,9 @@ mixin SharedDataNetworkRepoMixin on GetxController {
       SharedReceivedDataResponseModel? sharedReceivedDataResponseModel =
           response.response?.data;
 
-      if (sharedReceivedDataResponseModel?.sharedReceivedDataModelList !=
-          null) {
-        sharedDataModelList.value =
-            sharedReceivedDataResponseModel!.sharedReceivedDataModelList;
+      if (sharedReceivedDataResponseModel != null) {
+        subListItem(
+            sharedReceivedDataResponseModel.sharedReceivedDataModelList);
       } else {
         AppPopUps.showDialogContent(
             title: 'Error',

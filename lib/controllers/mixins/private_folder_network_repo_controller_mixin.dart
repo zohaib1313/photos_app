@@ -228,24 +228,29 @@ mixin PrivateFolderNetworkContentControllerMixin on GetxController {
   }
 
   openFolder({required MyDataModel item}) {
-    print("***********opening folder***********");
-    print(item.id);
-    privateFoldersStack.add(item);
-    /*  if (privateFoldersStack.isEmpty) {
-      // Get.to(() => const PrivateFolderViewPage(), preventDuplicates: false);
+    print(
+        "***********opening folder folder stack length is =${privateFoldersStack.length}***********");
+
+    if (privateFoldersStack.isEmpty) {
+      privateFoldersStack.add(item);
+
+      Get.to(() => const PrivateFolderViewPage(), preventDuplicates: false);
+      //    Get.toNamed(PrivateFolderViewPage.id, preventDuplicates: false);
     } else {
       privateFoldersStack.add(item);
-    }*/
+    }
   }
 
   Future<bool> closeLastFolder() {
-    privateFoldersStack.removeLast();
+    if (privateFoldersStack.isNotEmpty) {
+      privateFoldersStack.removeLast();
+    }
     return Future.value(privateFoldersStack.isEmpty);
   }
 
   openFile({required MyDataModel item}) {
     if (!(item.type == 'folder') && item.name != null) {
-      AppUtils.openFile(File(item.name ?? ''));
+      // AppUtils.openFile(File(item.name ?? ''));
     }
   }
 

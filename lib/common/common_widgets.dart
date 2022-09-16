@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:photos_app/common/styles.dart';
+import 'package:photos_app/dio_networking/app_apis.dart';
 import 'constants.dart';
 import 'helpers.dart';
 
@@ -431,7 +432,7 @@ class _ExpandableCardContainerState extends State<ExpandableCardContainer> {
 }
 
 class NetworkCircularImage extends StatefulWidget {
-  String? url;
+  String url = '';
   double radius;
   double? width;
   double? height;
@@ -442,7 +443,7 @@ class NetworkCircularImage extends StatefulWidget {
 
   NetworkCircularImage(
       {Key? key,
-      required this.url,
+      this.url = '',
       this.radius = 34,
       this.width,
       this.bgColor = Colors.transparent,
@@ -460,7 +461,9 @@ class _NetworkCircularImageState extends State<NetworkCircularImage> {
   @override
   Widget build(BuildContext context) {
     return CachedNetworkImage(
-      imageUrl: widget.url ?? AppConstants.placeHolderIcon,
+      imageUrl: (widget.url.isNotEmpty)
+          ? ApiConstants.baseUrl + widget.url
+          : ApiConstants.imageNetworkPlaceHolder,
       width: widget.width,
       height: widget.height,
       fit: widget.fit,

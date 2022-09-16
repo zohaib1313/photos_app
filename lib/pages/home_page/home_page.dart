@@ -12,10 +12,12 @@ import 'package:photos_app/pages/home_page/history_page/history_page.dart';
 import 'package:photos_app/pages/home_page/notes/notes_page.dart';
 import 'package:photos_app/pages/home_page/private_folder/private_folder_view_page.dart';
 import 'package:photos_app/pages/home_page/reminders/reminders_page.dart';
+import 'package:photos_app/pages/home_page/shared_folder/shared_folder_view_page.dart';
 
 import '../../../../common/loading_widget.dart';
 import '../../common/my_search_bar.dart';
 import '../../common/spaces_boxes.dart';
+import '../../models/shared_data_response_model.dart';
 import 'home_page_views_mixin.dart';
 
 class HomePage extends GetView<HomePageController> with HomePageViewsMixin {
@@ -84,7 +86,24 @@ class HomePage extends GetView<HomePageController> with HomePageViewsMixin {
                                   Expanded(
                                     child: getMainCards(
                                         onTap: () {
-                                          Get.toNamed(PrivateFolderViewPage.id);
+                                          controller.loadPrivateFolder(
+                                              model: MyDataModel(
+                                                userFk: int.tryParse(
+                                                  UserDefaults
+                                                          .getCurrentUserId() ??
+                                                      '',
+                                                ),
+                                              ),
+                                              subListItem: (List<MyDataModel>?
+                                                  dataModel) {
+                                                if (dataModel != null) {
+                                                  ///clearing folder stack
+                                                  controller.privateFoldersStack
+                                                      .clear();
+                                                  controller.openFolder(
+                                                      item: dataModel.first);
+                                                }
+                                              });
                                         },
                                         context: context,
                                         title: 'Private',
@@ -102,9 +121,24 @@ class HomePage extends GetView<HomePageController> with HomePageViewsMixin {
                                         Expanded(
                                           child: getMainCards(
                                               onTap: () {
-                                                /* controller.openFolder(
-                                                    item: controller
-                                                        .sharedMenuItem.value);*/
+                                                controller.loadSharedData(
+                                                    model: MyDataModel(
+                                                        userFk: int.tryParse(
+                                                            UserDefaults
+                                                                    .getCurrentUserId() ??
+                                                                '')),
+                                                    subListItem: (List<
+                                                            SharedReceivedDataModel>
+                                                        subListItem) {
+                                                      printWrapped('response');
+                                                      printWrapped(subListItem
+                                                          .toString());
+                                                      controller
+                                                          .sharedFolderStack
+                                                          .value = subListItem;
+                                                      Get.to(
+                                                          const SharedFolderViewPage());
+                                                    });
                                               },
                                               context: context,
                                               title: 'Shared',

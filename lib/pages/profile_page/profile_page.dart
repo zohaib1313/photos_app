@@ -33,11 +33,10 @@ class ProfilePage extends GetView<ProfilePageController>
                     child: Column(
                       children: [
                         vSpace,
-                        NetworkCircularImage(
-                          url:
-                              "https://memory-app34.herokuapp.com${UserDefaults.getUserSession()?.photo}",
+                        /* NetworkCircularImage(
+                          url: UserDefaults.getUserSession()?.photo ?? '',
                           radius: 60,
-                        ),
+                        ),*/
                         vSpace,
                         vSpace,
                         vSpace,
