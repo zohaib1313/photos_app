@@ -2,18 +2,24 @@ enum APIType {
   loginUser,
   registerUser,
 
+  ///reminders
   getReminders,
   createReminder,
   updateReminder,
   deleteReminder,
 
+  ///notes
   getNotes,
   createNotes,
   updateNotes,
   deleteNotes,
 
+  ///private folder
   postMyData,
   getMyData,
+
+  ///shared folder
+  getSharedReceivedData
 }
 
 class ApiConstants {

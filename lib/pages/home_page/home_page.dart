@@ -10,6 +10,7 @@ import 'package:photos_app/models/my_data_model.dart';
 import 'package:photos_app/notifications/awsome_notification.dart';
 import 'package:photos_app/pages/home_page/history_page/history_page.dart';
 import 'package:photos_app/pages/home_page/notes/notes_page.dart';
+import 'package:photos_app/pages/home_page/private_folder/private_folder_view_page.dart';
 import 'package:photos_app/pages/home_page/reminders/reminders_page.dart';
 
 import '../../../../common/loading_widget.dart';
@@ -79,24 +80,11 @@ class HomePage extends GetView<HomePageController> with HomePageViewsMixin {
                               child: Row(
                                 mainAxisSize: MainAxisSize.max,
                                 children: [
+                                  ///private
                                   Expanded(
                                     child: getMainCards(
                                         onTap: () {
-                                          controller.loadPrivateFolder(
-                                              model: MyDataModel(
-                                                userFk: int.tryParse(
-                                                  UserDefaults
-                                                          .getCurrentUserId() ??
-                                                      '',
-                                                ),
-                                              ),
-                                              subListItem: (List<MyDataModel>?
-                                                  dataModel) {
-                                                if (dataModel != null) {
-                                                  controller.openFolder(
-                                                      item: dataModel.first);
-                                                }
-                                              });
+                                          Get.toNamed(PrivateFolderViewPage.id);
                                         },
                                         context: context,
                                         title: 'Private',

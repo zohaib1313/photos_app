@@ -8,10 +8,9 @@ class ProfilePageController extends GetxController {
   TextEditingController usernameController = TextEditingController();
   TextEditingController firstNameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
-  TextEditingController userAgeController=TextEditingController();
+  TextEditingController userAgeController = TextEditingController();
 
   RxBool isUpdateModeOn = false.obs;
-
 
   void setValuesFromSharedPref() {
     UserModel? userModel = UserDefaults.getUserSession();
@@ -20,6 +19,6 @@ class ProfilePageController extends GetxController {
     usernameController.text = userModel?.username ?? '-';
     firstNameController.text = userModel?.firstName ?? '-';
     emailController.text = userModel?.email ?? '-';
-    userAgeController.text=UserModel?.
+//    userAgeController.text=UserModel
   }
 }

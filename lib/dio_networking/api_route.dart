@@ -103,6 +103,14 @@ class APIRoute implements APIRouteConfigurable {
           method: APIMethod.post,
         );
 
+      case APIType.getSharedReceivedData:
+        return RequestOptions(
+          path: ApiConstants.sharedData,
+          headers: headers,
+          queryParameters: body,
+          method: APIMethod.get,
+        );
+
       default:
         return RequestOptions(
           path: ApiConstants.loginUser,
