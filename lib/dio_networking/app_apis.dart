@@ -20,7 +20,10 @@ enum APIType {
   getMyData,
 
   ///shared folder
-  getSharedReceivedData
+  getSharedReceivedData,
+
+  ///friends
+  getAllFriends,
 }
 
 class ApiConstants {
@@ -35,4 +38,5 @@ class ApiConstants {
   static const myData = '/users/my-data/';
   static const sharedData = '/users/shared-data/';
   static const checkUniqueMail = '/users/unique-email';
+  static const friends = '/users/add-friend/';
 }

@@ -1,13 +1,13 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-import 'package:photos_app/common/helpers.dart';
 import 'package:photos_app/common/user_defaults.dart';
 import 'package:photos_app/pages/dashboard_page.dart';
 import 'package:photos_app/pages/login_page/login_page.dart';
-import '../common/constants.dart';
-import '../common/styles.dart';
+
+import '../my_application.dart';
 
 class SplashScreen extends StatefulWidget {
   static const id = "/SplashScreen";
@@ -37,15 +37,15 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       backgroundColor: Colors.black,
       body: Center(
         child: Padding(
-          padding: EdgeInsets.all(38.0),
+          padding: const EdgeInsets.all(38.0),
           child: Icon(
             Icons.share,
             size: 50,
-            color: AppColor.whiteColor,
+            color: myContext!.theme.hintColor,
           ) /*Image.asset("assets/images/logo.png")*/,
         ),
       ),

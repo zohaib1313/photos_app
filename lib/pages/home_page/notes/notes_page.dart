@@ -66,8 +66,7 @@ class NotesPage extends GetView<NotesController> {
                               "Refresh",
                               style: AppTextStyles.textStyleBoldBodyMedium
                                   .copyWith(
-                                      decoration: TextDecoration.underline,
-                                      color: AppColor.primaryColor),
+                                      decoration: TextDecoration.underline),
                             ),
                           ),
                         ],
@@ -120,7 +119,7 @@ class NotesPage extends GetView<NotesController> {
             // An action can be bigger than the others.
             flex: 2,
             onPressed: (x) {
-              controller.deleteReminder(index: index);
+              controller.deleteNotes(index: index);
             },
             icon: Icons.delete,
             label: 'Delete',
@@ -129,25 +128,25 @@ class NotesPage extends GetView<NotesController> {
       ),
       child: Card(
         margin: const EdgeInsets.all(4),
-        color: AppColor.alphaGrey,
+        color: myContext!.theme.hintColor,
         child: ListTile(
           contentPadding: const EdgeInsets.all(4),
           title: Text(controller.filteredItemList.elementAt(index)?.name ?? '-',
               maxLines: 3,
               overflow: TextOverflow.ellipsis,
               style: AppTextStyles.textStyleNormalBodySmall
-                  .copyWith(color: AppColor.blackColor)),
+                  .copyWith(color: myContext!.theme.cardColor)),
           subtitle: Text(
               controller.filteredItemList.elementAt(index)?.content ?? '-',
               maxLines: 3,
               overflow: TextOverflow.ellipsis,
               style: AppTextStyles.textStyleNormalBodySmall
-                  .copyWith(color: AppColor.blackColor)),
+                  .copyWith(color: myContext!.theme.cardColor)),
           trailing: Text(
               formatDateTime(DateTime.tryParse(
                   controller.filteredItemList.elementAt(index)?.content ?? '')),
               style: AppTextStyles.textStyleNormalBodySmall
-                  .copyWith(color: AppColor.blackColor)),
+                  .copyWith(color: myContext!.theme.cardColor)),
 
           /*  leading: const Icon(
             Icons.arrow_back_ios,

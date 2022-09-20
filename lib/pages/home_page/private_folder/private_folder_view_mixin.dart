@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:focused_menu/focused_menu.dart';
 import 'package:focused_menu/modals.dart';
+import 'package:get/get.dart';
 import 'package:photos_app/common/styles.dart';
 import 'package:photos_app/controllers/home_page_controller.dart';
 import 'package:photos_app/models/my_data_model.dart';
 
 import '../../../common/spaces_boxes.dart';
+import '../../../my_application.dart';
 
 mixin PrivateFolderViewMixin {
   Widget getFolderCard(
@@ -18,7 +20,7 @@ mixin PrivateFolderViewMixin {
         item: myFolderModel,
         context: context,
         child: Card(
-          color: AppColor.alphaGrey,
+          color: context.theme.hintColor,
           child: Container(
             height: 180.h,
             padding: const EdgeInsets.all(8),
@@ -37,11 +39,11 @@ mixin PrivateFolderViewMixin {
                           context: context,
                           child: Container(
                             decoration: BoxDecoration(
-                                color: AppColor.primaryColor,
+                                color: context.theme.primaryColor,
                                 borderRadius: BorderRadius.circular(12)),
-                            child: const Center(
-                              child:
-                                  Icon(Icons.add, color: AppColor.whiteColor),
+                            child: Center(
+                              child: Icon(Icons.add,
+                                  color: myContext!.theme.hintColor),
                             ),
                           ),
                         ),
@@ -171,7 +173,7 @@ mixin PrivateFolderViewMixin {
             FocusedMenuItem(
                 title: Text("Add New Folder",
                     style: AppTextStyles.textStyleBoldBodySmall),
-                trailingIcon: Icon(Icons.folder, color: AppColor.primaryColor),
+                trailingIcon: Icon(Icons.folder, color: context.theme.primaryColor),
                 onPressed: () {
                   /// ///////////.............................adding new folder///////////.............................
                   //   controller.addNewFolder(item: item);

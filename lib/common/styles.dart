@@ -1,28 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppColor {
-  static const primaryColor = Color(0xff0d88ea);
-  static const primaryBlueDarkColor = Color(0xff0070cc);
-  static const blackColor = Color(0xff1C2340);
-  static const orangeColor = Color(0xffFF7266);
-  static const greenColor = Color(0xff2CC78C);
-  static const accentColor = Color(0xff13CAC3);
-  static const redColor = Colors.red;
-  static const alphaGrey = Color(0xffF5F3F3);
-  static const whiteColor = Colors.white;
-  static const greyColor = Colors.grey;
-  static const green = greenColor;
-  static const yellowColor = Color(0xffFFC107);
+  static var primaryColor = Color(0xff0d88ea);
+  static var primaryBlueDarkColor = Color(0xff0070cc);
+  static var blackColor = Color(0xff1C2340);
+  static var greenColor = Color(0xff2CC78C);
+  static var redColor = Colors.red;
+  static var alphaGrey = Color(0xffF5F3F3);
+  static var whiteColor = Colors.white;
+  static var greyColor = Colors.grey;
+  static var yellowColor = Color(0xffFFC107);
 }
 
 class AppTextStyles {
-  static final _fontBold = GoogleFonts.abel(
-      textStyle: const TextStyle(
-          fontWeight: FontWeight.bold, color: AppColor.blackColor));
-  static final _fontNormal = GoogleFonts.abel(
-      textStyle: const TextStyle(
-          fontWeight: FontWeight.normal, color: AppColor.blackColor));
+  static final _fontBold =
+      GoogleFonts.abel(textStyle: TextStyle(fontWeight: FontWeight.bold));
+  static final _fontNormal =
+      GoogleFonts.abel(textStyle: TextStyle(fontWeight: FontWeight.normal));
 
   static TextStyle textStyleBoldTitleLarge = _fontBold.copyWith(fontSize: 22);
 

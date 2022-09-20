@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import '../../common/common_widgets.dart';
 import '../../common/styles.dart';
 import '../../dio_networking/app_apis.dart';
+import '../../my_application.dart';
 
 mixin SignupWidgetsMixin {
   getTextField(
@@ -32,10 +33,10 @@ mixin SignupWidgetsMixin {
         onChanged: onChanged,
         keyboardType: inputType,
         inputFormatters: inputFormatters,
-        focusBorderColor: AppColor.alphaGrey,
-        textColor: AppColor.blackColor,
-        hintColor: AppColor.blackColor,
-        fillColor: AppColor.alphaGrey,
+        focusBorderColor: myContext!.theme.hintColor,
+        textColor: myContext!.theme.cardColor,
+        hintColor: myContext!.theme.cardColor,
+        fillColor: myContext!.theme.hintColor,
         validator: validator ??
             (String? value) => validate
                 ? (value!.trim().isEmpty ? validateText ?? "Required" : null)

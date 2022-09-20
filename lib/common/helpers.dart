@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../common/styles.dart';
+import '../my_application.dart';
 
 void printWrapped(String text) {
   final pattern = RegExp('.{1,800}'); // 800 is the size of each chunk
@@ -40,18 +42,18 @@ int daysDifference({required DateTime from, required DateTime to}) {
 
 myAppBar(
     {String? title,
-    Color backGroundColor = AppColor.whiteColor,
-    Color iconColor = AppColor.blackColor,
+    Color? backGroundColor,
+    Color? iconColor,
     List<Widget>? actions,
     BuildContext? context,
     bool goBack = true,
     onBacKTap}) {
   return AppBar(
     elevation: 0,
-    iconTheme: IconThemeData(color: iconColor),
+    // iconTheme: IconThemeData(color: iconColor ?? myContext!.theme.cardColor),
     actions: actions ?? [],
     automaticallyImplyLeading: goBack,
-    backgroundColor: backGroundColor,
+    backgroundColor: backGroundColor ?? myContext!.theme.primaryColor,
     title: Text(
       title ?? "",
       style: AppTextStyles.textStyleBoldBodyMedium,
@@ -72,7 +74,7 @@ myCheckBox(
       Container(
         padding: EdgeInsets.all(8.r),
         decoration: BoxDecoration(
-          color: fillColor ?? AppColor.alphaGrey,
+          color: fillColor ?? myContext!.theme.hintColor,
           borderRadius: BorderRadius.circular(4),
         ),
         child: InkWell(
@@ -82,7 +84,7 @@ myCheckBox(
             size: 15.0,
             color: isActive
                 ? (checkColor ?? Colors.black)
-                : fillColor ?? AppColor.whiteColor,
+                : fillColor ?? myContext!.theme.hintColor,
           ),
         ),
       ),
@@ -94,7 +96,7 @@ myCheckBox(
         child: Text(
           message,
           style: AppTextStyles.textStyleNormalBodySmall
-              .copyWith(color: messageColor ?? AppColor.whiteColor),
+              .copyWith(color: messageColor ?? myContext!.theme.hintColor),
         ),
       )
     ],

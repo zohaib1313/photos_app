@@ -35,7 +35,7 @@ class SharedFolderViewPage extends GetView<HomePageController> {
                     children: [
                       Container(
                         padding: const EdgeInsets.all(6),
-                        color: AppColor.alphaGrey,
+                        color: context.theme.hintColor,
                         child: Text('Shared Folder',
                             style: AppTextStyles.textStyleNormalBodyXSmall),
                       ),

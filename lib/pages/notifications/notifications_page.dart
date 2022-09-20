@@ -8,6 +8,7 @@ import '../../common/helpers.dart';
 import '../../common/loading_widget.dart';
 import '../../common/styles.dart';
 import '../../controllers/notification_controller.dart';
+import '../../my_application.dart';
 
 class NotificationsPage extends GetView<NotificationsController> {
   const NotificationsPage({Key? key}) : super(key: key);
@@ -55,8 +56,8 @@ class NotificationsPage extends GetView<NotificationsController> {
                             snapshot.data?[index];
                         return Card(
                           color: (notificationModel?.isRead ?? false)
-                              ? AppColor.whiteColor
-                              : AppColor.alphaGrey,
+                              ? myContext!.theme.hintColor
+                              : context.theme.hintColor,
                           elevation: 10,
                           child: ListTile(
                             onTap: () {

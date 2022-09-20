@@ -1,6 +1,7 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:photos_app/common/common_widgets.dart';
 import 'package:photos_app/common/spaces_boxes.dart';
 import '../common/styles.dart';
@@ -117,7 +118,7 @@ class AppPopUps {
                 Expanded(
                   child: Button(
                     buttonText: 'Cancel',
-                    color: AppColor.redColor,
+                    color: myContext!.theme.errorColor,
                     onTap: () {
                       Navigator.pop(myContext!);
                     },
@@ -127,7 +128,7 @@ class AppPopUps {
                 Expanded(
                   child: Button(
                     buttonText: 'Ok',
-                    color: AppColor.green,
+                    color: myContext!.theme.shadowColor,
                     onTap: () {
                       if (controller.text.isNotEmpty) {
                         onSubmit(controller.text.trim());

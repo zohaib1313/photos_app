@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:photos_app/common/styles.dart';
+import 'package:photos_app/my_application.dart';
 
 class AppBottomSheets {
   //bool isDialogShowing = false;
@@ -30,7 +32,7 @@ class AppBottomSheets {
             margin: EdgeInsets.only(top: 80.h, left: 30.w, right: 30.w),
             padding: const EdgeInsets.all(18.0),
             decoration: BoxDecoration(
-              color: AppColor.whiteColor,
+              color: myContext!.theme.hintColor,
               borderRadius: BorderRadius.only(
                   topRight: Radius.circular(100.r),
                   topLeft: Radius.circular(100.r)),
@@ -50,9 +52,9 @@ class AppBottomSheets {
                       onTap: () {
                         Navigator.of(context).pop();
                       },
-                      child: const Icon(
+                      child: Icon(
                         Icons.cancel,
-                        color: AppColor.blackColor,
+                        color: context.theme.cardColor,
                       ),
                     )
                   ],

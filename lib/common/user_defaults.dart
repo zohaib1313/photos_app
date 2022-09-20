@@ -50,4 +50,12 @@ class UserDefaults {
     }
     return user;
   }
+
+  static Future<bool?> getTheme() async {
+    return getPref().then((value) => value?.getBool('themeMode'));
+  }
+
+  static Future<bool?> setTheme(bool isDarkTheme) async {
+    return getPref().then((value) => value?.setBool('themeMode', isDarkTheme));
+  }
 }

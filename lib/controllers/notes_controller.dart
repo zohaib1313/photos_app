@@ -198,7 +198,7 @@ class NotesController extends GetxController {
     });
   }
 
-  void deleteReminder({required int index}) {
+  void deleteNotes({required int index}) {
     AppPopUps.showConfirmDialog(
         title: 'Alert',
         message: 'Are you sure delete this reminder',
@@ -216,11 +216,11 @@ class NotesController extends GetxController {
               .request(
                   needToAuthenticate: true,
                   route: APIRoute(
-                    APIType.deleteReminder,
+                    APIType.deleteNotes,
                     body: data,
                   ),
                   create: () => APIResponse(decoding: false),
-                  apiFunction: deleteReminder)
+                  apiFunction: deleteNotes)
               .then((response) async {
             isLoading.value = false;
 

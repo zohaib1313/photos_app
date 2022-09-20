@@ -5,8 +5,10 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:photos_app/common/styles.dart';
 import 'package:photos_app/dio_networking/app_apis.dart';
+import 'package:photos_app/my_application.dart';
 import 'constants.dart';
 import 'helpers.dart';
 
@@ -57,7 +59,7 @@ class MyTextField extends StatelessWidget {
   final FieldValidator? validator;
   final TextInputType? keyboardType;
   final inputFormatters;
-  final Color textColor;
+  final Color? textColor;
   final bool? obsecureText;
   final Widget? suffixIconWidet;
   int minLines = 1;
@@ -67,7 +69,7 @@ class MyTextField extends StatelessWidget {
   MyTextField(
       {Key? key,
       this.textDirection,
-      this.textColor = AppColor.blackColor,
+      this.textColor,
       this.obsecureText,
       this.fillColor,
       this.labelText,
@@ -113,8 +115,9 @@ class MyTextField extends StatelessWidget {
       ),
       child: TextFormField(
         obscureText: obsecureText ?? false,
-        style:
+        /*  style:
             AppTextStyles.textStyleNormalBodySmall.copyWith(color: textColor),
+      */
         controller: controller ?? TextEditingController(),
         initialValue: text,
         minLines: minLines,
@@ -129,14 +132,14 @@ class MyTextField extends StatelessWidget {
         autofocus: false,
         decoration: InputDecoration(
           contentPadding: EdgeInsets.all(contentPadding ?? 25.h),
-          fillColor: fillColor,
+          //  fillColor: fillColor,
           labelText: hintText ?? "",
           hintText: hintText,
           filled: fillColor != null,
-          hintStyle:
+          /* hintStyle:
               AppTextStyles.textStyleBoldBodySmall.copyWith(color: hintColor),
           labelStyle: AppTextStyles.textStyleNormalBodySmall
-              .copyWith(color: labelColor),
+              .copyWith(color: labelColor),*/
           prefixIcon: (prefixIcon != null)
               ? Padding(
                   padding: EdgeInsets.all(contentPadding ?? 100.w),
@@ -170,26 +173,26 @@ class MyTextField extends StatelessWidget {
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(50.r),
             borderSide:
-                BorderSide(color: focusBorderColor ?? AppColor.alphaGrey),
+                BorderSide(color: focusBorderColor ?? context.theme.hintColor),
           ),
           disabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(50.r),
             borderSide:
-                BorderSide(color: focusBorderColor ?? AppColor.alphaGrey),
+                BorderSide(color: focusBorderColor ?? context.theme.hintColor),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(50.r),
-            borderSide:
-                BorderSide(color: unfocusBorderColor ?? AppColor.alphaGrey),
+            borderSide: BorderSide(
+                color: unfocusBorderColor ?? context.theme.hintColor),
           ),
           errorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(50.r),
-            borderSide: const BorderSide(color: AppColor.redColor),
+            borderSide: BorderSide(color: context.theme.errorColor),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(50.r),
-            borderSide:
-                BorderSide(color: focusBorderColor ?? AppColor.primaryColor),
+            borderSide: BorderSide(
+                color: focusBorderColor ?? context.theme.primaryColor),
           ),
         ),
       ),
@@ -252,7 +255,7 @@ class Button extends StatelessWidget {
                     ),
               borderRadius:
                   BorderRadius.all(Radius.circular(cornerRadius ?? 50.r)),
-              color: color ?? AppColor.primaryColor),
+              color: color ?? context.theme.primaryColor),
           child: Center(
               child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -265,8 +268,8 @@ class Button extends StatelessWidget {
                   buttonText,
                   textAlign: TextAlign.center,
                   style: textStyle ??
-                      AppTextStyles.textStyleBoldBodySmall
-                          .copyWith(color: textColor ?? AppColor.whiteColor),
+                      AppTextStyles.textStyleBoldBodySmall.copyWith(
+                          color: textColor ?? myContext!.theme.hintColor),
                 ),
               ),
               postFixIcon ?? const IgnorePointer(),
@@ -366,21 +369,21 @@ class _MyDropDownState extends State<MyDropDown> {
               disabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(50.r),
                 borderSide: BorderSide(
-                    color: widget.borderColor ?? AppColor.greenColor),
+                    color: widget.borderColor ?? context.theme.shadowColor),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(50.r),
                 borderSide: BorderSide(
-                    color: widget.borderColor ?? AppColor.greenColor),
+                    color: widget.borderColor ?? context.theme.shadowColor),
               ),
               errorBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(50.r),
-                borderSide: const BorderSide(color: AppColor.orangeColor),
+                borderSide: BorderSide(color: context.theme.errorColor),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(50.r),
                 borderSide: BorderSide(
-                    color: widget.borderColor ?? AppColor.greenColor),
+                    color: widget.borderColor ?? context.theme.shadowColor),
               ),
               filled: true,
               fillColor: widget.fillColor ?? Colors.transparent),
@@ -476,7 +479,7 @@ class _NetworkCircularImageState extends State<NetworkCircularImage> {
       placeholder: (context, url) => CircleAvatar(
         radius: widget.radius,
         child: CircularProgressIndicator(
-          color: AppColor.primaryColor,
+          color: context.theme.primaryColor,
         ),
       ),
       // progressIndicatorBuilder: (BuildContext context, String url,
@@ -490,7 +493,7 @@ class _NetworkCircularImageState extends State<NetworkCircularImage> {
       //
       //   return Container(
       //       child: CircularProgressIndicator(
-      //           value: downloadProgress.progress, color: AppColor.blackColor));
+      //           value: downloadProgress.progress, color: context.theme.cardColor));
       // },
       errorWidget: (context, url, error) {
         printWrapped(error.toString());
@@ -548,7 +551,7 @@ class _NetworkPlainImageState extends State<NetworkPlainImage> {
       errorWidget: (context, url, error) => Container(
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8),
-            color: AppColor.redColor.withOpacity(0.5)),
+            color: context.theme.errorColor.withOpacity(0.5)),
         child: const Center(
           child: Icon(Icons.error),
         ),
@@ -563,7 +566,8 @@ Widget keyValueRowWidget(
     padding: const EdgeInsets.all(8.0),
     decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(4),
-        color: isGrey ? AppColor.alphaGrey : AppColor.whiteColor),
+        color:
+            isGrey ? myContext!.theme.hintColor : myContext!.theme.hintColor),
     child: Row(
       children: [
         Expanded(
@@ -590,12 +594,14 @@ Widget getFeatureItem({required String title, Color? color}) {
     margin: const EdgeInsets.all(5),
     padding: const EdgeInsets.all(8),
     decoration: BoxDecoration(
-        color: color ?? AppColor.alphaGrey,
+        color: color ?? myContext!.theme.hintColor,
         borderRadius: BorderRadius.circular(10)),
     child: Text(
       title,
       style: AppTextStyles.textStyleNormalBodyMedium.copyWith(
-          color: color != null ? AppColor.whiteColor : AppColor.blackColor),
+          color: color != null
+              ? myContext!.theme.cardColor
+              : myContext!.theme.backgroundColor),
     ),
   );
 }

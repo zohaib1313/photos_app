@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:photos_app/common/theme_service.dart';
 import 'package:photos_app/pages/splash_screen.dart';
 
 import 'common/app_routes.dart';
@@ -40,6 +41,8 @@ class _MyApplicationState extends State<MyApplication>
         getPages: appRoutes(),
         fallbackLocale: const Locale('en', 'US'),
         title: 'photos app',
+        darkTheme: MyThemes.dark,
+        theme: MyThemes.light,
         localizationsDelegates: const [
           DefaultCupertinoLocalizations.delegate,
           DefaultMaterialLocalizations.delegate,

@@ -14,6 +14,7 @@ import '../../../../common/loading_widget.dart';
 import '../../../../common/styles.dart';
 import '../../common/spaces_boxes.dart';
 import '../../controllers/login_controller.dart';
+import '../../my_application.dart';
 
 class LoginPage extends GetView<LoginController> {
   LoginPage({Key? key}) : super(key: key);
@@ -60,10 +61,10 @@ class LoginPage extends GetView<LoginController> {
                             controller: controller.emailController,
                             hintText: "User name",
                             contentPadding: 20 /* context.height * 0.04*/,
-                            focusBorderColor: AppColor.primaryBlueDarkColor,
-                            textColor: AppColor.blackColor,
-                            hintColor: AppColor.blackColor,
-                            fillColor: AppColor.alphaGrey,
+                            focusBorderColor: context.theme.primaryColor,
+                            textColor: context.theme.cardColor,
+                            hintColor: context.theme.cardColor,
+                            fillColor: context.theme.hintColor,
                             validator: (String? value) {
                               if ((value ?? '').isEmpty) {
                                 return 'Required';
@@ -85,10 +86,10 @@ class LoginPage extends GetView<LoginController> {
                                       ? Icons.visibility_outlined
                                       : Icons.visibility_off_outlined)),
                               hintText: "Password",
-                              focusBorderColor: AppColor.primaryBlueDarkColor,
-                              textColor: AppColor.blackColor,
-                              hintColor: AppColor.blackColor,
-                              fillColor: AppColor.alphaGrey,
+                              focusBorderColor: context.theme.primaryColor,
+                              textColor: context.theme.cardColor,
+                              hintColor: context.theme.cardColor,
+                              fillColor: context.theme.hintColor,
                               obsecureText: controller.isObscure.value,
                               validator: (String? value) =>
                                   value!.toValidPassword(),
@@ -99,8 +100,8 @@ class LoginPage extends GetView<LoginController> {
                           Button(
                             buttonText: "login",
                             padding: 16 /*context.height * 0.04*/,
-                            textColor: AppColor.whiteColor,
-                            color: AppColor.primaryBlueDarkColor,
+                            textColor: myContext!.theme.hintColor,
+                            color: context.theme.primaryColor,
                             onTap: () async {
                               //todo
 
@@ -133,7 +134,7 @@ class LoginPage extends GetView<LoginController> {
                               style: AppTextStyles.textStyleBoldBodyMedium
                                   .copyWith(
                                       decoration: TextDecoration.underline,
-                                      color: AppColor.primaryColor),
+                                      color: context.theme.primaryColor),
                             ),
                           ),
                         ],
