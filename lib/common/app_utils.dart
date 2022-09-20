@@ -1,34 +1,51 @@
 import 'dart:io';
-
+import 'dart:io';
+import 'package:dio/dio.dart' as dio;
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:get/get.dart';
+import 'package:get/get.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:photos_app/common/app_pop_ups.dart';
-import 'package:photos_app/my_application.dart';
-import 'package:url_launcher/url_launcher.dart';
-
-import 'helpers.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
-import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:photos_app/common/app_alert_bottom_sheet.dart';
 import 'package:photos_app/common/app_pop_ups.dart';
+import 'package:photos_app/common/app_pop_ups.dart';
 import 'package:photos_app/common/common_widgets.dart';
-
+import 'package:photos_app/common/extension.dart';
+import 'package:photos_app/models/user_model.dart';
 import 'package:photos_app/my_application.dart';
+import 'package:photos_app/my_application.dart';
+import 'package:photos_app/pages/dashboard_page.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../common/loading_widget.dart';
+import '../../../../common/loading_widget.dart';
+import '../../../../common/spaces_boxes.dart';
 import '../../../common/helpers.dart';
 import '../../../common/my_search_bar.dart';
 import '../../../common/spaces_boxes.dart';
 import '../../../common/styles.dart';
 import '../../../controllers/reminder_controller.dart';
 import '../../../models/reminder_response_model.dart';
+import '../../common/app_pop_ups.dart';
+import '../../common/app_utils.dart';
+import '../../common/common_widgets.dart';
+import '../../common/styles.dart';
+import '../../controllers/signup_controller.dart';
+import '../dio_networking/api_client.dart';
+import '../dio_networking/api_response.dart';
+import '../dio_networking/api_route.dart';
+import '../dio_networking/app_apis.dart';
+import 'helpers.dart';
 
 class AppUtils {
   static Future<List<PlatformFile>?> pickMultipleFiles() async {
@@ -187,5 +204,27 @@ class AppUtils {
         onChanged: (date) {}, onConfirm: (DateTime? date) {
       onCompletePickTime(date ?? DateTime.now());
     }, currentTime: DateTime.now(), locale: LocaleType.en);
+  }
+
+  static Future<bool> checkIfEmailAlreadyExists({required String email}) async {
+    printWrapped("Checking email availablity...");
+    var data = {
+      "email": email,
+    };
+    try {
+      var response =
+          await APIClient(isCache: false, baseUrl: ApiConstants.baseUrl)
+              .request(
+                  needToAuthenticate: false,
+                  route: APIRoute(
+                    APIType.checkUniqueMail,
+                    body: data,
+                  ),
+                  create: () => APIResponse(decoding: false),
+                  apiFunction: checkIfEmailAlreadyExists);
+      return Future.value((response.response?.success ?? false));
+    } catch (e) {
+      return Future.value(false);
+    }
   }
 }

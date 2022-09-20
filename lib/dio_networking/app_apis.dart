@@ -1,6 +1,7 @@
 enum APIType {
   loginUser,
   registerUser,
+  checkUniqueMail,
 
   ///reminders
   getReminders,
@@ -33,4 +34,5 @@ class ApiConstants {
   static const notes = '/users/notes/';
   static const myData = '/users/my-data/';
   static const sharedData = '/users/shared-data/';
+  static const checkUniqueMail = '/users/unique-email';
 }

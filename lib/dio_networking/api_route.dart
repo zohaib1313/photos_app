@@ -30,6 +30,13 @@ class APIRoute implements APIRouteConfigurable {
           data: body,
           method: APIMethod.post,
         );
+      case APIType.checkUniqueMail:
+        return RequestOptions(
+          path: ApiConstants.checkUniqueMail,
+          headers: headers,
+          queryParameters: body,
+          method: APIMethod.get,
+        );
       case APIType.getReminders:
         return RequestOptions(
           path: ApiConstants.reminder,

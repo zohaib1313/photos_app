@@ -100,7 +100,7 @@ class SharedFolderViewPage extends GetView<HomePageController> {
                                                   style: AppTextStyles
                                                       .textStyleBoldBodyMedium),
                                               Text(
-                                                  'Shared with:${sharedModel.sharedWithFk?.firstName ?? '-'}',
+                                                  'Shared with:${sharedModel.sharedWithFk?.username ?? '-'}',
                                                   style: AppTextStyles
                                                       .textStyleNormalBodySmall),
                                             ],

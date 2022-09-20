@@ -59,7 +59,7 @@ myAppBar(
   );
 }
 
-mySwitch(
+myCheckBox(
     {onTickTap,
     onMessageTap,
     Color? fillColor,
@@ -72,7 +72,7 @@ mySwitch(
       Container(
         padding: EdgeInsets.all(8.r),
         decoration: BoxDecoration(
-          color: fillColor ?? AppColor.whiteColor,
+          color: fillColor ?? AppColor.alphaGrey,
           borderRadius: BorderRadius.circular(4),
         ),
         child: InkWell(

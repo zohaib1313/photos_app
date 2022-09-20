@@ -9,6 +9,9 @@ class ProfilePageController extends GetxController {
   TextEditingController firstNameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController userAgeController = TextEditingController();
+  TextEditingController userCountryController = TextEditingController();
+  TextEditingController userCityController = TextEditingController();
+  TextEditingController userPhoneNumberController = TextEditingController();
 
   RxBool isUpdateModeOn = false.obs;
 
@@ -19,6 +22,11 @@ class ProfilePageController extends GetxController {
     usernameController.text = userModel?.username ?? '-';
     firstNameController.text = userModel?.firstName ?? '-';
     emailController.text = userModel?.email ?? '-';
-//    userAgeController.text=UserModel
+    userAgeController.text = userModel?.age ?? '-';
+    userCountryController.text = userModel?.country ?? '-';
+    userCityController.text = userModel?.city ?? '-';
+    userPhoneNumberController.text = userModel?.phoneNumber ?? '-';
   }
+
+  void updateProfile() {}
 }

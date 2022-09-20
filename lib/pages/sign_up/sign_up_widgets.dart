@@ -20,6 +20,7 @@ mixin SignupWidgetsMixin {
       int maxLines = 2,
       List<TextInputFormatter> inputFormatters = const [],
       TextInputType inputType = TextInputType.text,
+      onChanged,
       validator}) {
     return MyTextField(
         controller: controller,
@@ -28,6 +29,7 @@ mixin SignupWidgetsMixin {
         minLines: minLines,
         maxLines: maxLines,
         contentPadding: 20,
+        onChanged: onChanged,
         keyboardType: inputType,
         inputFormatters: inputFormatters,
         focusBorderColor: AppColor.alphaGrey,
