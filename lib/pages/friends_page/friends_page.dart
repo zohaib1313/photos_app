@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:photos_app/my_application.dart';
 
 import '../../../../common/loading_widget.dart';
 import '../../common/helpers.dart';
@@ -20,16 +21,20 @@ class FriendsPage extends GetView<FriendsPageController> {
           //_showBottomSheet();
         },
       ),
-      appBar: myAppBar(goBack: true, title: 'Friends', actions: [
-        MyAnimSearchBar(
-          width: context.width,
-          onSuffixTap: () {
-            controller.searchController.clear();
-          },
-          closeSearchOnSuffixTap: true,
-          textController: controller.searchController,
-        ),
-      ]),
+      appBar: myAppBar(
+          backGroundColor: context.theme.primaryColor,
+          goBack: true,
+          title: 'Friends',
+          actions: [
+            MyAnimSearchBar(
+              width: context.width,
+              onSuffixTap: () {
+                controller.searchController.clear();
+              },
+              closeSearchOnSuffixTap: true,
+              textController: controller.searchController,
+            ),
+          ]),
       body: GetX<FriendsPageController>(
         initState: (state) {
           controller.loadFriendsList();

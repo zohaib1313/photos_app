@@ -10,6 +10,7 @@ import '../../../../common/loading_widget.dart';
 import '../../common/common_widgets.dart';
 import '../../common/spaces_boxes.dart';
 import '../../common/user_defaults.dart';
+import '../../my_application.dart';
 import '../sign_up/sign_up_widgets.dart';
 
 class ProfilePage extends GetView<ProfilePageController>
@@ -20,14 +21,12 @@ class ProfilePage extends GetView<ProfilePageController>
 
   @override
   Widget build(BuildContext context) {
-    print(UserDefaults.getUserSession()?.photo ?? '');
-    return GetX<ProfilePageController>(
-      initState: (state) {
-        controller.setValuesFromSharedPref();
-      },
-      builder: (logic) {
-        return Scaffold(
-          appBar: myAppBar(title: 'Profile', goBack: false, actions: [
+    return Scaffold(
+      appBar: myAppBar(
+          backGroundColor: context.theme.primaryColor,
+          title: 'Profile',
+          goBack: false,
+          actions: [
             Row(
               children: [
                 Text(
@@ -44,7 +43,12 @@ class ProfilePage extends GetView<ProfilePageController>
               ],
             )
           ]),
-          body: SafeArea(
+      body: GetX<ProfilePageController>(
+        initState: (state) {
+          controller.setValuesFromSharedPref();
+        },
+        builder: (logic) {
+          return SafeArea(
             child: Stack(
               children: [
                 SingleChildScrollView(
@@ -134,9 +138,9 @@ class ProfilePage extends GetView<ProfilePageController>
                 if (controller.isLoading.isTrue) LoadingWidget(),
               ],
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }
