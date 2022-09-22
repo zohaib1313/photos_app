@@ -118,7 +118,7 @@ class AppPopUps {
                 Expanded(
                   child: Button(
                     buttonText: 'Cancel',
-                    color: myContext!.theme.errorColor,
+                    color: AppColor.redColor,
                     onTap: () {
                       Navigator.pop(myContext!);
                     },
@@ -128,7 +128,7 @@ class AppPopUps {
                 Expanded(
                   child: Button(
                     buttonText: 'Ok',
-                    color: myContext!.theme.shadowColor,
+                    color: AppColor.alphaGrey,
                     onTap: () {
                       if (controller.text.isNotEmpty) {
                         onSubmit(controller.text.trim());

@@ -32,7 +32,8 @@ mixin HomePageViewsMixin {
               Flexible(
                 child: Text(title,
                     overflow: TextOverflow.ellipsis,
-                    style: AppTextStyles.textStyleNormalLargeTitle),
+                    style: AppTextStyles.textStyleNormalLargeTitle
+                        .copyWith(color: AppColor.whiteColor)),
               ),
             ],
           ),

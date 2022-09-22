@@ -50,10 +50,10 @@ myAppBar(
     onBacKTap}) {
   return AppBar(
     elevation: 0,
-    //iconTheme: IconThemeData(color: iconColor ?? myContext!.theme.cardColor),
+    iconTheme: IconThemeData(color: iconColor ?? AppColor.whiteColor),
     actions: actions ?? [],
     automaticallyImplyLeading: goBack,
-    backgroundColor: backGroundColor ?? myContext!.theme.primaryColor,
+    backgroundColor: backGroundColor ?? AppColor.primaryColor,
     title: Text(
       title ?? "",
       style: AppTextStyles.textStyleBoldBodyMedium,
@@ -74,7 +74,7 @@ myCheckBox(
       Container(
         padding: EdgeInsets.all(8.r),
         decoration: BoxDecoration(
-          color: fillColor ?? myContext!.theme.hintColor,
+          color: fillColor ?? AppColor.alphaGrey,
           borderRadius: BorderRadius.circular(4),
         ),
         child: InkWell(
@@ -84,7 +84,7 @@ myCheckBox(
             size: 15.0,
             color: isActive
                 ? (checkColor ?? Colors.black)
-                : fillColor ?? myContext!.theme.hintColor,
+                : fillColor ?? AppColor.alphaGrey,
           ),
         ),
       ),
@@ -96,7 +96,7 @@ myCheckBox(
         child: Text(
           message,
           style: AppTextStyles.textStyleNormalBodySmall
-              .copyWith(color: messageColor ?? myContext!.theme.hintColor),
+              .copyWith(color: messageColor ?? AppColor.alphaGrey),
         ),
       )
     ],

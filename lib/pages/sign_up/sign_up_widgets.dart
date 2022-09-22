@@ -33,10 +33,10 @@ mixin SignupWidgetsMixin {
         onChanged: onChanged,
         keyboardType: inputType,
         inputFormatters: inputFormatters,
-        focusBorderColor: myContext!.theme.hintColor,
-        textColor: myContext!.theme.cardColor,
-        hintColor: myContext!.theme.cardColor,
-        fillColor: myContext!.theme.hintColor,
+        focusBorderColor: AppColor.alphaGrey,
+        textColor: AppColor.whiteColor,
+        hintColor: AppColor.whiteColor,
+        fillColor: AppColor.alphaGrey,
         validator: validator ??
             (String? value) => validate
                 ? (value!.trim().isEmpty ? validateText ?? "Required" : null)

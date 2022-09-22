@@ -23,7 +23,7 @@ class ProfilePage extends GetView<ProfilePageController>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: myAppBar(
-          backGroundColor: context.theme.primaryColor,
+          backGroundColor: AppColor.primaryColor,
           title: 'Profile',
           goBack: false,
           actions: [

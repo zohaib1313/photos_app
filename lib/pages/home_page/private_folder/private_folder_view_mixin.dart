@@ -20,7 +20,7 @@ mixin PrivateFolderViewMixin {
         item: myFolderModel,
         context: context,
         child: Card(
-          color: context.theme.hintColor,
+          color: AppColor.alphaGrey,
           child: Container(
             height: 180.h,
             padding: const EdgeInsets.all(8),
@@ -39,11 +39,10 @@ mixin PrivateFolderViewMixin {
                           context: context,
                           child: Container(
                             decoration: BoxDecoration(
-                                color: context.theme.primaryColor,
+                                color: AppColor.primaryColor,
                                 borderRadius: BorderRadius.circular(12)),
                             child: Center(
-                              child: Icon(Icons.add,
-                                  color: myContext!.theme.hintColor),
+                              child: Icon(Icons.add, color: AppColor.alphaGrey),
                             ),
                           ),
                         ),
@@ -173,7 +172,7 @@ mixin PrivateFolderViewMixin {
             FocusedMenuItem(
                 title: Text("Add New Folder",
                     style: AppTextStyles.textStyleBoldBodySmall),
-                trailingIcon: Icon(Icons.folder, color: context.theme.primaryColor),
+                trailingIcon: Icon(Icons.folder, color: AppColor.primaryColor),
                 onPressed: () {
                   /// ///////////.............................adding new folder///////////.............................
                   //   controller.addNewFolder(item: item);

@@ -128,25 +128,25 @@ class NotesPage extends GetView<NotesController> {
       ),
       child: Card(
         margin: const EdgeInsets.all(4),
-        color: myContext!.theme.hintColor,
+        color: AppColor.alphaGrey,
         child: ListTile(
           contentPadding: const EdgeInsets.all(4),
           title: Text(controller.filteredItemList.elementAt(index)?.name ?? '-',
               maxLines: 3,
               overflow: TextOverflow.ellipsis,
               style: AppTextStyles.textStyleNormalBodySmall
-                  .copyWith(color: myContext!.theme.cardColor)),
+                  .copyWith(color: AppColor.whiteColor)),
           subtitle: Text(
               controller.filteredItemList.elementAt(index)?.content ?? '-',
               maxLines: 3,
               overflow: TextOverflow.ellipsis,
               style: AppTextStyles.textStyleNormalBodySmall
-                  .copyWith(color: myContext!.theme.cardColor)),
+                  .copyWith(color: AppColor.whiteColor)),
           trailing: Text(
               formatDateTime(DateTime.tryParse(
                   controller.filteredItemList.elementAt(index)?.content ?? '')),
               style: AppTextStyles.textStyleNormalBodySmall
-                  .copyWith(color: myContext!.theme.cardColor)),
+                  .copyWith(color: AppColor.whiteColor)),
 
           /*  leading: const Icon(
             Icons.arrow_back_ios,

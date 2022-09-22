@@ -134,10 +134,10 @@ class SignupPage extends GetView<SignupController> with SignupWidgetsMixin {
                                           ? Icons.visibility_outlined
                                           : Icons.visibility_off_outlined)),
                                   hintText: "Password",
-                                  focusBorderColor: context.theme.primaryColor,
-                                  textColor: context.theme.cardColor,
-                                  hintColor: context.theme.cardColor,
-                                  fillColor: context.theme.hintColor,
+                                  focusBorderColor: AppColor.primaryColor,
+                                  textColor: AppColor.whiteColor,
+                                  hintColor: AppColor.whiteColor,
+                                  fillColor: AppColor.alphaGrey,
                                   obsecureText: controller.isObscure.value,
                                   validator: (String? value) =>
                                       value!.toValidPassword(),
@@ -158,11 +158,10 @@ class SignupPage extends GetView<SignupController> with SignupWidgetsMixin {
                                             ? Icons.visibility_outlined
                                             : Icons.visibility_off_outlined)),
                                     hintText: "Confirm Password",
-                                    focusBorderColor:
-                                        context.theme.primaryColor,
-                                    textColor: context.theme.cardColor,
-                                    hintColor: context.theme.cardColor,
-                                    fillColor: context.theme.hintColor,
+                                    focusBorderColor: AppColor.primaryColor,
+                                    textColor: AppColor.whiteColor,
+                                    hintColor: AppColor.whiteColor,
+                                    fillColor: AppColor.alphaGrey,
                                     obsecureText: controller.isObscure2.value,
                                     validator: (String? value) {
                                       if ((value ?? '') !=
@@ -178,8 +177,8 @@ class SignupPage extends GetView<SignupController> with SignupWidgetsMixin {
                               Button(
                                 buttonText: "Register",
                                 padding: 16,
-                                textColor: myContext!.theme.hintColor,
-                                color: context.theme.primaryColor,
+                                textColor: AppColor.alphaGrey,
+                                color: AppColor.primaryColor,
                                 onTap: () {
                                   if (controller.profileImage.value != null) {
                                     if (controller.formKeyUserInfo.currentState
@@ -224,7 +223,7 @@ class SignupPage extends GetView<SignupController> with SignupWidgetsMixin {
                                   style: AppTextStyles.textStyleBoldBodyMedium
                                       .copyWith(
                                           decoration: TextDecoration.underline,
-                                          color: context.theme.primaryColor),
+                                          color: AppColor.primaryColor),
                                 ),
                               ),
                               vSpace,

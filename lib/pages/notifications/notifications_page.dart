@@ -56,8 +56,8 @@ class NotificationsPage extends GetView<NotificationsController> {
                             snapshot.data?[index];
                         return Card(
                           color: (notificationModel?.isRead ?? false)
-                              ? myContext!.theme.hintColor
-                              : context.theme.hintColor,
+                              ? AppColor.alphaGrey
+                              : AppColor.alphaGrey,
                           elevation: 10,
                           child: ListTile(
                             onTap: () {

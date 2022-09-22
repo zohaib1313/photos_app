@@ -67,7 +67,7 @@ class ReminderPage extends GetView<ReminderController> {
                               style: AppTextStyles.textStyleBoldBodyMedium
                                   .copyWith(
                                       decoration: TextDecoration.underline,
-                                      color: context.theme.primaryColor),
+                                      color: AppColor.primaryColor),
                             ),
                           ),
                         ],
@@ -136,8 +136,7 @@ class ReminderPage extends GetView<ReminderController> {
       ),
       child: Card(
         margin: const EdgeInsets.all(4),
-        color:
-            isPast ? myContext!.theme.hintColor : myContext!.theme.shadowColor,
+        color: isPast ? AppColor.alphaGrey : AppColor.alphaGrey,
         child: ListTile(
           contentPadding: const EdgeInsets.all(4),
           title: Text(
@@ -145,17 +144,13 @@ class ReminderPage extends GetView<ReminderController> {
               maxLines: 3,
               overflow: TextOverflow.ellipsis,
               style: AppTextStyles.textStyleNormalBodySmall.copyWith(
-                  color: !isPast
-                      ? myContext!.theme.backgroundColor
-                      : myContext!.theme.cardColor)),
+                  color: !isPast ? AppColor.whiteColor : AppColor.whiteColor)),
           subtitle: Text(
               formatDateTime(DateTime.tryParse(
                   controller.filteredItemList.elementAt(index)?.reminderTime ??
                       '')),
               style: AppTextStyles.textStyleNormalBodySmall.copyWith(
-                  color: !isPast
-                      ? myContext!.theme.hintColor
-                      : myContext!.theme.cardColor)),
+                  color: !isPast ? AppColor.alphaGrey : AppColor.whiteColor)),
 
           /*  leading: const Icon(
             Icons.arrow_back_ios,
@@ -192,7 +187,7 @@ class ReminderPage extends GetView<ReminderController> {
             ///date
             Container(
               padding: const EdgeInsets.all(4),
-              color: myContext!.theme.hintColor,
+              color: AppColor.alphaGrey,
               child: Row(
                 children: [
                   Obx(() {

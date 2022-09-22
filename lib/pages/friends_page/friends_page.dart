@@ -22,7 +22,7 @@ class FriendsPage extends GetView<FriendsPageController> {
         },
       ),
       appBar: myAppBar(
-          backGroundColor: context.theme.primaryColor,
+          backGroundColor: AppColor.primaryColor,
           goBack: true,
           title: 'Friends',
           actions: [

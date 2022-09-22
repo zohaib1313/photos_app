@@ -48,7 +48,7 @@ class PrivateFolderViewPage extends GetView<HomePageController>
                   children: [
                     Container(
                       padding: const EdgeInsets.all(6),
-                      color: context.theme.hintColor,
+                      color: AppColor.alphaGrey,
                       child: Text(_getPath(),
                           style: AppTextStyles.textStyleNormalBodyXSmall),
                     ),

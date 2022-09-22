@@ -30,6 +30,7 @@ class HomePage extends GetView<HomePageController> with HomePageViewsMixin {
           actions: [
             MyAnimSearchBar(
               width: context.width * 0.8,
+              color: AppColor.whiteColor,
               onSuffixTap: () {
                 controller.searchController.clear();
               },
