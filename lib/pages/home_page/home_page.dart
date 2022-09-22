@@ -8,9 +8,7 @@ import 'package:photos_app/common/user_defaults.dart';
 import 'package:photos_app/controllers/home_page_controller.dart';
 import 'package:photos_app/models/my_data_model.dart';
 import 'package:photos_app/notifications/awsome_notification.dart';
-import 'package:photos_app/pages/home_page/history_page/history_page.dart';
 import 'package:photos_app/pages/home_page/notes/notes_page.dart';
-import 'package:photos_app/pages/home_page/private_folder/private_folder_view_page.dart';
 import 'package:photos_app/pages/home_page/reminders/reminders_page.dart';
 import 'package:photos_app/pages/home_page/shared_folder/shared_folder_view_page.dart';
 
@@ -109,8 +107,7 @@ class HomePage extends GetView<HomePageController> with HomePageViewsMixin {
                                         title: 'Private',
                                         color: AppColor.primaryColor,
                                         textColor: AppColor.whiteColor,
-                                        icon: const Icon(
-                                            Icons.private_connectivity,
+                                        icon: Icon(Icons.private_connectivity,
                                             size: 50,
                                             color: AppColor.whiteColor)),
                                   ),
@@ -144,7 +141,7 @@ class HomePage extends GetView<HomePageController> with HomePageViewsMixin {
                                               title: 'Shared',
                                               color: AppColor.primaryColor,
                                               textColor: AppColor.whiteColor,
-                                              icon: const Icon(
+                                              icon: Icon(
                                                   Icons.broadcast_on_personal,
                                                   size: 50,
                                                   color: AppColor.whiteColor)),
@@ -162,8 +159,7 @@ class HomePage extends GetView<HomePageController> with HomePageViewsMixin {
                                               title: 'Received',
                                               color: AppColor.primaryColor,
                                               textColor: AppColor.whiteColor,
-                                              icon: const Icon(
-                                                  Icons.move_to_inbox,
+                                              icon: Icon(Icons.move_to_inbox,
                                                   size: 50,
                                                   color: AppColor.whiteColor)),
                                         ),
@@ -187,7 +183,7 @@ class HomePage extends GetView<HomePageController> with HomePageViewsMixin {
                                         title: 'History',
                                         textColor: AppColor.whiteColor,
                                         color: AppColor.primaryColor,
-                                        icon: const Icon(Icons.history,
+                                        icon: Icon(Icons.history,
                                             size: 40,
                                             color: AppColor.whiteColor)),
                                   ),
@@ -201,7 +197,7 @@ class HomePage extends GetView<HomePageController> with HomePageViewsMixin {
                                         title: 'Reminders',
                                         textColor: AppColor.whiteColor,
                                         color: AppColor.primaryColor,
-                                        icon: const Icon(Icons.remember_me,
+                                        icon: Icon(Icons.remember_me,
                                             size: 40,
                                             color: AppColor.whiteColor)),
                                   ),
@@ -233,7 +229,7 @@ class HomePage extends GetView<HomePageController> with HomePageViewsMixin {
                                   title: 'Notes',
                                   textColor: AppColor.whiteColor,
                                   color: AppColor.primaryColor,
-                                  icon: const Icon(Icons.note_alt,
+                                  icon: Icon(Icons.note_alt,
                                       size: 40, color: AppColor.whiteColor)),
                             ),
                             vSpace,
@@ -248,8 +244,8 @@ class HomePage extends GetView<HomePageController> with HomePageViewsMixin {
                                   context: context,
                                   title: 'Camera',
                                   textColor: AppColor.whiteColor,
-                                  color: AppColor.green,
-                                  icon: const Icon(Icons.camera_alt_rounded,
+                                  color: AppColor.greenColor,
+                                  icon: Icon(Icons.camera_alt_rounded,
                                       size: 40, color: AppColor.whiteColor)),
                             ),
                             vSpace,
