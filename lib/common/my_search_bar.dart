@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 
 class MyAnimSearchBar extends StatefulWidget {
   ///  width - double ,isRequired : Yes
@@ -29,10 +30,12 @@ class MyAnimSearchBar extends StatefulWidget {
   final TextStyle? style;
   final bool closeSearchOnSuffixTap;
   final Color? color;
+  final Color? iconColor;
   final List<TextInputFormatter>? inputFormatters;
 
   const MyAnimSearchBar({
     Key? key,
+    this.iconColor,
 
     /// The width cannot be null
     required this.width,
@@ -168,10 +171,10 @@ class _MyAnimSearchBarState extends State<MyAnimSearchBar>
 
                       ///suffixIcon is of type Icon
                       child: widget.suffixIcon ??
-                          const Icon(
+                          Icon(
                             Icons.close,
                             size: 20.0,
-                            color: Colors.black,
+                            color: widget.iconColor ?? Colors.black,
                           ),
                     ),
                   ),
@@ -209,7 +212,8 @@ class _MyAnimSearchBarState extends State<MyAnimSearchBar>
                     },
 
                     ///style is of type TextStyle, the default is just a color black
-                    style: widget.style ?? const TextStyle(color: Colors.black),
+                    style: widget.style ??
+                        TextStyle(color: widget.iconColor ?? Colors.black),
                     cursorColor: Colors.black,
                     decoration: InputDecoration(
                       contentPadding: const EdgeInsets.only(bottom: 5),
@@ -245,15 +249,15 @@ class _MyAnimSearchBarState extends State<MyAnimSearchBar>
                 ///prefixIcon is of type Icon
                 icon: widget.prefixIcon != null
                     ? toggle == 1
-                        ? const Icon(
+                        ? Icon(
                             Icons.arrow_back_ios,
-                            color: Colors.black,
+                            color: widget.iconColor ?? Colors.white,
                           )
                         : widget.prefixIcon!
                     : Icon(
                         toggle == 1 ? Icons.arrow_back_ios : Icons.search,
                         size: 20.0,
-                        color: Colors.black,
+                        color: widget.iconColor ?? Colors.white,
                       ),
                 onPressed: () {
                   setState(

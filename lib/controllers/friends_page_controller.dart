@@ -66,4 +66,26 @@ class FriendsPageController extends GetxController {
       return Future.value(null);
     });
   }
+
+  void filterListBy(String filter) {
+    filteredList.clear();
+    for (var element in friendsList) {
+      switch (filter) {
+        case 'pending':
+          if (element.friendRequestStatus == 'pending') {
+            filteredList.add(element);
+          }
+          break;
+        case 'received':
+
+          ///if (friend_fk == current user) id it means these request are received...
+          if (element.friendRequestStatus == 'pending') {
+            filteredList.add(element);
+          }
+          break;
+        case 'reject':
+          break;
+      }
+    }
+  }
 }

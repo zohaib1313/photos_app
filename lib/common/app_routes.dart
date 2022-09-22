@@ -8,6 +8,7 @@ import 'package:photos_app/controllers/notes_controller.dart';
 import 'package:photos_app/controllers/notification_controller.dart';
 import 'package:photos_app/controllers/profile_page_controller.dart';
 import 'package:photos_app/controllers/reminder_controller.dart';
+import 'package:photos_app/controllers/search_user_controller.dart';
 import 'package:photos_app/controllers/signup_controller.dart';
 import 'package:photos_app/pages/dashboard_page.dart';
 import 'package:photos_app/pages/home_page/history_page/history_page.dart';
@@ -17,6 +18,7 @@ import 'package:photos_app/pages/home_page/reminders/reminders_page.dart';
 import 'package:photos_app/pages/home_page/shared_folder/shared_folder_view_page.dart';
 import 'package:photos_app/pages/login_page/login_page.dart';
 import 'package:photos_app/pages/notifications/notifications_page.dart';
+import 'package:photos_app/pages/search_user_page.dart';
 import 'package:photos_app/pages/sign_up/sign_up_page.dart';
 
 import '../controllers/settings_page_controller.dart';
@@ -83,6 +85,12 @@ appRoutes() {
         page: () => NotesPage(),
         binding: BindingsBuilder(() {
           Get.lazyPut<NotesController>(() => NotesController());
+        })),
+    GetPage(
+        name: SearchUserPage.id,
+        page: () => SearchUserPage(),
+        binding: BindingsBuilder(() {
+          Get.lazyPut<SearchUserController>(() => SearchUserController());
         })),
     /* GetPage(
         name: PrivateFolderViewPage.id,

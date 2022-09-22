@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:photos_app/common/common_widgets.dart';
+import 'package:photos_app/common/spaces_boxes.dart';
 import 'package:photos_app/my_application.dart';
+import 'package:photos_app/pages/search_user_page.dart';
 
 import '../../../../common/loading_widget.dart';
+import '../../common/app_alert_bottom_sheet.dart';
 import '../../common/helpers.dart';
 import '../../common/my_search_bar.dart';
 import '../../common/styles.dart';
@@ -15,11 +19,17 @@ class FriendsPage extends GetView<FriendsPageController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
-        onPressed: () {
-          //_showBottomSheet();
-        },
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 18.0),
+        child: FloatingActionButton(
+          child: const Icon(Icons.add),
+          onPressed: () async {
+            await Get.toNamed(SearchUserPage.id);
+            controller.friendsList.clear();
+            controller.filteredList.clear();
+            controller.loadFriendsList(showAlert: true);
+          },
+        ),
       ),
       appBar: myAppBar(
           backGroundColor: AppColor.primaryColor,
@@ -27,13 +37,21 @@ class FriendsPage extends GetView<FriendsPageController> {
           title: 'Friends',
           actions: [
             MyAnimSearchBar(
-              width: context.width,
+              width: context.width * 0.8,
+              color: AppColor.primaryColor,
+              iconColor: AppColor.whiteColor,
               onSuffixTap: () {
                 controller.searchController.clear();
               },
               closeSearchOnSuffixTap: true,
               textController: controller.searchController,
             ),
+            IconButton(
+                icon: const Icon(Icons.filter_alt),
+                onPressed: () {
+                  _showBottomSheet();
+                }),
+            hSpace,
           ]),
       body: GetX<FriendsPageController>(
         initState: (state) {
@@ -95,11 +113,82 @@ class FriendsPage extends GetView<FriendsPageController> {
   Widget getFriendItemCard({required int index}) {
     return Card(
       child: ListTile(
+        contentPadding: const EdgeInsets.all(2),
+        leading: Padding(
+          padding: const EdgeInsets.all(4.0),
+          child: NetworkCircularImage(
+              url: controller.filteredList.elementAt(index).friendFk?.photo ??
+                  ''),
+        ),
         title: Text(
           controller.filteredList.elementAt(index).friendFk?.username ?? '-',
           style: AppTextStyles.textStyleNormalBodyMedium,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+        trailing: SizedBox(
+          width: 100,
+          height: 40,
+          child: controller.filteredList.elementAt(index).friendRequestStatus ==
+                  'pending'
+              ? TextButton(
+                  onPressed: () {},
+                  child: Text('Cancel',
+                      style: AppTextStyles.textStyleBoldBodyMedium))
+              : const IgnorePointer(),
         ),
       ),
     );
+  }
+
+  Widget getRequestButton({String? request}) {
+    switch (request) {
+      case 'pending':
+        return Button(buttonText: 'Cancel');
+      case 'accept':
+        return Button(buttonText: '');
+      case 'reject':
+        return Button(buttonText: 'Rejected');
+    }
+    return IgnorePointer();
+  }
+
+  void _showBottomSheet() {
+    AppBottomSheets.showAppAlertBottomSheet(
+        isFull: false,
+        isDismissable: true,
+        title: 'Filter by',
+        context: myContext!,
+        child: Column(
+          children: [
+            vSpace,
+            Button(
+              buttonText: 'Request Sent',
+              textColor: AppColor.whiteColor,
+              onTap: () {
+                controller.filterListBy('pending');
+                Get.back();
+              },
+            ),
+            vSpace,
+            Button(
+              buttonText: 'Request Received',
+              textColor: AppColor.whiteColor,
+              onTap: () {
+                controller.filterListBy('received');
+                Get.back();
+              },
+            ),
+            vSpace,
+            Button(
+              buttonText: 'Request Rejected',
+              textColor: AppColor.whiteColor,
+              onTap: () {
+                controller.filterListBy('reject');
+                Get.back();
+              },
+            ),
+          ],
+        ));
   }
 }

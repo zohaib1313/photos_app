@@ -24,6 +24,9 @@ enum APIType {
 
   ///friends
   getAllFriends,
+
+  ///users
+  searchUniqueUser
 }
 
 class ApiConstants {
@@ -39,4 +42,5 @@ class ApiConstants {
   static const sharedData = '/users/shared-data/';
   static const checkUniqueMail = '/users/unique-email';
   static const friends = '/users/add-friend/';
+  static const uniqueUser = '/users/unique-username';
 }

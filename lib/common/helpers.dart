@@ -50,7 +50,7 @@ myAppBar(
     onBacKTap}) {
   return AppBar(
     elevation: 0,
-    iconTheme: IconThemeData(color: iconColor ?? AppColor.whiteColor),
+    // iconTheme: IconThemeData(color: iconColor ?? AppColor.whiteColor),
     actions: actions ?? [],
     automaticallyImplyLeading: goBack,
     backgroundColor: backGroundColor ?? AppColor.primaryColor,

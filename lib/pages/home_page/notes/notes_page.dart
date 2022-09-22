@@ -83,7 +83,7 @@ class NotesPage extends GetView<NotesController> {
                           controller: controller.listViewController,
                           physics: const AlwaysScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
-                            return getNotesList(index: index);
+                            return getNotesListItem(index: index);
                           },
                         ),
                       ),
@@ -96,7 +96,7 @@ class NotesPage extends GetView<NotesController> {
     );
   }
 
-  Widget getNotesList({required int index}) {
+  Widget getNotesListItem({required int index}) {
     return Slidable(
       endActionPane: ActionPane(
         motion: const ScrollMotion(),
