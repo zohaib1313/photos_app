@@ -3,12 +3,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:photos_app/common/app_utils.dart';
 import 'package:photos_app/common/helpers.dart';
-import 'package:photos_app/common/theme_service.dart';
+import 'package:photos_app/common/styles.dart';
 import 'package:photos_app/common/user_defaults.dart';
 import 'package:photos_app/controllers/home_page_controller.dart';
 import 'package:photos_app/models/my_data_model.dart';
 import 'package:photos_app/notifications/awsome_notification.dart';
+import 'package:photos_app/pages/home_page/history_page/history_page.dart';
 import 'package:photos_app/pages/home_page/notes/notes_page.dart';
+import 'package:photos_app/pages/home_page/private_folder/private_folder_view_page.dart';
 import 'package:photos_app/pages/home_page/reminders/reminders_page.dart';
 import 'package:photos_app/pages/home_page/shared_folder/shared_folder_view_page.dart';
 
@@ -16,7 +18,6 @@ import '../../../../common/loading_widget.dart';
 import '../../common/my_search_bar.dart';
 import '../../common/spaces_boxes.dart';
 import '../../models/shared_data_response_model.dart';
-import '../../my_application.dart';
 import 'home_page_views_mixin.dart';
 
 class HomePage extends GetView<HomePageController> with HomePageViewsMixin {
@@ -106,10 +107,12 @@ class HomePage extends GetView<HomePageController> with HomePageViewsMixin {
                                         },
                                         context: context,
                                         title: 'Private',
-                                        color: context.theme.primaryColor,
+                                        color: AppColor.primaryColor,
+                                        textColor: AppColor.whiteColor,
                                         icon: const Icon(
                                             Icons.private_connectivity,
-                                            size: 50)),
+                                            size: 50,
+                                            color: AppColor.whiteColor)),
                                   ),
                                   hSpace,
                                   Expanded(
@@ -139,10 +142,12 @@ class HomePage extends GetView<HomePageController> with HomePageViewsMixin {
                                               },
                                               context: context,
                                               title: 'Shared',
-                                              color: context.theme.primaryColor,
+                                              color: AppColor.primaryColor,
+                                              textColor: AppColor.whiteColor,
                                               icon: const Icon(
                                                   Icons.broadcast_on_personal,
-                                                  size: 50)),
+                                                  size: 50,
+                                                  color: AppColor.whiteColor)),
                                         ),
                                         vSpace,
                                         Expanded(
@@ -155,9 +160,12 @@ class HomePage extends GetView<HomePageController> with HomePageViewsMixin {
                                               },
                                               context: context,
                                               title: 'Received',
-                                              color: context.theme.primaryColor,
-                                              icon: Icon(Icons.move_to_inbox,
-                                                  size: 50)),
+                                              color: AppColor.primaryColor,
+                                              textColor: AppColor.whiteColor,
+                                              icon: const Icon(
+                                                  Icons.move_to_inbox,
+                                                  size: 50,
+                                                  color: AppColor.whiteColor)),
                                         ),
                                       ],
                                     ),
@@ -173,14 +181,15 @@ class HomePage extends GetView<HomePageController> with HomePageViewsMixin {
                                   Expanded(
                                     child: getMainCards(
                                         onTap: () {
-                                          ThemeService.switchTheme();
                                           //  Get.toNamed(HistoryPage.id);
                                         },
                                         context: context,
                                         title: 'History',
-                                        color: context.theme.primaryColor,
+                                        textColor: AppColor.whiteColor,
+                                        color: AppColor.primaryColor,
                                         icon: const Icon(Icons.history,
-                                            size: 40)),
+                                            size: 40,
+                                            color: AppColor.whiteColor)),
                                   ),
                                   hSpace,
                                   Expanded(
@@ -190,12 +199,13 @@ class HomePage extends GetView<HomePageController> with HomePageViewsMixin {
                                         },
                                         context: context,
                                         title: 'Reminders',
-                                        textColor: myContext!.theme.hintColor,
-                                        color: context.theme.primaryColor,
-                                        icon: Icon(Icons.remember_me,
+                                        textColor: AppColor.whiteColor,
+                                        color: AppColor.primaryColor,
+                                        icon: const Icon(Icons.remember_me,
                                             size: 40,
-                                            color: myContext!.theme.hintColor)),
+                                            color: AppColor.whiteColor)),
                                   ),
+                                  hSpace,
                                   /*  Expanded(
                                     child: getMainCards(
                                         onTap: () {
@@ -203,11 +213,11 @@ class HomePage extends GetView<HomePageController> with HomePageViewsMixin {
                                         },
                                         context: context,
                                         title: 'Check list',
-                                        textColor: myContext!.theme.hintColor,
-                                        color: context.theme.primaryColor,
+                                        textColor: AppColor.whiteColor,
+                                        color: AppColor.primaryColor,
                                         icon: const Icon(Icons.check_box,
                                             size: 40,
-                                            color: myContext!.theme.hintColor)),
+                                            color: AppColor.whiteColor)),
                                   ),*/
                                 ],
                               ),
@@ -221,11 +231,10 @@ class HomePage extends GetView<HomePageController> with HomePageViewsMixin {
                                   },
                                   context: context,
                                   title: 'Notes',
-                                  textColor: myContext!.theme.hintColor,
-                                  color: context.theme.primaryColor,
-                                  icon: Icon(Icons.note_alt,
-                                      size: 40,
-                                      color: myContext!.theme.hintColor)),
+                                  textColor: AppColor.whiteColor,
+                                  color: AppColor.primaryColor,
+                                  icon: const Icon(Icons.note_alt,
+                                      size: 40, color: AppColor.whiteColor)),
                             ),
                             vSpace,
                             SizedBox(
@@ -238,10 +247,10 @@ class HomePage extends GetView<HomePageController> with HomePageViewsMixin {
                                   },
                                   context: context,
                                   title: 'Camera',
-                                  textColor: myContext!.theme.hintColor,
-                                  color: context.theme.primaryColor,
-                                  icon: const Icon(Icons.camera_alt_outlined,
-                                      size: 40)),
+                                  textColor: AppColor.whiteColor,
+                                  color: AppColor.green,
+                                  icon: const Icon(Icons.camera_alt_rounded,
+                                      size: 40, color: AppColor.whiteColor)),
                             ),
                             vSpace,
                             vSpace,
