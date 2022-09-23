@@ -6,7 +6,6 @@ import 'package:photos_app/common/styles.dart';
 import 'package:photos_app/controllers/home_page_controller.dart';
 import 'package:photos_app/models/my_data_model.dart';
 import 'package:photos_app/pages/home_page/private_folder/private_folder_view_mixin.dart';
-
 import '../../../../../common/loading_widget.dart';
 import '../../../common/spaces_boxes.dart';
 
@@ -42,11 +41,10 @@ class PrivateFolderViewPage extends GetView<HomePageController>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      padding: const EdgeInsets.all(6),
-                      color: AppColor.alphaGrey,
-                      child: Text(_getPath(),
-                          style: AppTextStyles.textStyleNormalBodyXSmall),
-                    ),
+                        padding: const EdgeInsets.all(6),
+                        color: AppColor.alphaGrey.withOpacity(0.5),
+                        child: Text(_getPath(),
+                            style: AppTextStyles.textStyleNormalBodyXSmall)),
                     vSpace,
                     Expanded(
                       child: Padding(

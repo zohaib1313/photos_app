@@ -17,21 +17,27 @@ class FriendsPageController extends GetxController {
   RxList<FriendsModel> filteredList = <FriendsModel>[].obs;
   ScrollController listViewController = ScrollController();
 
-  void loadFriendsList({bool showAlert = false}) async {
+  void loadFriendsList(
+      {bool showAlert = false, required bool isForUpdate}) async {
     isLoading.value = true;
     try {
-      var apiResponse =
+      final apiResponse =
           await FriendsNetworkRepo.loadFriendsFromServer(queryMap: {
         'page': pageToLoad,
         'user_id': UserDefaults.getCurrentUserId(),
       });
-
       isLoading.value = false;
       if (apiResponse?.data != null) {
         if (apiResponse?.data?.next != null) {
           pageToLoad++;
         }
         friendsList.addAll(apiResponse?.data?.friendsList ?? []);
+
+        ///filter on only friends if picking up user for shairng files..
+        if (isForUpdate) {
+          friendsList.removeWhere(
+              (element) => (element.friendRequestStatus != 'accept'));
+        }
         filteredList.addAll(friendsList);
       } else {
         if (showAlert) {

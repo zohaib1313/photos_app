@@ -13,24 +13,29 @@ import '../../common/styles.dart';
 import '../../controllers/friends_page_controller.dart';
 
 class FriendsPage extends GetView<FriendsPageController> {
-  const FriendsPage({Key? key}) : super(key: key);
+  var isForUpdate = false;
+
+  FriendsPage({Key? key, this.isForUpdate = false}) : super(key: key);
   static const id = '/FriendsPage';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 18.0),
-        child: FloatingActionButton(
-          child: const Icon(Icons.add),
-          onPressed: () async {
-            await Get.toNamed(SearchUserPage.id);
-            controller.friendsList.clear();
-            controller.filteredList.clear();
-            controller.loadFriendsList(showAlert: true);
-          },
-        ),
-      ),
+      floatingActionButton: isForUpdate
+          ? const IgnorePointer()
+          : Padding(
+              padding: const EdgeInsets.only(bottom: 18.0),
+              child: FloatingActionButton(
+                child: const Icon(Icons.add),
+                onPressed: () async {
+                  await Get.toNamed(SearchUserPage.id);
+                  controller.friendsList.clear();
+                  controller.filteredList.clear();
+                  controller.loadFriendsList(
+                      showAlert: true, isForUpdate: isForUpdate);
+                },
+              ),
+            ),
       appBar: myAppBar(
           backGroundColor: AppColor.primaryColor,
           goBack: true,
@@ -46,16 +51,23 @@ class FriendsPage extends GetView<FriendsPageController> {
               closeSearchOnSuffixTap: true,
               textController: controller.searchController,
             ),
-            IconButton(
-                icon: const Icon(Icons.filter_alt),
-                onPressed: () {
-                  _showBottomSheet();
-                }),
+
+            ///if this page is being used for update then remove filtering of list
+            if (!isForUpdate)
+              IconButton(
+                  icon: const Icon(Icons.filter_alt),
+                  onPressed: () {
+                    _showBottomSheet();
+                  }),
             hSpace,
           ]),
       body: GetX<FriendsPageController>(
         initState: (state) {
-          controller.loadFriendsList();
+          WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+            controller.friendsList.clear();
+            controller.filteredList.clear();
+            controller.loadFriendsList(isForUpdate: isForUpdate);
+          });
         },
         builder: (_) {
           return SafeArea(
@@ -74,7 +86,8 @@ class FriendsPage extends GetView<FriendsPageController> {
                             onTap: () {
                               controller.filteredList.clear();
                               controller.friendsList.clear();
-                              controller.loadFriendsList(showAlert: true);
+                              controller.loadFriendsList(
+                                  showAlert: true, isForUpdate: isForUpdate);
                             },
                             child: Text(
                               "Refresh",
@@ -89,7 +102,8 @@ class FriendsPage extends GetView<FriendsPageController> {
                         onRefresh: () {
                           controller.filteredList.clear();
                           controller.friendsList.clear();
-                          controller.loadFriendsList(showAlert: true);
+                          controller.loadFriendsList(
+                              showAlert: true, isForUpdate: isForUpdate);
                           return Future.delayed(const Duration(seconds: 2));
                         },
                         child: ListView.builder(
@@ -126,8 +140,19 @@ class FriendsPage extends GetView<FriendsPageController> {
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
-        trailing:
-            controller.filteredList.elementAt(index).userFk?.id.toString() ==
+        trailing: isForUpdate
+
+            ///if this page is used for picking up the user then select that user and return to back page....
+            ? TextButton(
+                onPressed: () {
+                  Get.back(result: controller.filteredList.elementAt(index));
+                  controller.filteredList.clear();
+                  controller.friendsList.clear();
+                  controller.loadFriendsList(isForUpdate: false);
+                },
+                child: Text('Select',
+                    style: AppTextStyles.textStyleBoldBodyMedium))
+            : controller.filteredList.elementAt(index).userFk?.id.toString() ==
                     UserDefaults.getCurrentUserId()
                 ? getRequestButton(index: index)
                 : const IgnorePointer(),

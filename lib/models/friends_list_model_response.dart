@@ -94,4 +94,9 @@ class FriendsModel implements Decodeable {
     friendRequestStatus = json['friend_request_status'];
     return this;
   }
+
+  @override
+  String toString() {
+    return 'FriendsModel{id: $id, userFk: $userFk, friendFk: $friendFk, friendRequestStatus: $friendRequestStatus}';
+  }
 }

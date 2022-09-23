@@ -4,9 +4,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:focused_menu/focused_menu.dart';
 import 'package:focused_menu/modals.dart';
 import 'package:get/get.dart';
+import 'package:photos_app/common/helpers.dart';
 import 'package:photos_app/common/styles.dart';
 import 'package:photos_app/controllers/home_page_controller.dart';
+import 'package:photos_app/models/friends_list_model_response.dart';
 import 'package:photos_app/models/my_data_model.dart';
+import 'package:photos_app/pages/friends_page/friends_page.dart';
 
 import '../../../common/spaces_boxes.dart';
 import '../../../my_application.dart';
@@ -180,7 +183,15 @@ mixin PrivateFolderViewMixin {
           FocusedMenuItem(
               title: Text("Share", style: AppTextStyles.textStyleBoldBodySmall),
               trailingIcon: const Icon(Icons.share),
-              onPressed: () {}),
+              onPressed: () async {
+                ///load friends ......
+                FriendsModel? friendModel =
+                    await Get.to(FriendsPage(isForUpdate: true));
+                if (friendModel != null) {
+                  ///share file...
+                  printWrapped(friendModel.toString());
+                }
+              }),
           FocusedMenuItem(
               title: Text("Delete",
                   style: AppTextStyles.textStyleBoldBodySmall

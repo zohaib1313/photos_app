@@ -35,7 +35,7 @@ class SharedReceivedDataResponseModel implements Decodeable {
     data['previous'] = this.previous;
     if (this.sharedReceivedDataModelList != null) {
       data['results'] =
-          this.sharedReceivedDataModelList!.map((v) => v.toJson()).toList();
+          this.sharedReceivedDataModelList.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -48,7 +48,7 @@ class SharedReceivedDataResponseModel implements Decodeable {
     if (json['results'] != null) {
       sharedReceivedDataModelList = <SharedReceivedDataModel>[];
       json['results'].forEach((v) {
-        sharedReceivedDataModelList!
+        sharedReceivedDataModelList
             .add(new SharedReceivedDataModel.fromJson(v));
       });
     }
