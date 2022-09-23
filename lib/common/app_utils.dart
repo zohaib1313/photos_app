@@ -4,6 +4,7 @@ import 'package:dio/dio.dart' as dio;
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
@@ -225,6 +226,19 @@ class AppUtils {
       return Future.value((response.response?.success ?? false));
     } catch (e) {
       return Future.value(false);
+    }
+  }
+
+  static unFocusKeyboard() {
+    try {
+      final FocusScopeNode currentScope = FocusScope.of(myContext!);
+      if (!currentScope.hasPrimaryFocus && currentScope.hasFocus) {
+        FocusManager.instance.primaryFocus?.unfocus();
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 }

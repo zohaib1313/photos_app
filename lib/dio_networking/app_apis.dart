@@ -24,6 +24,8 @@ enum APIType {
 
   ///friends
   getAllFriends,
+  sendFriendRequest,
+  deleteFriendRequest,
 
   ///users
   searchUniqueUser

@@ -14,7 +14,7 @@ class DashBoardController extends GetxController {
 
   final List<Widget> viewsList = [
     HomePage(),
-    FriendsPage(),
+    const FriendsPage(),
     ProfilePage(),
     SettingsPage()
   ];

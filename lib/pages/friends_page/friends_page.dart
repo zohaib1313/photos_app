@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:photos_app/common/common_widgets.dart';
 import 'package:photos_app/common/spaces_boxes.dart';
+import 'package:photos_app/common/user_defaults.dart';
 import 'package:photos_app/my_application.dart';
 import 'package:photos_app/pages/search_user_page.dart';
-
 import '../../../../common/loading_widget.dart';
 import '../../common/app_alert_bottom_sheet.dart';
 import '../../common/helpers.dart';
@@ -13,7 +13,7 @@ import '../../common/styles.dart';
 import '../../controllers/friends_page_controller.dart';
 
 class FriendsPage extends GetView<FriendsPageController> {
-  FriendsPage({Key? key}) : super(key: key);
+  const FriendsPage({Key? key}) : super(key: key);
   static const id = '/FriendsPage';
 
   @override
@@ -126,31 +126,64 @@ class FriendsPage extends GetView<FriendsPageController> {
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
-        trailing: SizedBox(
-          width: 100,
-          height: 40,
-          child: controller.filteredList.elementAt(index).friendRequestStatus ==
-                  'pending'
-              ? TextButton(
-                  onPressed: () {},
-                  child: Text('Cancel',
-                      style: AppTextStyles.textStyleBoldBodyMedium))
-              : const IgnorePointer(),
-        ),
+        trailing:
+            controller.filteredList.elementAt(index).userFk?.id.toString() ==
+                    UserDefaults.getCurrentUserId()
+                ? getRequestButton(index: index)
+                : const IgnorePointer(),
       ),
     );
   }
 
-  Widget getRequestButton({String? request}) {
-    switch (request) {
+  Widget getRequestButton({required int index}) {
+    switch (controller.filteredList
+        .elementAt(index)
+        .friendRequestStatus
+        .toString()) {
       case 'pending':
-        return Button(buttonText: 'Cancel');
+        return TextButton(
+            onPressed: () {
+              controller.removeFriend(index: index);
+            },
+            child: Column(
+              children: [
+                Text(
+                  'request sent',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTextStyles.textStyleNormalBodyXSmall
+                      .copyWith(color: AppColor.blackColor),
+                ),
+                Text('Cancel',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTextStyles.textStyleBoldBodyMedium),
+              ],
+            ));
       case 'accept':
-        return Button(buttonText: '');
+        return TextButton(
+            onPressed: () {
+              controller.removeFriend(index: index);
+            },
+            child: Column(
+              children: [
+                Text(
+                  'friend added',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTextStyles.textStyleNormalBodyXSmall
+                      .copyWith(color: AppColor.blackColor),
+                ),
+                Text('Remove',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTextStyles.textStyleBoldBodyMedium),
+              ],
+            ));
       case 'reject':
-        return Button(buttonText: 'Rejected');
+        return const IgnorePointer();
     }
-    return IgnorePointer();
+    return const IgnorePointer();
   }
 
   void _showBottomSheet() {
@@ -163,10 +196,10 @@ class FriendsPage extends GetView<FriendsPageController> {
           children: [
             vSpace,
             Button(
-              buttonText: 'Request Sent',
+              buttonText: 'All',
               textColor: AppColor.whiteColor,
               onTap: () {
-                controller.filterListBy('pending');
+                controller.filterListBy('all');
                 Get.back();
               },
             ),
@@ -181,10 +214,10 @@ class FriendsPage extends GetView<FriendsPageController> {
             ),
             vSpace,
             Button(
-              buttonText: 'Request Rejected',
+              buttonText: 'Request Sent',
               textColor: AppColor.whiteColor,
               onTap: () {
-                controller.filterListBy('reject');
+                controller.filterListBy('pending');
                 Get.back();
               },
             ),

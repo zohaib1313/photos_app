@@ -3,12 +3,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:photos_app/common/user_defaults.dart';
 import 'package:photos_app/models/friends_list_model_response.dart';
+import 'package:photos_app/network_repositories/friends_network_repo.dart';
 
 import '../common/app_pop_ups.dart';
-import '../dio_networking/api_client.dart';
-import '../dio_networking/api_response.dart';
-import '../dio_networking/api_route.dart';
-import '../dio_networking/app_apis.dart';
+import '../my_application.dart';
 
 class FriendsPageController extends GetxController {
   RxBool isLoading = false.obs;
@@ -19,33 +17,21 @@ class FriendsPageController extends GetxController {
   RxList<FriendsModel> filteredList = <FriendsModel>[].obs;
   ScrollController listViewController = ScrollController();
 
-  void loadFriendsList({
-    bool showAlert = false,
-  }) {
-    Map<String, dynamic> body = {
-      'page': pageToLoad,
-      'user_id': UserDefaults.getCurrentUserId(),
-    };
+  void loadFriendsList({bool showAlert = false}) async {
     isLoading.value = true;
-    APIClient(isCache: false, baseUrl: ApiConstants.baseUrl)
-        .request(
-            route: APIRoute(
-              APIType.getAllFriends,
-              body: body,
-            ),
-            create: () => APIResponse<FriendsListModelResponse>(
-                create: () => FriendsListModelResponse()),
-            apiFunction: loadFriendsList)
-        .then((response) {
+    try {
+      var apiResponse =
+          await FriendsNetworkRepo.loadFriendsFromServer(queryMap: {
+        'page': pageToLoad,
+        'user_id': UserDefaults.getCurrentUserId(),
+      });
+
       isLoading.value = false;
-
-      FriendsListModelResponse? responseModel = response.response?.data;
-
-      if (responseModel != null) {
-        if (responseModel.next != null) {
+      if (apiResponse?.data != null) {
+        if (apiResponse?.data?.next != null) {
           pageToLoad++;
         }
-        friendsList.addAll(responseModel.friendsList ?? []);
+        friendsList.addAll(apiResponse?.data?.friendsList ?? []);
         filteredList.addAll(friendsList);
       } else {
         if (showAlert) {
@@ -55,21 +41,56 @@ class FriendsPageController extends GetxController {
               dialogType: DialogType.WARNING);
         }
       }
-    }).catchError((error) {
+    } catch (e) {
       isLoading.value = false;
       if (showAlert) {
         AppPopUps.showDialogContent(
             title: 'Error',
-            description: error.toString(),
+            description: e.toString(),
             dialogType: DialogType.ERROR);
       }
-      return Future.value(null);
-    });
+    }
+  }
+
+  void removeFriend({required int index}) {
+    AppPopUps.showConfirmDialog(
+        title: 'Alert',
+        message: 'Are you sure remove/cancel',
+        onSubmit: () async {
+          try {
+            ///delete with api and also reminder alarm scheduled
+
+            isLoading.value = true;
+
+            ///to close bottomsheet
+            Get.back();
+            final apiResponse = await FriendsNetworkRepo.removeFriend(
+                data: {"id": filteredList.elementAt(index).id});
+            isLoading.value = false;
+            if (apiResponse?.success ?? false) {
+              AppPopUps.showSnackBar(message: 'Removed', context: myContext!);
+              friendsList.removeAt(index);
+              filteredList.removeAt(index);
+            } else {
+              AppPopUps.showDialogContent(
+                  title: 'Error',
+                  description: 'Failed to delete',
+                  dialogType: DialogType.ERROR);
+            }
+          } catch (error) {
+            isLoading.value = false;
+            AppPopUps.showDialogContent(
+                title: 'Error',
+                description: error.toString(),
+                dialogType: DialogType.ERROR);
+          }
+        });
   }
 
   void filterListBy(String filter) {
+    isLoading.value = true;
     filteredList.clear();
-    for (var element in friendsList) {
+    for (final element in friendsList) {
       switch (filter) {
         case 'pending':
           if (element.friendRequestStatus == 'pending') {
@@ -79,13 +100,16 @@ class FriendsPageController extends GetxController {
         case 'received':
 
           ///if (friend_fk == current user) id it means these request are received...
-          if (element.friendRequestStatus == 'pending') {
+          if (element.friendFk?.id.toString() ==
+              UserDefaults.getCurrentUserId()) {
             filteredList.add(element);
           }
           break;
-        case 'reject':
+        case 'all':
+          filteredList.add(element);
           break;
       }
     }
+    isLoading.value = false;
   }
 }

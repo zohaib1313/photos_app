@@ -124,6 +124,20 @@ class APIRoute implements APIRouteConfigurable {
           queryParameters: body,
           method: APIMethod.get,
         );
+      case APIType.sendFriendRequest:
+        return RequestOptions(
+          path: ApiConstants.friends,
+          headers: headers,
+          data: body,
+          method: APIMethod.post,
+        );
+      case APIType.deleteFriendRequest:
+        return RequestOptions(
+          path: "${ApiConstants.friends}/${body['id']}/",
+          headers: headers,
+          data: body,
+          method: APIMethod.delete,
+        );
 
       case APIType.searchUniqueUser:
         return RequestOptions(

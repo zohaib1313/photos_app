@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:photos_app/common/app_utils.dart';
 import 'package:photos_app/controllers/search_user_controller.dart';
+
 import '../../../../common/loading_widget.dart';
 import '../common/common_widgets.dart';
 import '../common/helpers.dart';
@@ -24,7 +26,7 @@ class SearchUserPage extends GetView<SearchUserController> {
               color: AppColor.primaryColor,
               iconColor: AppColor.whiteColor,
               onSuffixTap: () {
-                FocusScope.of(context).unfocus();
+                AppUtils.unFocusKeyboard();
                 controller.searchController.clear();
                 controller.lastQueryUserName = '';
               },
@@ -34,16 +36,14 @@ class SearchUserPage extends GetView<SearchUserController> {
           ]),
       body: GetX<SearchUserController>(
         initState: (state) {
-          controller.searchController.addListener(() {
+          controller.searchController.addListener(() async {
             String query = controller.searchController.text;
             if (query.isNotEmpty) {
-              if (controller.lastQueryUserName != query) {
+              if (controller.lastQueryUserName != query &&
+                  controller.isLoading.isFalse) {
                 controller.lastQueryUserName = query;
-
                 controller.filteredItemList.clear();
-
                 controller.usersList.clear();
-
                 controller.searchForFriendFromApi(userName: query);
               }
             }
@@ -56,7 +56,7 @@ class SearchUserPage extends GetView<SearchUserController> {
                 ListView.builder(
                   itemCount: controller.filteredItemList.length,
                   controller: controller.listViewController,
-                  physics: const AlwaysScrollableScrollPhysics(),
+                  physics: const BouncingScrollPhysics(),
                   itemBuilder: (context, index) {
                     return ListTile(
                       title: getUserItemCard(index: index),
@@ -91,7 +91,13 @@ class SearchUserPage extends GetView<SearchUserController> {
           width: 100,
           height: 40,
           child: TextButton(
-              onPressed: () {},
+              onPressed: () {
+                controller.sendFriendRequest(
+                    friendId: controller.filteredItemList
+                        .elementAt(index)
+                        ?.id
+                        .toString());
+              },
               child: Text('Send Request',
                   style: AppTextStyles.textStyleBoldBodyMedium)),
         ),

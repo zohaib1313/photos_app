@@ -1,6 +1,7 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:photos_app/common/user_defaults.dart';
 import 'package:photos_app/models/user_model.dart';
 
 import '../common/app_pop_ups.dart';
@@ -65,7 +66,13 @@ class SearchUserController extends GetxController {
         } else {
           hasNewPage = false;
         }
+
         usersList.addAll(model?.results ?? []);
+
+        ///removing current user from the list so that it don't show up in the list result.....
+        ///and user should not sent friend request to ownself.....
+        usersList.removeWhere((element) =>
+            element?.id.toString() == UserDefaults.getCurrentUserId());
         filteredItemList.addAll(usersList);
       } else {
         if (showAlert) {
@@ -74,6 +81,49 @@ class SearchUserController extends GetxController {
               description: 'No User Found',
               dialogType: DialogType.INFO);
         }
+      }
+    }).catchError((error) {
+      print(error);
+      isLoading.value = false;
+      AppPopUps.showDialogContent(
+          title: 'Error',
+          description: error.toString(),
+          dialogType: DialogType.ERROR);
+      return Future.value(null);
+    });
+  }
+
+  void sendFriendRequest({required String? friendId}) {
+    FocusManager.instance.primaryFocus?.unfocus();
+    isLoading.value = true;
+
+    Map<String, dynamic> data = {
+      "friend_fk[0]": friendId,
+      "user_fk": UserDefaults.getCurrentUserId(),
+      "len": '1',
+    };
+    APIClient(isCache: false, baseUrl: ApiConstants.baseUrl)
+        .request(
+            needToAuthenticate: true,
+            route: APIRoute(
+              APIType.sendFriendRequest,
+              body: data,
+            ),
+            create: () => APIResponse(decoding: false),
+            apiFunction: sendFriendRequest)
+        .then((response) async {
+      isLoading.value = false;
+
+      if ((response.response?.success ?? false)) {
+        AppPopUps.showDialogContent(
+            title: 'success',
+            description: 'Friend request sent',
+            dialogType: DialogType.SUCCES);
+      } else {
+        AppPopUps.showDialogContent(
+            title: 'Alert',
+            description: response.response?.responseMessage ?? '',
+            dialogType: DialogType.WARNING);
       }
     }).catchError((error) {
       print(error);

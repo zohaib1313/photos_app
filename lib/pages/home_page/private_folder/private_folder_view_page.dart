@@ -1,19 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:focused_menu/focused_menu.dart';
-import 'package:focused_menu/modals.dart';
 import 'package:get/get.dart';
 import 'package:photos_app/common/helpers.dart';
 import 'package:photos_app/common/styles.dart';
 import 'package:photos_app/controllers/home_page_controller.dart';
 import 'package:photos_app/models/my_data_model.dart';
-import 'package:photos_app/models/my_menu_item_model.dart';
 import 'package:photos_app/pages/home_page/private_folder/private_folder_view_mixin.dart';
 
 import '../../../../../common/loading_widget.dart';
 import '../../../common/spaces_boxes.dart';
-import '../../../common/user_defaults.dart';
-import '../home_page_views_mixin.dart';
 
 class PrivateFolderViewPage extends GetView<HomePageController>
     with PrivateFolderViewMixin {
