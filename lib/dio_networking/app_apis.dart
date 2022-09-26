@@ -2,6 +2,7 @@ enum APIType {
   loginUser,
   registerUser,
   checkUniqueMail,
+  updateUserProfile,
 
   ///reminders
   getReminders,
@@ -27,6 +28,7 @@ enum APIType {
   getAllFriends,
   sendFriendRequest,
   deleteFriendRequest,
+  updateFriendRequestStatus,
 
   ///users
   searchUniqueUser
@@ -38,7 +40,7 @@ class ApiConstants {
   static const googleApiKey = 'AIzaSyC0-5OqwY75sPwoncSujsbkJD6wDU7BvOw';
   static const baseUrl = "https://memory-app34.herokuapp.com/";
   static const loginUser = '/users/login';
-  static const registerUser = 'users/user/';
+  static const users = 'users/user/';
   static const reminder = '/users/reminder/';
   static const notes = '/users/notes/';
   static const myData = '/users/my-data/';

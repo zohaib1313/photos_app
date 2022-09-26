@@ -79,28 +79,40 @@ class SearchUserPage extends GetView<SearchUserController> {
         leading: Padding(
           padding: const EdgeInsets.all(4.0),
           child: NetworkCircularImage(
-              url: controller.filteredItemList.elementAt(index)?.photo ?? ''),
+              url: controller.filteredItemList
+                      .elementAt(index)
+                      ?.searchedUser
+                      ?.photo ??
+                  ''),
         ),
         title: Text(
-          controller.filteredItemList.elementAt(index)?.username ?? '-',
+          controller.filteredItemList
+                  .elementAt(index)
+                  ?.searchedUser
+                  ?.username ??
+              '-',
           style: AppTextStyles.textStyleNormalBodyMedium,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
-        trailing: SizedBox(
-          width: 100,
-          height: 40,
-          child: TextButton(
-              onPressed: () {
-                controller.sendFriendRequest(
-                    friendId: controller.filteredItemList
-                        .elementAt(index)
-                        ?.id
-                        .toString());
-              },
-              child: Text('Send Request',
-                  style: AppTextStyles.textStyleBoldBodyMedium)),
-        ),
+        trailing: controller.filteredItemList.elementAt(index)?.status == ''
+            ? SizedBox(
+                width: 100,
+                height: 40,
+                child: TextButton(
+                    onPressed: () {
+                      controller.sendFriendRequest(
+                          friendId: controller.filteredItemList
+                              .elementAt(index)
+                              ?.searchedUser
+                              ?.id
+                              .toString());
+                    },
+                    child: Text('Send Request',
+                        style: AppTextStyles.textStyleBoldBodyMedium)),
+              )
+            : Text('Already friend',
+                style: AppTextStyles.textStyleNormalBodyXSmall),
       ),
     );
   }

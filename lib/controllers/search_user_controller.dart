@@ -17,8 +17,9 @@ class SearchUserController extends GetxController {
   bool hasNewPage = false;
   TextEditingController searchController = TextEditingController();
 
-  RxList<UserModel?> usersList = <UserModel?>[].obs;
-  RxList<UserModel?> filteredItemList = <UserModel?>[].obs;
+  RxList<SearchUserResponseModel?> usersList = <SearchUserResponseModel?>[].obs;
+  RxList<SearchUserResponseModel?> filteredItemList =
+      <SearchUserResponseModel?>[].obs;
   ScrollController listViewController = ScrollController();
 
   String lastQueryUserName = '';
@@ -44,7 +45,11 @@ class SearchUserController extends GetxController {
       {required String userName, bool showAlert = false}) {
     isLoading.value = true;
 
-    Map<String, dynamic> data = {"page": pageToLoad, "username": userName};
+    Map<String, dynamic> data = {
+      "page": pageToLoad,
+      "user_id": UserDefaults.getCurrentUserId(),
+      "username": userName
+    };
     APIClient(isCache: false, baseUrl: ApiConstants.baseUrl)
         .request(
             needToAuthenticate: true,
@@ -52,36 +57,41 @@ class SearchUserController extends GetxController {
               APIType.searchUniqueUser,
               body: data,
             ),
-            create: () => APIResponse<SearchUserResponseModel>(
+            create: () => APIListResponse<SearchUserResponseModel>(
                 create: () => SearchUserResponseModel()),
             apiFunction: searchForFriendFromApi)
         .then((response) async {
       isLoading.value = false;
-      SearchUserResponseModel? model = response.response?.data;
+      List<SearchUserResponseModel> model = response.response?.data ?? [];
+      model.removeWhere((element) =>
+          element.searchedUser?.id.toString() ==
+          UserDefaults.getCurrentUserId());
+      usersList.addAll(model);
+      filteredItemList.addAll(usersList);
 
-      if ((model?.results?.length ?? 0) > 0) {
-        if ((model?.next ?? '').isNotEmpty) {
-          pageToLoad++;
-          hasNewPage = true;
-        } else {
-          hasNewPage = false;
-        }
-
-        usersList.addAll(model?.results ?? []);
-
-        ///removing current user from the list so that it don't show up in the list result.....
-        ///and user should not sent friend request to ownself.....
-        usersList.removeWhere((element) =>
-            element?.id.toString() == UserDefaults.getCurrentUserId());
-        filteredItemList.addAll(usersList);
-      } else {
-        if (showAlert) {
-          AppPopUps.showDialogContent(
-              title: 'Alert',
-              description: 'No User Found',
-              dialogType: DialogType.INFO);
-        }
-      }
+      // if ((model?.results?.length ?? 0) > 0) {
+      //  if ((model?.next ?? '').isNotEmpty) {
+      //     pageToLoad++;
+      //     hasNewPage = true;
+      //   } else {
+      //     hasNewPage = false;
+      //   }
+      //
+      //   usersList.addAll(model?.results ?? []);
+      //
+      //   ///removing current user from the list so that it don't show up in the list result.....
+      //   ///and user should not sent friend request to ownself.....
+      //   usersList.removeWhere((element) =>
+      //   element?.id.toString() == UserDefaults.getCurrentUserId());
+      //   filteredItemList.addAll(usersList);
+      // } else {
+      //   if (showAlert) {
+      //     AppPopUps.showDialogContent(
+      //         title: 'Alert',
+      //         description: 'No User Found',
+      //         dialogType: DialogType.INFO);
+      //   }
+      // }
     }).catchError((error) {
       print(error);
       isLoading.value = false;

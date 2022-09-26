@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 
+import '../common/user_defaults.dart';
 import 'app_apis.dart';
 
 class APIRoute implements APIRouteConfigurable {
@@ -25,7 +26,7 @@ class APIRoute implements APIRouteConfigurable {
         );
       case APIType.registerUser:
         return RequestOptions(
-          path: ApiConstants.registerUser,
+          path: ApiConstants.users,
           headers: headers,
           data: body,
           method: APIMethod.post,
@@ -36,6 +37,13 @@ class APIRoute implements APIRouteConfigurable {
           headers: headers,
           queryParameters: body,
           method: APIMethod.get,
+        );
+      case APIType.updateUserProfile:
+        return RequestOptions(
+          path: "${ApiConstants.users}/${UserDefaults.getCurrentUserId()}/",
+          headers: headers,
+          data: body,
+          method: APIMethod.put,
         );
       case APIType.getReminders:
         return RequestOptions(
@@ -146,6 +154,13 @@ class APIRoute implements APIRouteConfigurable {
           method: APIMethod.delete,
         );
 
+      case APIType.updateFriendRequestStatus:
+        return RequestOptions(
+          path: "${ApiConstants.friends}/${body['id']}/",
+          headers: headers,
+          data: body,
+          method: APIMethod.put,
+        );
       case APIType.searchUniqueUser:
         return RequestOptions(
           path: ApiConstants.uniqueUser,

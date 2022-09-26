@@ -21,126 +21,126 @@ class ProfilePage extends GetView<ProfilePageController>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: myAppBar(
-          backGroundColor: AppColor.primaryColor,
-          title: 'Profile',
-          goBack: false,
-          actions: [
-            Row(
-              children: [
-                Text(
-                  'Edit',
-                  style: AppTextStyles.textStyleBoldBodyMedium,
-                ),
-                hSpace,
-                CupertinoSwitch(
-                    value: controller.isUpdateModeOn.value,
-                    onChanged: (v) {
-                      controller.isUpdateModeOn.toggle();
-                      FocusScope.of(context).requestFocus();
-                    }),
-              ],
-            )
-          ]),
-      body: GetX<ProfilePageController>(
-        initState: (state) {
-          controller.setValuesFromSharedPref();
-        },
-        builder: (logic) {
-          return SafeArea(
-            child: Stack(
-              children: [
-                SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
-                  child: Center(
-                    child: Form(
-                      key: _globalKey,
-                      child: Column(
-                        children: [
-                          vSpace,
-                          NetworkCircularImage(
-                            url: UserDefaults.getUserSession()?.photo ?? '',
-                            radius: 60,
-                          ),
-                          vSpace,
-                          vSpace,
-                          vSpace,
-                          vSpace,
-                          vSpace,
-                          vSpace,
-                          vSpace,
-                          getTextField(
-                              validate: true,
-                              enabled: controller.isUpdateModeOn.value,
-                              hintText: 'User name',
-                              controller: controller.usernameController),
-                          vSpace,
-                          getTextField(
-                              validate: true,
-                              enabled: controller.isUpdateModeOn.value,
-                              hintText: 'First name',
-                              controller: controller.firstNameController),
-                          vSpace,
-                          getTextField(
-                              validate: true,
-                              enabled: controller.isUpdateModeOn.value,
-                              hintText: 'Age',
-                              controller: controller.userAgeController),
-                          vSpace,
-                          getTextField(
-                              validate: true,
-                              enabled: controller.isUpdateModeOn.value,
-                              hintText: 'Country',
-                              controller: controller.userCountryController),
-                          vSpace,
-                          getTextField(
-                              validate: true,
-                              enabled: controller.isUpdateModeOn.value,
-                              hintText: 'City',
-                              controller: controller.userCityController),
-                          vSpace,
-                          getTextField(
-                              validate: true,
-                              enabled: controller.isUpdateModeOn.value,
-                              hintText: 'Phone',
-                              controller: controller.userPhoneNumberController),
-                          vSpace,
-                          getTextField(
-                              hintText: 'Email',
-                              enabled: controller.isUpdateModeOn.value,
-                              controller: controller.emailController,
-                              validate: true),
-                          vSpace,
-                          vSpace,
-                          vSpace,
-                          if (controller.isUpdateModeOn.value)
-                            Button(
-                              leftPadding: 200.w,
-                              rightPading: 200.w,
-                              buttonText: 'Update',
-                              onTap: () {
-                                if (_globalKey.currentState?.validate() ??
-                                    false) {
-                                  controller.updateProfile();
-                                }
-                              },
+    return GetX<ProfilePageController>(
+      initState: (_) {
+        controller.setValuesFromSharedPref();
+      },
+      builder: (logic) {
+        return Scaffold(
+            appBar: myAppBar(
+                backGroundColor: AppColor.primaryColor,
+                title: 'Profile',
+                goBack: false,
+                actions: [
+                  Row(
+                    children: [
+                      Text(
+                        'Edit',
+                        style: AppTextStyles.textStyleBoldBodyMedium,
+                      ),
+                      hSpace,
+                      CupertinoSwitch(
+                          value: controller.isUpdateModeOn.value,
+                          onChanged: (v) {
+                            controller.isUpdateModeOn.toggle();
+                            FocusScope.of(context).requestFocus();
+                          }),
+                    ],
+                  )
+                ]),
+            body: SafeArea(
+              child: Stack(
+                children: [
+                  SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    child: Center(
+                      child: Form(
+                        key: _globalKey,
+                        child: Column(
+                          children: [
+                            vSpace,
+                            NetworkCircularImage(
+                              url: UserDefaults.getUserSession()?.photo ?? '',
+                              radius: 60,
                             ),
-                          vSpace,
-                          vSpace,
-                          vSpace,
-                          vSpace,
-                        ],
+                            vSpace,
+                            vSpace,
+                            vSpace,
+                            vSpace,
+                            vSpace,
+                            vSpace,
+                            vSpace,
+                            getTextField(
+                                validate: true,
+                                enabled: false,
+                                hintText: 'User name',
+                                controller: controller.usernameController),
+                            vSpace,
+                            getTextField(
+                                validate: true,
+                                enabled: controller.isUpdateModeOn.value,
+                                hintText: 'First name',
+                                controller: controller.firstNameController),
+                            vSpace,
+                            getTextField(
+                                validate: true,
+                                enabled: controller.isUpdateModeOn.value,
+                                hintText: 'Age',
+                                controller: controller.userAgeController),
+                            vSpace,
+                            getTextField(
+                                validate: true,
+                                enabled: controller.isUpdateModeOn.value,
+                                hintText: 'Country',
+                                controller: controller.userCountryController),
+                            vSpace,
+                            getTextField(
+                                validate: true,
+                                enabled: controller.isUpdateModeOn.value,
+                                hintText: 'City',
+                                controller: controller.userCityController),
+                            vSpace,
+                            getTextField(
+                                validate: true,
+                                enabled: controller.isUpdateModeOn.value,
+                                hintText: 'Phone',
+                                controller:
+                                    controller.userPhoneNumberController),
+                            vSpace,
+                            getTextField(
+                                hintText: 'Email',
+                                enabled: false,
+                                controller: controller.emailController,
+                                validate: true),
+                            vSpace,
+                            vSpace,
+                            vSpace,
+                            if (controller.isUpdateModeOn.value)
+                              Button(
+                                leftPadding: 200.w,
+                                rightPading: 200.w,
+                                buttonText: 'Update',
+                                onTap: () {
+                                  if (_globalKey.currentState?.validate() ??
+                                      false) {
+                                    controller.updateProfile();
+                                  }
+                                },
+                              ),
+                            vSpace,
+                            vSpace,
+                            vSpace,
+                            vSpace,
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-                if (controller.isLoading.isTrue) LoadingWidget(),
-              ],
-            ),
-          );
-        },
-      ),
+                  if (controller.isLoading.isTrue) LoadingWidget(),
+                ],
+              ),
+            ));
+      },
     );
   }
 }

@@ -54,7 +54,7 @@ class AppBottomSheets {
                       },
                       child: Icon(
                         Icons.cancel,
-                        color: AppColor.whiteColor,
+                        color: AppColor.blackColor,
                       ),
                     )
                   ],

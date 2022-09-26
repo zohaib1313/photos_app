@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:photos_app/common/common_widgets.dart';
 import 'package:photos_app/common/spaces_boxes.dart';
 import 'package:photos_app/common/user_defaults.dart';
+import 'package:photos_app/models/search_user_response_model.dart';
 import 'package:photos_app/my_application.dart';
 import 'package:photos_app/pages/search_user_page.dart';
 import '../../../../common/loading_widget.dart';
@@ -11,6 +13,7 @@ import '../../common/helpers.dart';
 import '../../common/my_search_bar.dart';
 import '../../common/styles.dart';
 import '../../controllers/friends_page_controller.dart';
+import '../../models/friends_list_model_response.dart';
 
 class FriendsPage extends GetView<FriendsPageController> {
   var isForUpdate = false;
@@ -32,7 +35,7 @@ class FriendsPage extends GetView<FriendsPageController> {
                   controller.friendsList.clear();
                   controller.filteredList.clear();
                   controller.loadFriendsList(
-                      showAlert: true, isForUpdate: isForUpdate);
+                      showAlert: true, getOnlyFriendsAccepted: isForUpdate);
                 },
               ),
             ),
@@ -66,7 +69,7 @@ class FriendsPage extends GetView<FriendsPageController> {
           WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
             controller.friendsList.clear();
             controller.filteredList.clear();
-            controller.loadFriendsList(isForUpdate: isForUpdate);
+            controller.loadFriendsList(getOnlyFriendsAccepted: isForUpdate);
           });
         },
         builder: (_) {
@@ -87,7 +90,8 @@ class FriendsPage extends GetView<FriendsPageController> {
                               controller.filteredList.clear();
                               controller.friendsList.clear();
                               controller.loadFriendsList(
-                                  showAlert: true, isForUpdate: isForUpdate);
+                                  showAlert: true,
+                                  getOnlyFriendsAccepted: isForUpdate);
                             },
                             child: Text(
                               "Refresh",
@@ -103,7 +107,8 @@ class FriendsPage extends GetView<FriendsPageController> {
                           controller.filteredList.clear();
                           controller.friendsList.clear();
                           controller.loadFriendsList(
-                              showAlert: true, isForUpdate: isForUpdate);
+                              showAlert: true,
+                              getOnlyFriendsAccepted: isForUpdate);
                           return Future.delayed(const Duration(seconds: 2));
                         },
                         child: ListView.builder(
@@ -149,7 +154,7 @@ class FriendsPage extends GetView<FriendsPageController> {
                   controller.filteredList.clear();
 
                   controller.friendsList.clear();
-                  controller.loadFriendsList(isForUpdate: false);
+                  controller.loadFriendsList(getOnlyFriendsAccepted: false);
                 },
                 child: Text('Select',
                     style: AppTextStyles.textStyleBoldBodyMedium))
@@ -169,7 +174,11 @@ class FriendsPage extends GetView<FriendsPageController> {
       case 'pending':
         return TextButton(
             onPressed: () {
-              controller.removeFriend(index: index);
+              controller.removeFriend(
+                  id: controller.filteredList.elementAt(index).id!,
+                  onSuccess: () {
+                    controller.filteredList.removeAt(index);
+                  });
             },
             child: Column(
               children: [
@@ -189,7 +198,11 @@ class FriendsPage extends GetView<FriendsPageController> {
       case 'accept':
         return TextButton(
             onPressed: () {
-              controller.removeFriend(index: index);
+              controller.removeFriend(
+                  id: controller.filteredList.elementAt(index).id!,
+                  onSuccess: () {
+                    controller.filteredList.removeAt(index);
+                  });
             },
             child: Column(
               children: [
@@ -218,7 +231,7 @@ class FriendsPage extends GetView<FriendsPageController> {
         isDismissable: true,
         title: 'Filter by',
         context: myContext!,
-        child: Column(
+        child: ListView(
           children: [
             vSpace,
             Button(
@@ -231,11 +244,24 @@ class FriendsPage extends GetView<FriendsPageController> {
             ),
             vSpace,
             Button(
+              buttonText: 'friends',
+              textColor: AppColor.whiteColor,
+              onTap: () {
+                controller.filterListBy('friends');
+                Get.back();
+              },
+            ),
+            vSpace,
+            Button(
               buttonText: 'Request Received',
               textColor: AppColor.whiteColor,
               onTap: () {
-                controller.filterListBy('received');
+                controller.requestsReceivedPage = 1;
                 Get.back();
+                controller.getReceivedFriendsRequest(
+                    onRequestOfFriends: (List<FriendsModel> friensList) {
+                  showFriendRequestedBottomSheet(friendsList: friensList);
+                });
               },
             ),
             vSpace,
@@ -249,5 +275,67 @@ class FriendsPage extends GetView<FriendsPageController> {
             ),
           ],
         ));
+  }
+
+  void showFriendRequestedBottomSheet(
+      {required List<FriendsModel> friendsList}) {
+    AppBottomSheets.showAppAlertBottomSheet(
+      isFull: true,
+      isDismissable: false,
+      title: 'Requests',
+      context: myContext!,
+      child: ListView.builder(
+        itemCount: friendsList.length,
+        itemBuilder: (context, index) {
+          return Card(
+            child: ListTile(
+              leading: Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: NetworkCircularImage(
+                    url: friendsList.elementAt(index).userFk?.photo ?? ''),
+              ),
+              title: Text(friendsList.elementAt(index).userFk?.username ?? '',
+                  style: AppTextStyles.textStyleBoldBodyMedium),
+              subtitle: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                      "${friendsList.elementAt(index).friendFk?.username ?? ''} sent you request",
+                      style: AppTextStyles.textStyleNormalBodyXSmall),
+                  vSpace,
+                  Row(
+                    children: [
+                      Button(
+                          buttonText: 'Accept',
+                          color: AppColor.greenColor,
+                          ...unable to update friend request due to not allowed....
+                          onTap: () {
+                            controller.acceptRequest(
+                                id: friendsList.elementAt(index).id!,
+                                onSuccess: (FriendsModel? f) {
+                                  if (f != null) friendsList[0] = f;
+                                });
+                          }),
+                      hSpace,
+                      Button(
+                          buttonText: 'Reject',
+                          color: AppColor.redColor,
+                          onTap: () {
+                            controller.removeFriend(
+                                id: friendsList.elementAt(index).id!,
+                                onSuccess: () {
+                                  controller.filteredList.removeAt(index);
+                                });
+                          }),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
   }
 }

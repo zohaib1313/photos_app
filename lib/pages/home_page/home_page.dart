@@ -204,20 +204,6 @@ class HomePage extends GetView<HomePageController> with HomePageViewsMixin {
                                             size: 40,
                                             color: AppColor.whiteColor)),
                                   ),
-                                  hSpace,
-                                  /*  Expanded(
-                                    child: getMainCards(
-                                        onTap: () {
-                                          Get.toNamed(CheckListPage.id);
-                                        },
-                                        context: context,
-                                        title: 'Check list',
-                                        textColor: AppColor.whiteColor,
-                                        color: AppColor.primaryColor,
-                                        icon: const Icon(Icons.check_box,
-                                            size: 40,
-                                            color: AppColor.whiteColor)),
-                                  ),*/
                                 ],
                               ),
                             ),

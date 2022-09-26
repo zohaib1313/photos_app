@@ -17,8 +17,10 @@ class FriendsPageController extends GetxController {
   RxList<FriendsModel> filteredList = <FriendsModel>[].obs;
   ScrollController listViewController = ScrollController();
 
+  int requestsReceivedPage = 1;
+
   void loadFriendsList(
-      {bool showAlert = false, required bool isForUpdate}) async {
+      {bool showAlert = false, required bool getOnlyFriendsAccepted}) async {
     isLoading.value = true;
     try {
       final apiResponse =
@@ -34,7 +36,7 @@ class FriendsPageController extends GetxController {
         friendsList.addAll(apiResponse?.data?.friendsList ?? []);
 
         ///filter on only friends if picking up user for shairng files..
-        if (isForUpdate) {
+        if (getOnlyFriendsAccepted) {
           friendsList.removeWhere(
               (element) => (element.friendRequestStatus != 'accept'));
         }
@@ -58,7 +60,7 @@ class FriendsPageController extends GetxController {
     }
   }
 
-  void removeFriend({required int index}) {
+  void removeFriend({required int id, required dynamic onSuccess}) {
     AppPopUps.showConfirmDialog(
         title: 'Alert',
         message: 'Are you sure remove/cancel',
@@ -70,13 +72,12 @@ class FriendsPageController extends GetxController {
 
             ///to close bottomsheet
             Get.back();
-            final apiResponse = await FriendsNetworkRepo.removeFriend(
-                data: {"id": filteredList.elementAt(index).id});
+            final apiResponse =
+                await FriendsNetworkRepo.removeFriend(data: {"id": id});
             isLoading.value = false;
             if (apiResponse?.success ?? false) {
+              onSuccess();
               AppPopUps.showSnackBar(message: 'Removed', context: myContext!);
-              friendsList.removeAt(index);
-              filteredList.removeAt(index);
             } else {
               AppPopUps.showDialogContent(
                   title: 'Error',
@@ -93,7 +94,7 @@ class FriendsPageController extends GetxController {
         });
   }
 
-  void filterListBy(String filter) {
+  Future<void> filterListBy(String filter) async {
     isLoading.value = true;
     filteredList.clear();
     for (final element in friendsList) {
@@ -103,19 +104,65 @@ class FriendsPageController extends GetxController {
             filteredList.add(element);
           }
           break;
-        case 'received':
-
-          ///if (friend_fk == current user) id it means these request are received...
-          if (element.friendFk?.id.toString() ==
-              UserDefaults.getCurrentUserId()) {
-            filteredList.add(element);
-          }
-          break;
         case 'all':
           filteredList.add(element);
+          break;
+        case 'friends':
+          if (element.friendRequestStatus == 'accept') {
+            filteredList.add(element);
+          }
           break;
       }
     }
     isLoading.value = false;
+  }
+
+  Future<void> getReceivedFriendsRequest({dynamic onRequestOfFriends}) async {
+    isLoading.value = true;
+    try {
+      ///if (friend_fk == current user) id it means these request are received...
+      final apiResponse =
+          await FriendsNetworkRepo.loadFriendsFromServer(queryMap: {
+        'page': requestsReceivedPage,
+        'friend_id': UserDefaults.getCurrentUserId(),
+      });
+      isLoading.value = false;
+      if ((apiResponse?.data?.next ?? '').isNotEmpty) {
+        requestsReceivedPage++;
+      }
+      if (apiResponse?.success ?? false) {
+        onRequestOfFriends(apiResponse?.data?.friendsList ?? []);
+      } else {
+        AppPopUps.showSnackBar(
+            message: 'Failed to remove', context: myContext!);
+      }
+    } catch (e) {
+      isLoading.value = false;
+      AppPopUps.showSnackBar(message: 'Failed to remove', context: myContext!);
+      print(e.toString());
+    }
+  }
+
+  void acceptRequest({required int id, required onSuccess}) async {
+    isLoading.value = true;
+    try {
+      ///if (friend_fk == current user) id it means these request are received...
+      final apiResponse =
+          await FriendsNetworkRepo.changeFriendRequestStatus(data: {
+        'id': id,
+        'status': 'accept',
+      });
+      isLoading.value = false;
+      if (apiResponse?.success ?? false) {
+        onSuccess(apiResponse?.data);
+      } else {
+        AppPopUps.showSnackBar(
+            message: 'Failed to update', context: myContext!);
+      }
+    } catch (e) {
+      isLoading.value = false;
+      AppPopUps.showSnackBar(message: 'Failed to update', context: myContext!);
+      print(e.toString());
+    }
   }
 }

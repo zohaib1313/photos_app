@@ -44,4 +44,19 @@ class FriendsNetworkRepo {
             apiFunction: removeFriend);
     return result.response;
   }
+
+  static Future<APIResponse<FriendsModel>?> changeFriendRequestStatus(
+      {required Map<String, dynamic> data}) async {
+    var result = await APIClient(isCache: false, baseUrl: ApiConstants.baseUrl)
+        .request(
+            needToAuthenticate: true,
+            route: APIRoute(
+              APIType.updateFriendRequestStatus,
+              body: data,
+            ),
+            create: () =>
+                APIResponse<FriendsModel>(create: () => FriendsModel()),
+            apiFunction: removeFriend);
+    return result.response;
+  }
 }

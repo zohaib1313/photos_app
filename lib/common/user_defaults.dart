@@ -36,7 +36,9 @@ class UserDefaults {
   static Future<bool?> saveUserSession(UserModel userModel) async {
     String user = json.encode(userModel.toJson());
     setCurrentUserId(userModel.id!.toString());
-    setApiToken(userModel.token ?? '');
+    if ((userModel.token ?? '').isNotEmpty) {
+      setApiToken(userModel.token ?? '');
+    }
     return await getPref().then((value) => value?.setString('userData', user));
   }
 
