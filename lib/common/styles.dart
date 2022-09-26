@@ -8,7 +8,7 @@ class AppColor {
   static var blackColor = Color(0xff1C2340);
   static var greenColor = Color(0xff2CC78C);
   static var redColor = Colors.red;
-  static var alphaGrey = Colors.grey;
+  static var alphaGrey = Color(0xffe3e2e2);
   static var whiteColor = Colors.white;
   static var greyColor = Colors.grey;
   static var yellowColor = Color(0xffFFC107);

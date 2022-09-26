@@ -32,6 +32,7 @@ class ReminderPage extends GetView<ReminderController> {
       appBar: myAppBar(goBack: true, title: 'Reminders', actions: [
         MyAnimSearchBar(
           width: context.width,
+          color: AppColor.primaryColor,
           onSuffixTap: () {
             controller.searchController.clear();
           },
@@ -136,7 +137,8 @@ class ReminderPage extends GetView<ReminderController> {
       ),
       child: Card(
         margin: const EdgeInsets.all(4),
-        color: isPast ? AppColor.alphaGrey : AppColor.alphaGrey,
+        color:
+            isPast ? AppColor.greyColor : AppColor.yellowColor.withOpacity(0.5),
         child: ListTile(
           contentPadding: const EdgeInsets.all(4),
           title: Text(
@@ -187,7 +189,6 @@ class ReminderPage extends GetView<ReminderController> {
             ///date
             Container(
               padding: const EdgeInsets.all(4),
-              color: AppColor.alphaGrey,
               child: Row(
                 children: [
                   Obx(() {

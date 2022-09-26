@@ -20,6 +20,7 @@ import '../../dio_networking/api_client.dart';
 import '../../dio_networking/api_response.dart';
 import '../../dio_networking/api_route.dart';
 import '../../dio_networking/app_apis.dart';
+import '../../models/friends_list_model_response.dart';
 
 mixin PrivateFolderNetworkContentControllerMixin on GetxController {
   int pageToLoad = 1;
@@ -252,6 +253,50 @@ mixin PrivateFolderNetworkContentControllerMixin on GetxController {
     if (!(item.type == 'folder') && item.name != null) {
       // AppUtils.openFile(File(item.name ?? ''));
     }
+  }
+
+  void shareFolderWithFriend(
+      {required FriendsModel friendModel,
+      required int contentKey,
+      bool showAlert = false,
+      required onSuccess}) async {
+    Map<String, dynamic> body = {
+      "shared_by_fk": UserDefaults.getCurrentUserId(),
+      "shared_with_fk": friendModel.id,
+      "content_fk": contentKey
+    };
+
+    var data = dio.FormData.fromMap(body);
+    isLoading.value = true;
+    var client = APIClient(isCache: false, baseUrl: ApiConstants.baseUrl);
+    client
+        .request(
+            route: APIRoute(
+              APIType.postShareData,
+              body: data,
+            ),
+            create: () => APIResponse(decoding: false),
+            apiFunction: shareFolderWithFriend)
+        .then((response) {
+      isLoading.value = false;
+
+      if ((response.response?.success ?? false)) {
+        onSuccess();
+        if (showAlert) {
+          AppPopUps.showSnackBar(
+              message: 'Document shard', context: myContext!);
+        }
+      } else {
+        AppPopUps.showSnackBar(
+            message: 'Document sharing failed', context: myContext!);
+      }
+    }).catchError((error) {
+      isLoading.value = false;
+      AppPopUps.showSnackBar(
+          message: 'Document sharing failed $error', context: myContext!);
+
+      return Future.value(null);
+    });
   }
 
   void refreshCurrentViewList(MyDataModel item) {

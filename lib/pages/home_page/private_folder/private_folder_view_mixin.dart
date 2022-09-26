@@ -189,7 +189,11 @@ mixin PrivateFolderViewMixin {
                     await Get.to(FriendsPage(isForUpdate: true));
                 if (friendModel != null) {
                   ///share file...
-                  printWrapped(friendModel.toString());
+                  controller.shareFolderWithFriend(
+                      friendModel: friendModel,
+                      contentKey: item.id!,
+                      showAlert: true,
+                      onSuccess: () {});
                 }
               }),
           FocusedMenuItem(

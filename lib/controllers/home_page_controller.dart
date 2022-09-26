@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:photos_app/controllers/mixins/shared_folders_network_repo_mixin.dart';
+import 'package:photos_app/models/friends_list_model_response.dart';
 
 import '../common/user_defaults.dart';
 import '../models/user_model.dart';

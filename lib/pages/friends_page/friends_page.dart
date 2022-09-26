@@ -147,6 +147,7 @@ class FriendsPage extends GetView<FriendsPageController> {
                 onPressed: () {
                   Get.back(result: controller.filteredList.elementAt(index));
                   controller.filteredList.clear();
+
                   controller.friendsList.clear();
                   controller.loadFriendsList(isForUpdate: false);
                 },

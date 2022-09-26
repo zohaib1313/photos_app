@@ -32,6 +32,7 @@ class NotesPage extends GetView<NotesController> {
       appBar: myAppBar(goBack: true, title: 'Notes', actions: [
         MyAnimSearchBar(
           width: context.width,
+          color: AppColor.primaryColor,
           onSuffixTap: () {
             controller.searchController.clear();
           },
@@ -128,7 +129,7 @@ class NotesPage extends GetView<NotesController> {
       ),
       child: Card(
         margin: const EdgeInsets.all(4),
-        color: AppColor.alphaGrey,
+        color: AppColor.greyColor,
         child: ListTile(
           contentPadding: const EdgeInsets.all(4),
           title: Text(controller.filteredItemList.elementAt(index)?.name ?? '-',

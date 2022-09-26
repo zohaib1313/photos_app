@@ -21,6 +21,7 @@ enum APIType {
 
   ///shared folder
   getSharedReceivedData,
+  postShareData,
 
   ///friends
   getAllFriends,
