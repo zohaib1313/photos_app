@@ -75,7 +75,7 @@ class PrivateFolderViewPage extends GetView<HomePageController>
                   child: Padding(
                     padding: const EdgeInsets.all(20.0),
                     child: focusMenueForFab(
-                      item: controller.privateFoldersStack.last,
+                      focusedItemMode: controller.privateFoldersStack.last,
                       context: context,
                       controller: controller,
                       child: const CircleAvatar(

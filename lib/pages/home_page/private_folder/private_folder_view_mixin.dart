@@ -20,7 +20,7 @@ mixin PrivateFolderViewMixin {
       required HomePageController controller,
       required BuildContext context}) {
     return getFocusedMenu(
-        item: myFolderModel,
+        focusedItem: myFolderModel,
         context: context,
         child: Card(
           color: AppColor.alphaGrey,
@@ -37,7 +37,7 @@ mixin PrivateFolderViewMixin {
                 myFolderModel.subFolder.isEmpty
                     ? Expanded(
                         child: getFocusedMenu(
-                          item: myFolderModel,
+                          focusedItem: myFolderModel,
                           controller: controller,
                           context: context,
                           child: Container(
@@ -76,7 +76,7 @@ mixin PrivateFolderViewMixin {
       required HomePageController controller,
       required BuildContext context}) {
     return getFocusedMenu(
-        item: item,
+        focusedItem: item,
         context: context,
         child: Card(
           child: Container(
@@ -121,7 +121,7 @@ mixin PrivateFolderViewMixin {
   }
 
   Widget getFocusedMenu(
-      {required MyDataModel item,
+      {required MyDataModel focusedItem,
       required BuildContext context,
       required HomePageController controller,
       required Widget child}) {
@@ -147,20 +147,20 @@ mixin PrivateFolderViewMixin {
               title: Text("Open", style: AppTextStyles.textStyleBoldBodySmall),
               trailingIcon: const Icon(Icons.open_in_new),
               onPressed: () {
-                item.type == 'folder'
+                focusedItem.type == 'folder'
                     ? {
                         controller.loadPrivateFolder(
-                            model: item,
+                            model: focusedItem,
                             subListItem: (List<MyDataModel>? myDataModelList) {
-                              item.subFolder.clear();
+                              focusedItem.subFolder.clear();
                               if (myDataModelList != null) {
-                                item.subFolder.addAll(myDataModelList);
+                                focusedItem.subFolder.addAll(myDataModelList);
                               }
 
-                              controller.openFolder(item: item);
+                              controller.openFolder(item: focusedItem);
                             })
                       }
-                    : controller.openFile(item: item);
+                    : controller.openFile(item: focusedItem);
               }),
           /*  if (item.type == 'folder')
             FocusedMenuItem(
@@ -191,7 +191,7 @@ mixin PrivateFolderViewMixin {
                   ///share file...
                   controller.shareFolderWithFriend(
                       friendModel: friendModel,
-                      contentKey: item.id!,
+                      contentKey: focusedItem.id!,
                       showAlert: true,
                       onSuccess: () {});
                 }
@@ -205,12 +205,17 @@ mixin PrivateFolderViewMixin {
                 color: Colors.redAccent,
               ),
               onPressed: () {
+                print(focusedItem.toString());
+
                 ///delete folder file,,,
                 controller.deleteContent(
-                    item: item,
-                    contentKey: item.id!,
+                    contentKey: focusedItem.id!,
                     showAlert: true,
-                    onSuccess: () {});
+                    onSuccess: () {
+                      ///remove item from the list....
+                      controller.privateFoldersStack.last.subFolder
+                          .remove(focusedItem);
+                    });
               }),
         ],
         onPressed: () {},
@@ -218,7 +223,7 @@ mixin PrivateFolderViewMixin {
   }
 
   Widget focusMenueForFab(
-      {required MyDataModel item,
+      {required MyDataModel focusedItemMode,
       required BuildContext context,
       required HomePageController controller,
       required Widget child}) {
@@ -243,14 +248,14 @@ mixin PrivateFolderViewMixin {
               title: Text("File", style: AppTextStyles.textStyleBoldBodySmall),
               trailingIcon: const Icon(Icons.file_copy),
               onPressed: () {
-                controller.addNewFile(item: item, context: context);
+                controller.addNewFile(item: focusedItemMode, context: context);
               }),
           FocusedMenuItem(
               title:
                   Text("Folder", style: AppTextStyles.textStyleBoldBodySmall),
               trailingIcon: const Icon(Icons.folder),
               onPressed: () {
-                controller.addNewFolder(item: item);
+                controller.addNewFolder(item: focusedItemMode);
               }),
         ],
         onPressed: () {},

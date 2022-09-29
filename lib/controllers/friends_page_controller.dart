@@ -26,7 +26,7 @@ class FriendsPageController extends GetxController {
       final apiResponse =
           await FriendsNetworkRepo.loadFriendsFromServer(queryMap: {
         'page': pageToLoad,
-        'user_id': UserDefaults.getCurrentUserId(),
+        '_id': UserDefaults.getCurrentUserId(),
       });
       isLoading.value = false;
       if (apiResponse?.data != null) {
@@ -101,6 +101,13 @@ class FriendsPageController extends GetxController {
       switch (filter) {
         case 'pending':
           if (element.friendRequestStatus == 'pending') {
+            filteredList.add(element);
+          }
+          break;
+        case 'received':
+          if (element.friendRequestStatus != 'accept' &&
+              element.friendFk?.id.toString() ==
+                  UserDefaults.getCurrentUserId()) {
             filteredList.add(element);
           }
           break;

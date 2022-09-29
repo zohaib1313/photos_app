@@ -6,9 +6,9 @@ import '../../../../common/loading_widget.dart';
 import '../../../common/my_search_bar.dart';
 import '../../../controllers/history_controller.dart';
 
-class HistoryPage extends GetView<HistoryController> {
-  HistoryPage({Key? key}) : super(key: key);
-  static const id = '/HistoryPage';
+class GroupsPage extends GetView<GroupsController> {
+  GroupsPage({Key? key}) : super(key: key);
+  static const id = '/GroupsPage';
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +23,7 @@ class HistoryPage extends GetView<HistoryController> {
           textController: controller.searchController,
         ),
       ]),
-      body: GetX<HistoryController>(
+      body: GetX<GroupsController>(
         initState: (state) {},
         builder: (_) {
           return SafeArea(

@@ -302,7 +302,6 @@ mixin PrivateFolderNetworkContentControllerMixin on GetxController {
   void deleteContent(
       {required int contentKey,
       bool showAlert = false,
-      required MyDataModel item,
       required onSuccess}) async {
     isLoading.value = true;
     var client = APIClient(isCache: false, baseUrl: ApiConstants.baseUrl);
@@ -319,16 +318,7 @@ mixin PrivateFolderNetworkContentControllerMixin on GetxController {
 
       if ((response.response?.success ?? false)) {
         onSuccess();
-        loadPrivateFolder(
-            model: item,
-            subListItem: (List<MyDataModel>? dataList) {
-              ///list of current folder
-              if (dataList != null) {
-                item.subFolder.clear();
-                item.subFolder.addAll(dataList);
-                refreshCurrentViewList(item);
-              }
-            });
+
         if (showAlert) {
           AppPopUps.showSnackBar(
               message: 'Document deleted', context: myContext!);

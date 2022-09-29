@@ -8,6 +8,7 @@ import 'package:photos_app/common/user_defaults.dart';
 import 'package:photos_app/controllers/home_page_controller.dart';
 import 'package:photos_app/models/my_data_model.dart';
 import 'package:photos_app/notifications/awsome_notification.dart';
+import 'package:photos_app/pages/home_page/history_page/history_page.dart';
 import 'package:photos_app/pages/home_page/notes/notes_page.dart';
 import 'package:photos_app/pages/home_page/reminders/reminders_page.dart';
 import 'package:photos_app/pages/home_page/shared_folder/shared_folder_view_page.dart';
@@ -202,13 +203,13 @@ class HomePage extends GetView<HomePageController> with HomePageViewsMixin {
                                   Expanded(
                                     child: getMainCards(
                                         onTap: () {
-                                          //  Get.toNamed(HistoryPage.id);
+                                          Get.toNamed(GroupsPage.id);
                                         },
                                         context: context,
-                                        title: 'History',
+                                        title: 'Groups',
                                         textColor: AppColor.whiteColor,
                                         color: AppColor.primaryColor,
-                                        icon: Icon(Icons.history,
+                                        icon: Icon(Icons.groups,
                                             size: 40,
                                             color: AppColor.whiteColor)),
                                   ),

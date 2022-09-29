@@ -157,10 +157,7 @@ class FriendsPage extends GetView<FriendsPageController> {
                 },
                 child: Text('Select',
                     style: AppTextStyles.textStyleBoldBodyMedium))
-            : controller.filteredList.elementAt(index).userFk?.id.toString() ==
-                    UserDefaults.getCurrentUserId()
-                ? getRequestButton(index: index)
-                : const IgnorePointer(),
+            : getRequestButton(index: index),
       ),
     );
   }
@@ -255,12 +252,14 @@ class FriendsPage extends GetView<FriendsPageController> {
               buttonText: 'Request Received',
               textColor: AppColor.whiteColor,
               onTap: () {
-                controller.requestsReceivedPage = 1;
+                controller.filterListBy('received');
+                Get.back();
+                /*  controller.requestsReceivedPage = 1;
                 Get.back();
                 controller.getReceivedFriendsRequest(
                     onRequestOfFriends: (List<FriendsModel> friensList) {
                   showFriendRequestedBottomSheet(friendsList: friensList);
-                });
+                });*/
               },
             ),
             vSpace,

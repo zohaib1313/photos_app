@@ -65,10 +65,10 @@ appRoutes() {
 
     ///history///
     GetPage(
-        name: HistoryPage.id,
-        page: () => HistoryPage(),
+        name: GroupsPage.id,
+        page: () => GroupsPage(),
         binding: BindingsBuilder(() {
-          Get.lazyPut<HistoryController>(() => HistoryController());
+          Get.lazyPut<GroupsController>(() => GroupsController());
         })),
 
     ///reminder///
