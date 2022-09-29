@@ -9,22 +9,23 @@ import '../../dio_networking/api_route.dart';
 import '../../dio_networking/app_apis.dart';
 import '../../models/my_data_model.dart';
 
-mixin SharedDataNetworkRepoMixin on GetxController {
+mixin SharedReceivedDataNetworkRepoMixin on GetxController {
   int pageToLoad = 1;
   bool hasNewPage = false;
   RxBool isLoading = false.obs;
 
-  RxList<SharedReceivedDataModel> sharedFolderStack =
+  RxList<SharedReceivedDataModel> sharedReceivedFolderStack =
       <SharedReceivedDataModel>[].obs;
 
-  void loadSharedData({
+  void loadSharedReceivedData({
     bool showAlert = false,
     required MyDataModel model,
+    required bool isForShareFolder,
     required subListItem,
   }) {
     Map<String, dynamic> body = {
       'page': pageToLoad.toString(),
-      'shared_by': model.userFk?.toString(),
+      isForShareFolder ? 'shared_by' : 'shared_with': model.userFk?.toString(),
     };
     isLoading.value = true;
     APIClient(isCache: false, baseUrl: ApiConstants.baseUrl)
@@ -35,7 +36,7 @@ mixin SharedDataNetworkRepoMixin on GetxController {
             ),
             create: () => APIResponse<SharedReceivedDataResponseModel>(
                 create: () => SharedReceivedDataResponseModel()),
-            apiFunction: loadSharedData)
+            apiFunction: loadSharedReceivedData)
         .then((response) {
       isLoading.value = false;
 

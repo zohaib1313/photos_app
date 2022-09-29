@@ -19,6 +19,7 @@ enum APIType {
   ///private folder
   postMyData,
   getMyData,
+  deleteContent,
 
   ///shared folder
   getSharedReceivedData,

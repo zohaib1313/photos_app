@@ -118,6 +118,14 @@ class APIRoute implements APIRouteConfigurable {
           method: APIMethod.post,
         );
 
+      case APIType.deleteContent:
+        return RequestOptions(
+          path: "${ApiConstants.myData}/${body['id']}/",
+          headers: headers,
+          data: body,
+          method: APIMethod.delete,
+        );
+
       case APIType.getSharedReceivedData:
         return RequestOptions(
           path: ApiConstants.sharedData,

@@ -11,7 +11,7 @@ import 'mixins/private_folder_network_repo_controller_mixin.dart';
 class HomePageController extends GetxController
     with
         PrivateFolderNetworkContentControllerMixin,
-        SharedDataNetworkRepoMixin {
+        SharedReceivedDataNetworkRepoMixin {
   UserModel? user = UserDefaults.getUserSession();
 
   TextEditingController searchController = TextEditingController();

@@ -121,24 +121,28 @@ class HomePage extends GetView<HomePageController> with HomePageViewsMixin {
                                         Expanded(
                                           child: getMainCards(
                                               onTap: () {
-                                                controller.loadSharedData(
-                                                    model: MyDataModel(
-                                                        userFk: int.tryParse(
-                                                            UserDefaults
-                                                                    .getCurrentUserId() ??
-                                                                '')),
-                                                    subListItem: (List<
-                                                            SharedReceivedDataModel>
-                                                        subListItem) {
-                                                      printWrapped('response');
-                                                      printWrapped(subListItem
-                                                          .toString());
-                                                      controller
-                                                          .sharedFolderStack
-                                                          .value = subListItem;
-                                                      Get.to(
-                                                          const SharedFolderViewPage());
-                                                    });
+                                                controller
+                                                    .loadSharedReceivedData(
+                                                        isForShareFolder: true,
+                                                        model: MyDataModel(
+                                                            userFk: int.tryParse(
+                                                                UserDefaults
+                                                                        .getCurrentUserId() ??
+                                                                    '')),
+                                                        subListItem: (List<
+                                                                SharedReceivedDataModel>
+                                                            subListItem) {
+                                                          printWrapped(
+                                                              'response');
+                                                          printWrapped(
+                                                              subListItem
+                                                                  .toString());
+                                                          controller
+                                                              .sharedReceivedFolderStack
+                                                              .value = subListItem;
+                                                          Get.to(
+                                                              const SharedReceivedFolderViewPage());
+                                                        });
                                               },
                                               context: context,
                                               title: 'Shared',
@@ -153,10 +157,28 @@ class HomePage extends GetView<HomePageController> with HomePageViewsMixin {
                                         Expanded(
                                           child: getMainCards(
                                               onTap: () {
-                                                /*controller.openFolder(
-                                                    item: controller
-                                                        .receivedMenuItem
-                                                        .value);*/
+                                                controller
+                                                    .loadSharedReceivedData(
+                                                        isForShareFolder: false,
+                                                        model: MyDataModel(
+                                                            userFk: int.tryParse(
+                                                                UserDefaults
+                                                                        .getCurrentUserId() ??
+                                                                    '')),
+                                                        subListItem: (List<
+                                                                SharedReceivedDataModel>
+                                                            subListItem) {
+                                                          printWrapped(
+                                                              'response');
+                                                          printWrapped(
+                                                              subListItem
+                                                                  .toString());
+                                                          controller
+                                                              .sharedReceivedFolderStack
+                                                              .value = subListItem;
+                                                          Get.to(
+                                                              const SharedReceivedFolderViewPage());
+                                                        });
                                               },
                                               context: context,
                                               title: 'Received',

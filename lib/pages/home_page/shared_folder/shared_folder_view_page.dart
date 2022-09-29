@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:photos_app/common/app_pop_ups.dart';
+import 'package:photos_app/common/app_utils.dart';
 import 'package:photos_app/common/common_widgets.dart';
 import 'package:photos_app/common/helpers.dart';
 import 'package:photos_app/common/styles.dart';
 import 'package:photos_app/controllers/home_page_controller.dart';
-import 'package:photos_app/models/my_data_model.dart';
 import 'package:photos_app/models/shared_data_response_model.dart';
 
 import '../../../../../common/loading_widget.dart';
 import '../../../common/spaces_boxes.dart';
-import '../../../common/user_defaults.dart';
 
-class SharedFolderViewPage extends GetView<HomePageController> {
-  const SharedFolderViewPage({Key? key}) : super(key: key);
+class SharedReceivedFolderViewPage extends GetView<HomePageController> {
+  const SharedReceivedFolderViewPage({Key? key}) : super(key: key);
   static const id = '/SharedFolderViewPage';
 
   @override
@@ -24,11 +24,11 @@ class SharedFolderViewPage extends GetView<HomePageController> {
           // return controller.closeLastFolder();
         },
         child: Scaffold(
-          appBar: myAppBar(goBack: true, title: 'Shared Folder'),
+          appBar: myAppBar(goBack: true, title: 'Folder'),
           body: SafeArea(
             child: Stack(
               children: [
-                if (controller.sharedFolderStack.isNotEmpty)
+                if (controller.sharedReceivedFolderStack.isNotEmpty)
                   Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -45,10 +45,11 @@ class SharedFolderViewPage extends GetView<HomePageController> {
                           padding: const EdgeInsets.all(8.0),
                           child: ListView.builder(
                             physics: const BouncingScrollPhysics(),
-                            itemCount: controller.sharedFolderStack.length,
+                            itemCount:
+                                controller.sharedReceivedFolderStack.length,
                             itemBuilder: (context, index) {
                               SharedReceivedDataModel sharedModel =
-                                  controller.sharedFolderStack[index];
+                                  controller.sharedReceivedFolderStack[index];
                               return InkWell(
                                 onTap: () {
                                   /*    print(sharedModel.contentFk?.id);
@@ -65,9 +66,17 @@ class SharedFolderViewPage extends GetView<HomePageController> {
 
                                         }
                                       });*/
-                                  controller.privateFoldersStack.clear();
-                                  controller.openFolder(
-                                      item: sharedModel.contentFk!);
+                                  if (sharedModel.contentFk?.type == 'folder') {
+                                    controller.privateFoldersStack.clear();
+                                    controller.openFolder(
+                                        item: sharedModel.contentFk!);
+                                  } else if (sharedModel.contentFk?.type ==
+                                      'file') {
+                                    AppPopUps.showSnackBar(
+                                        message: 'open file',
+                                        color: AppColor.greenColor,
+                                        context: context);
+                                  }
                                 },
                                 child: Card(
                                   child: Padding(
@@ -100,7 +109,7 @@ class SharedFolderViewPage extends GetView<HomePageController> {
                                                   style: AppTextStyles
                                                       .textStyleBoldBodyMedium),
                                               Text(
-                                                  'Shared with:${sharedModel.sharedWithFk?.username ?? '-'}',
+                                                  'From :${sharedModel.sharedWithFk?.username ?? '-'}',
                                                   style: AppTextStyles
                                                       .textStyleNormalBodySmall),
                                             ],

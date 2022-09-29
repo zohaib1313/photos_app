@@ -299,6 +299,53 @@ mixin PrivateFolderNetworkContentControllerMixin on GetxController {
     });
   }
 
+  void deleteContent(
+      {required int contentKey,
+      bool showAlert = false,
+      required MyDataModel item,
+      required onSuccess}) async {
+    isLoading.value = true;
+    var client = APIClient(isCache: false, baseUrl: ApiConstants.baseUrl);
+    client
+        .request(
+            route: APIRoute(
+              APIType.deleteContent,
+              body: {"id": contentKey},
+            ),
+            create: () => APIResponse(decoding: false),
+            apiFunction: deleteContent)
+        .then((response) {
+      isLoading.value = false;
+
+      if ((response.response?.success ?? false)) {
+        onSuccess();
+        loadPrivateFolder(
+            model: item,
+            subListItem: (List<MyDataModel>? dataList) {
+              ///list of current folder
+              if (dataList != null) {
+                item.subFolder.clear();
+                item.subFolder.addAll(dataList);
+                refreshCurrentViewList(item);
+              }
+            });
+        if (showAlert) {
+          AppPopUps.showSnackBar(
+              message: 'Document deleted', context: myContext!);
+        }
+      } else {
+        AppPopUps.showSnackBar(
+            message: 'Document delete failed', context: myContext!);
+      }
+    }).catchError((error) {
+      isLoading.value = false;
+      AppPopUps.showSnackBar(
+          message: 'Document delete failed $error', context: myContext!);
+
+      return Future.value(null);
+    });
+  }
+
   void refreshCurrentViewList(MyDataModel item) {
     if (privateFoldersStack.isNotEmpty) {
       privateFoldersStack.removeLast();

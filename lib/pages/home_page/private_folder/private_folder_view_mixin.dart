@@ -204,7 +204,14 @@ mixin PrivateFolderViewMixin {
                 Icons.delete,
                 color: Colors.redAccent,
               ),
-              onPressed: () {}),
+              onPressed: () {
+                ///delete folder file,,,
+                controller.deleteContent(
+                    item: item,
+                    contentKey: item.id!,
+                    showAlert: true,
+                    onSuccess: () {});
+              }),
         ],
         onPressed: () {},
         child: child);

@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:photos_app/common/common_widgets.dart';
 import 'package:photos_app/common/spaces_boxes.dart';
 import 'package:photos_app/common/user_defaults.dart';
-import 'package:photos_app/models/search_user_response_model.dart';
 import 'package:photos_app/my_application.dart';
 import 'package:photos_app/pages/search_user_page.dart';
+
 import '../../../../common/loading_widget.dart';
 import '../../common/app_alert_bottom_sheet.dart';
 import '../../common/helpers.dart';
@@ -309,7 +308,7 @@ class FriendsPage extends GetView<FriendsPageController> {
                       Button(
                           buttonText: 'Accept',
                           color: AppColor.greenColor,
-                          ...unable to update friend request due to not allowed....
+                          //  ...unable to update friend request due to not allowed....
                           onTap: () {
                             controller.acceptRequest(
                                 id: friendsList.elementAt(index).id!,
