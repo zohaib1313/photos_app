@@ -1,22 +1,24 @@
-/*
+import 'package:photos_app/dio_networking/decodable.dart';
+import 'package:photos_app/models/my_data_model.dart';
 import 'package:photos_app/models/user_model.dart';
 
-class GroupsResponseModel {
+class GroupListResponseModel implements Decodeable {
   int? count;
-  Null? next;
-  Null? previous;
-  List<Results>? results;
+  String? next;
+  String? previous;
+  List<GroupModel>? groupModelList;
 
-  GroupsResponseModel({this.count, this.next, this.previous, this.results});
+  GroupListResponseModel(
+      {this.count, this.next, this.previous, this.groupModelList});
 
-  GroupsResponseModel.fromJson(Map<String, dynamic> json) {
+  GroupListResponseModel.fromJson(Map<String, dynamic> json) {
     count = json['count'];
     next = json['next'];
     previous = json['previous'];
     if (json['results'] != null) {
-      results = <Results>[];
+      groupModelList = <GroupModel>[];
       json['results'].forEach((v) {
-        results!.add(new Results.fromJson(v));
+        groupModelList!.add(new GroupModel.fromJson(v));
       });
     }
   }
@@ -26,26 +28,40 @@ class GroupsResponseModel {
     data['count'] = this.count;
     data['next'] = this.next;
     data['previous'] = this.previous;
-    if (this.results != null) {
-      data['results'] = this.results!.map((v) => v.toJson()).toList();
+    if (this.groupModelList != null) {
+      data['results'] = this.groupModelList!.map((v) => v.toJson()).toList();
     }
     return data;
   }
+
+  @override
+  decode(json) {
+    count = json['count'];
+    next = json['next'];
+    previous = json['previous'];
+    if (json['results'] != null) {
+      groupModelList = <GroupModel>[];
+      json['results'].forEach((v) {
+        groupModelList!.add(new GroupModel.fromJson(v));
+      });
+    }
+    return this;
+  }
 }
 
-class Results {
+class GroupModel {
   int? id;
   String? groupName;
   String? description;
-  Null? groupPhoto;
+  String? groupPhoto;
   String? createdAt;
   String? updatedAt;
-  AdminFk? adminFk;
-  List<Null>? groupContent;
+  UserModel? adminFk;
+  List<GroupContent>? groupContent;
   List<UserModel>? members;
   int? membersCount;
 
-  Results(
+  GroupModel(
       {this.id,
       this.groupName,
       this.description,
@@ -57,7 +73,7 @@ class Results {
       this.members,
       this.membersCount});
 
-  Results.fromJson(Map<String, dynamic> json) {
+  GroupModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     groupName = json['group_name'];
     description = json['description'];
@@ -65,18 +81,18 @@ class Results {
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     adminFk = json['admin_fk'] != null
-        ? new AdminFk.fromJson(json['admin_fk'])
+        ? new UserModel.fromJson(json['admin_fk'])
         : null;
     if (json['group_content'] != null) {
-      groupContent = <Null>[];
+      groupContent = <GroupContent>[];
       json['group_content'].forEach((v) {
-        groupContent!.add(new Null.fromJson(v));
+        groupContent!.add(new GroupContent.fromJson(v));
       });
     }
     if (json['members'] != null) {
-      members = <Members>[];
+      members = <UserModel>[];
       json['members'].forEach((v) {
-        members!.add(new Members.fromJson(v));
+        members!.add(new UserModel.fromJson(v));
       });
     }
     membersCount = json['members_count'];
@@ -105,64 +121,47 @@ class Results {
   }
 }
 
-class AdminFk {
+class GroupContent {
   int? id;
-  String? username;
-  String? email;
-  String? firstName;
-  String? lastName;
-  Null? country;
-  String? photo;
-  int? userType;
-  String? phoneNumber;
-  Null? age;
-  String? city;
   String? createdAt;
+  String? updatedAt;
+  UserModel? userFk;
+  int? groupFk;
+  MyDataModel? contentFk;
 
-  AdminFk(
+  GroupContent(
       {this.id,
-      this.username,
-      this.email,
-      this.firstName,
-      this.lastName,
-      this.country,
-      this.photo,
-      this.userType,
-      this.phoneNumber,
-      this.age,
-      this.city,
-      this.createdAt});
+      this.createdAt,
+      this.updatedAt,
+      this.userFk,
+      this.groupFk,
+      this.contentFk});
 
-  AdminFk.fromJson(Map<String, dynamic> json) {
+  GroupContent.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    username = json['username'];
-    email = json['email'];
-    firstName = json['first_name'];
-    lastName = json['last_name'];
-    country = json['country'];
-    photo = json['photo'];
-    userType = json['user_type'];
-    phoneNumber = json['phone_number'];
-    age = json['age'];
-    city = json['city'];
     createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+    userFk = json['user_fk'] != null
+        ? new UserModel.fromJson(json['user_fk'])
+        : null;
+    groupFk = json['group_fk'];
+    contentFk = json['content_fk'] != null
+        ? new MyDataModel.fromJson(json['content_fk'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
-    data['username'] = this.username;
-    data['email'] = this.email;
-    data['first_name'] = this.firstName;
-    data['last_name'] = this.lastName;
-    data['country'] = this.country;
-    data['photo'] = this.photo;
-    data['user_type'] = this.userType;
-    data['phone_number'] = this.phoneNumber;
-    data['age'] = this.age;
-    data['city'] = this.city;
     data['created_at'] = this.createdAt;
+    data['updated_at'] = this.updatedAt;
+    if (this.userFk != null) {
+      data['user_fk'] = this.userFk!.toJson();
+    }
+    data['group_fk'] = this.groupFk;
+    if (this.contentFk != null) {
+      data['content_fk'] = this.contentFk!.toJson();
+    }
     return data;
   }
 }
-*/

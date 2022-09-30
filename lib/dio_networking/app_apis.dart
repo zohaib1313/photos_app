@@ -32,7 +32,10 @@ enum APIType {
   updateFriendRequestStatus,
 
   ///users
-  searchUniqueUser
+  searchUniqueUser,
+
+  ///groups
+  getAllGroups,
 }
 
 class ApiConstants {
@@ -40,6 +43,7 @@ class ApiConstants {
       'https://rsjlawang.com/assets/images/lightbox/image-3.jpg';
   static const googleApiKey = 'AIzaSyC0-5OqwY75sPwoncSujsbkJD6wDU7BvOw';
   static const baseUrl = "https://memory-app34.herokuapp.com/";
+  static const imageUrlBase = "https://memory-app34.herokuapp.com";
   static const loginUser = '/users/login';
   static const users = 'users/user/';
   static const reminder = '/users/reminder/';
@@ -49,4 +53,5 @@ class ApiConstants {
   static const checkUniqueMail = '/users/unique-email';
   static const friends = '/users/add-friend/';
   static const uniqueUser = '/users/unique-username';
+  static const groups = '/users/group/';
 }

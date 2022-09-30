@@ -1,10 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:photos_app/common/app_alert_bottom_sheet.dart';
 import 'package:photos_app/common/helpers.dart';
 import 'package:photos_app/common/styles.dart';
+import 'package:photos_app/dio_networking/app_apis.dart';
 import '../../../../common/loading_widget.dart';
 import '../../../common/app_pop_ups.dart';
 import '../../../common/app_utils.dart';
@@ -40,32 +42,52 @@ class GroupsPage extends GetView<GroupsController> {
         child: const Icon(Icons.add),
       ),
       body: GetX<GroupsController>(
-        initState: (state) {},
+        initState: (state) {
+          controller.clearLists();
+          controller.loadGroups();
+        },
         builder: (_) {
           return SafeArea(
             child: Stack(
               children: [
-                /* ListView.builder(
-                    itemCount: 10,
-                    physics: const BouncingScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      return Card(
-                        child: ListTile(
-                          leading: const CircleAvatar(
-                              child: Icon(Icons.picture_as_pdf)),
-                          title: Text('John doe shared a file with you',
-                              style: AppTextStyles.textStyleBoldBodyXSmall),
-                          subtitle: Text('file_09.pdf',
-                              style: AppTextStyles.textStyleNormalBodyXSmall),
-                          trailing: Text("10:11 am\n2022",
-                              style: AppTextStyles.textStyleNormalBodyXSmall),
+                ((controller.isLoading.value == false &&
+                        controller.filteredList.isEmpty))
+                    ? Center(
+                        child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text("No Friend Found",
+                              style: AppTextStyles.textStyleBoldBodyMedium),
+                          InkWell(
+                            onTap: () {
+                              controller.clearLists();
+                              controller.loadGroups(showAlert: true);
+                            },
+                            child: Text(
+                              "Refresh",
+                              style: AppTextStyles.textStyleBoldBodyMedium
+                                  .copyWith(
+                                      decoration: TextDecoration.underline),
+                            ),
+                          ),
+                        ],
+                      ))
+                    : RefreshIndicator(
+                        onRefresh: () {
+                          controller.clearLists();
+                          controller.loadGroups(showAlert: true);
+                          return Future.delayed(const Duration(seconds: 2));
+                        },
+                        child: ListView.builder(
+                          itemCount: controller.filteredList.length,
+                          controller: controller.listViewController,
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            return getGroupItem(index: index);
+                          },
                         ),
-                      );
-                    }),*/
-
-                Center(
-                  child: Text('in Progress'),
-                ),
+                      ),
                 if (controller.isLoading.isTrue) LoadingWidget(),
               ],
             ),
@@ -162,5 +184,60 @@ class GroupsPage extends GetView<GroupsController> {
             ],
           ),
         ));
+  }
+
+  Widget getGroupItem({required int index}) {
+    return Card(
+      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+      child: Column(
+        children: [
+          NetworkPlainImage(
+              url: controller.filteredList.elementAt(index).groupPhoto ?? '',
+              height: 200.h),
+          Text(controller.filteredList.elementAt(index).groupName ?? '-',
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: AppTextStyles.textStyleBoldTitleLarge),
+          Text(controller.filteredList.elementAt(index).description ?? '-',
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: AppTextStyles.textStyleNormalBodySmall),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                Expanded(
+                    child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.person),
+                    Text((controller.filteredList
+                                .elementAt(index)
+                                .membersCount ??
+                            0)
+                        .toString()),
+                  ],
+                )),
+                Expanded(
+                    child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.attach_file_sharp),
+                    Text((controller.filteredList
+                                .elementAt(index)
+                                .groupContent
+                                ?.length ??
+                            0)
+                        .toString()),
+                  ],
+                ))
+              ],
+            ),
+          )
+        ],
+      ),
+    );
   }
 }

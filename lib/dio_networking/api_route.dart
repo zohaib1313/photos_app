@@ -177,6 +177,15 @@ class APIRoute implements APIRouteConfigurable {
           method: APIMethod.get,
         );
 
+      ///groups
+      case APIType.getAllGroups:
+        return RequestOptions(
+          path: ApiConstants.groups,
+          headers: headers,
+          queryParameters: body,
+          method: APIMethod.get,
+        );
+
       default:
         return RequestOptions(
           path: ApiConstants.loginUser,

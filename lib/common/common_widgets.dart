@@ -467,7 +467,9 @@ class _NetworkCircularImageState extends State<NetworkCircularImage> {
   Widget build(BuildContext context) {
     return CachedNetworkImage(
       imageUrl: (widget.url.isNotEmpty)
-          ? ApiConstants.baseUrl + widget.url
+          ? widget.url.startsWith('/')
+              ? ApiConstants.imageUrlBase + widget.url
+              : ApiConstants.baseUrl + widget.url
           : ApiConstants.imageNetworkPlaceHolder,
       width: widget.width,
       height: widget.height,
@@ -517,7 +519,7 @@ class _NetworkCircularImageState extends State<NetworkCircularImage> {
 }
 
 class NetworkPlainImage extends StatefulWidget {
-  String? url;
+  String url;
 
   double? width;
   double? height;
@@ -535,7 +537,11 @@ class _NetworkPlainImageState extends State<NetworkPlainImage> {
   @override
   Widget build(BuildContext context) {
     return CachedNetworkImage(
-      imageUrl: widget.url ?? AppConstants.placeHolderIcon,
+      imageUrl: (widget.url.isNotEmpty)
+          ? widget.url.startsWith('/')
+              ? ApiConstants.imageUrlBase + widget.url
+              : ApiConstants.baseUrl + widget.url
+          : ApiConstants.imageNetworkPlaceHolder,
       width: widget.width,
       height: widget.height,
       key: UniqueKey(),
