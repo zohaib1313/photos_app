@@ -1,5 +1,7 @@
 // ignore_for_file: avoid_print, must_be_immutable, unnecessary_question_mark, prefer_typing_uninitialized_variables
 
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
@@ -600,5 +602,51 @@ Widget getFeatureItem({required String title, Color? color}) {
       style: AppTextStyles.textStyleNormalBodyMedium.copyWith(
           color: color != null ? AppColor.whiteColor : AppColor.whiteColor),
     ),
+  );
+}
+
+Widget getImageWidget(Rx<File?> file, {String? networkImage = ''}) {
+  return Stack(
+    children: [
+      (file.value != null)
+          ? CircleAvatar(
+              radius: 70, backgroundImage: Image.file(file.value!).image)
+          : (networkImage != ''
+              ? NetworkCircularImage(radius: 70, url: networkImage ?? '')
+              : const CircleAvatar(
+                  radius: 70,
+                  backgroundImage:
+                      AssetImage('assets/images/place_your_image.png'))),
+      Positioned(
+        bottom: 1,
+        right: 10,
+        child: Container(
+          decoration: BoxDecoration(
+              border: Border.all(
+                width: 3,
+                color: Colors.white,
+              ),
+              borderRadius: const BorderRadius.all(
+                Radius.circular(
+                  50,
+                ),
+              ),
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  offset: const Offset(2, 4),
+                  color: Colors.black.withOpacity(
+                    0.3,
+                  ),
+                  blurRadius: 3,
+                ),
+              ]),
+          child: const Padding(
+            padding: EdgeInsets.all(2.0),
+            child: Icon(Icons.add_a_photo, color: Colors.black),
+          ),
+        ),
+      ),
+    ],
   );
 }

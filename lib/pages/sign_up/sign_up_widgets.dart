@@ -1,14 +1,9 @@
-import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
 
 import '../../common/common_widgets.dart';
 import '../../common/styles.dart';
-import '../../dio_networking/app_apis.dart';
-import '../../my_application.dart';
 
 mixin SignupWidgetsMixin {
   getTextField(
@@ -41,51 +36,5 @@ mixin SignupWidgetsMixin {
             (String? value) => validate
                 ? (value!.trim().isEmpty ? validateText ?? "Required" : null)
                 : null);
-  }
-
-  Widget getImageWidget(Rx<File?> file, {String? networkImage = ''}) {
-    return Stack(
-      children: [
-        (file.value != null)
-            ? CircleAvatar(
-                radius: 70, backgroundImage: Image.file(file.value!).image)
-            : (networkImage != ''
-                ? NetworkCircularImage(radius: 70, url: networkImage ?? '')
-                : const CircleAvatar(
-                    radius: 70,
-                    backgroundImage:
-                        AssetImage('assets/images/place_your_image.png'))),
-        Positioned(
-          bottom: 1,
-          right: 10,
-          child: Container(
-            decoration: BoxDecoration(
-                border: Border.all(
-                  width: 3,
-                  color: Colors.white,
-                ),
-                borderRadius: const BorderRadius.all(
-                  Radius.circular(
-                    50,
-                  ),
-                ),
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    offset: const Offset(2, 4),
-                    color: Colors.black.withOpacity(
-                      0.3,
-                    ),
-                    blurRadius: 3,
-                  ),
-                ]),
-            child: const Padding(
-              padding: EdgeInsets.all(2.0),
-              child: Icon(Icons.add_a_photo, color: Colors.black),
-            ),
-          ),
-        ),
-      ],
-    );
   }
 }
