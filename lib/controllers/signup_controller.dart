@@ -55,7 +55,7 @@ class SignupController extends GetxController {
     }
 
     isLoading.value = true;
-    var data = dio.FormData.fromMap({
+    final data = dio.FormData.fromMap({
       "photo": await dio.MultipartFile.fromFile(profileImage.value!.path,
           filename: basename(profileImage.value!.path)),
       "username": usernameController.text.trim(),

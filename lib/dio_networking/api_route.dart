@@ -185,6 +185,13 @@ class APIRoute implements APIRouteConfigurable {
           queryParameters: body,
           method: APIMethod.get,
         );
+      case APIType.addNewGroup:
+        return RequestOptions(
+          path: ApiConstants.groups,
+          headers: headers,
+          data: body,
+          method: APIMethod.post,
+        );
 
       default:
         return RequestOptions(

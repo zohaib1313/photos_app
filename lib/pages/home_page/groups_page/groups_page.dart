@@ -101,6 +101,7 @@ class GroupsPage extends GetView<GroupsController> {
     if (index == null) {
       controller.groupTitleController.clear();
       controller.groupDescriptionController.clear();
+      controller.profileImage.value = null;
     } else {
       /*controller.groupTitleController.text =
           controller.filteredItemList.elementAt(index)?.name ?? '';

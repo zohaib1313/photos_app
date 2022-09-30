@@ -39,10 +39,11 @@ class AppPopUps {
               FlatButton(
                 color: Colors.green,
                 textColor: Colors.white,
+                onPressed: onSubmit ??
+                    () {
+                      Navigator.of(context).pop();
+                    },
                 child: const Text('Confirm'),
-                onPressed: () {
-                  onSubmit();
-                },
               ),
             ],
           );

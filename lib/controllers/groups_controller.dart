@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:dio/dio.dart' as dio;
+import 'package:path/path.dart';
 
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +33,51 @@ class GroupsController extends GetxController {
 
   void updateGroup({required int index}) {}
 
-  void addNewGroup() {}
+  void addNewGroup({bool showAlert = false}) async {
+    if (profileImage.value == null) {
+      AppPopUps.showConfirmDialog(message: 'Select Cover Image', title: "");
+      return;
+    }
+
+    ///close sheet
+    Get.back();
+    isLoading.value = true;
+
+    final data = dio.FormData.fromMap({
+      "group_photo": await dio.MultipartFile.fromFile(profileImage.value!.path,
+          filename: basename(profileImage.value!.path)),
+      "group_name": groupTitleController.text.trim(),
+      "description": groupDescriptionController.text.trim(),
+      "admin_fk": UserDefaults.getCurrentUserId()
+    });
+
+    try {
+      final apiResponse = await GroupNetworkRepo.addNewGroup(data: data);
+      isLoading.value = false;
+
+      if ((apiResponse?.success ?? false) && apiResponse?.data != null) {
+        AppPopUps.showDialogContent(
+            title: 'Success',
+            description: 'Group Added',
+            dialogType: DialogType.SUCCES);
+        groupList.add(apiResponse!.data!);
+        filteredList.add(apiResponse.data!);
+      } else {
+        AppPopUps.showDialogContent(
+            title: 'Error',
+            description: 'Failed to add',
+            dialogType: DialogType.ERROR);
+      }
+    } catch (e) {
+      isLoading.value = false;
+      if (showAlert) {
+        AppPopUps.showDialogContent(
+            title: 'Error',
+            description: e.toString(),
+            dialogType: DialogType.ERROR);
+      }
+    }
+  }
 
   void loadGroups({bool showAlert = false}) async {
     isLoading.value = true;

@@ -49,7 +49,7 @@ class GroupListResponseModel implements Decodeable {
   }
 }
 
-class GroupModel {
+class GroupModel implements Decodeable {
   int? id;
   String? groupName;
   String? description;
@@ -118,6 +118,33 @@ class GroupModel {
     }
     data['members_count'] = this.membersCount;
     return data;
+  }
+
+  @override
+  decode(json) {
+    id = json['id'];
+    groupName = json['group_name'];
+    description = json['description'];
+    groupPhoto = json['group_photo'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+    adminFk = json['admin_fk'] != null
+        ? new UserModel.fromJson(json['admin_fk'])
+        : null;
+    if (json['group_content'] != null) {
+      groupContent = <GroupContent>[];
+      json['group_content'].forEach((v) {
+        groupContent!.add(new GroupContent.fromJson(v));
+      });
+    }
+    if (json['members'] != null) {
+      members = <UserModel>[];
+      json['members'].forEach((v) {
+        members!.add(new UserModel.fromJson(v));
+      });
+    }
+    membersCount = json['members_count'];
+    return this;
   }
 }
 
