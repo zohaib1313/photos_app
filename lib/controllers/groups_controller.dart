@@ -6,6 +6,7 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:photos_app/models/groups_response_model.dart';
+import 'package:photos_app/models/user_model.dart';
 import 'package:photos_app/network_repositories/groups_network_repo.dart';
 
 import '../common/app_pop_ups.dart';
@@ -17,7 +18,6 @@ class GroupsController extends GetxController {
   int pageToLoad = 1;
 
   bool hasNewPage = false;
-  RxList<GroupModel> groupList = <GroupModel>[].obs;
 
   RxList<GroupModel> filteredList = <GroupModel>[].obs;
 
@@ -31,7 +31,48 @@ class GroupsController extends GetxController {
 
   Rxn<File?> profileImage = Rxn<File>();
 
-  void updateGroup({required int index}) {}
+  void updateGroup({required int index, bool showAlert = true}) async {
+    Map<String, dynamic> map = {
+      "id": filteredList.elementAt(index).id.toString(),
+      "group_name": groupTitleController.text.trim(),
+      "description": groupDescriptionController.text.trim(),
+    };
+    if (profileImage.value != null) {
+      map['group_photo'] = await dio.MultipartFile.fromFile(
+          profileImage.value!.path,
+          filename: basename(profileImage.value!.path));
+    }
+
+    ///close sheet
+    Get.back();
+    isLoading.value = true;
+
+    try {
+      final apiResponse = await GroupNetworkRepo.updateGroup(data: map);
+      isLoading.value = false;
+
+      if ((apiResponse?.success ?? false) && apiResponse?.data != null) {
+        AppPopUps.showDialogContent(
+            title: 'Success',
+            description: 'Group updated',
+            dialogType: DialogType.SUCCES);
+        filteredList[index] = apiResponse!.data!;
+      } else {
+        AppPopUps.showDialogContent(
+            title: 'Error',
+            description: 'Failed to updated',
+            dialogType: DialogType.ERROR);
+      }
+    } catch (e) {
+      isLoading.value = false;
+      if (showAlert) {
+        AppPopUps.showDialogContent(
+            title: 'Error',
+            description: e.toString(),
+            dialogType: DialogType.ERROR);
+      }
+    }
+  }
 
   void addNewGroup({bool showAlert = false}) async {
     if (profileImage.value == null) {
@@ -60,8 +101,8 @@ class GroupsController extends GetxController {
             title: 'Success',
             description: 'Group Added',
             dialogType: DialogType.SUCCES);
-        groupList.add(apiResponse!.data!);
-        filteredList.add(apiResponse.data!);
+
+        filteredList.add(apiResponse!.data!);
       } else {
         AppPopUps.showDialogContent(
             title: 'Error',
@@ -92,9 +133,8 @@ class GroupsController extends GetxController {
         if (apiResponse?.data?.next != null) {
           pageToLoad++;
         }
-        groupList.addAll(apiResponse?.data?.groupModelList ?? []);
 
-        filteredList.addAll(groupList);
+        filteredList.addAll(apiResponse?.data?.groupModelList ?? []);
       } else {
         if (showAlert) {
           AppPopUps.showDialogContent(
@@ -115,7 +155,6 @@ class GroupsController extends GetxController {
   }
 
   void clearLists() {
-    groupList.clear();
     filteredList.clear();
   }
 
@@ -123,6 +162,42 @@ class GroupsController extends GetxController {
     AppPopUps.showConfirmDialog(
         title: 'Confirm',
         message: 'Are you sure to delete this group',
+        onSubmit: () async {
+          ///to close dialog....
+          Get.back();
+          isLoading.value = true;
+          try {
+            final apiResponse = await GroupNetworkRepo.deleteGroup(
+                data: {'id': group.id.toString()});
+            isLoading.value = false;
+
+            if (apiResponse?.success ?? false) {
+              debugPrint('Group deleted');
+              filteredList.remove(group);
+              if (showAlert) {
+                AppPopUps.showDialogContent(
+                    title: 'Alert',
+                    description: 'No Group found',
+                    dialogType: DialogType.WARNING);
+              }
+            }
+          } catch (e) {
+            isLoading.value = false;
+            if (showAlert) {
+              AppPopUps.showDialogContent(
+                  title: 'Error',
+                  description: e.toString(),
+                  dialogType: DialogType.ERROR);
+            }
+          }
+        });
+  }
+
+  void removeMemberFromGroup(
+      {required UserModel user, required onSuccess}) async {
+    AppPopUps.showConfirmDialog(
+        title: 'Confirm',
+        message: 'Are you sure to remove this user',
         onSubmit: () async {
           ///to close dialog....
           Get.back();

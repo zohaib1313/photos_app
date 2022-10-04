@@ -4,12 +4,17 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:focused_menu/focused_menu.dart';
 import 'package:focused_menu/modals.dart';
 import 'package:get/get.dart';
+import 'package:photos_app/common/app_alert_bottom_sheet.dart';
+import 'package:photos_app/common/app_pop_ups.dart';
+import 'package:photos_app/common/common_widgets.dart';
 import 'package:photos_app/common/helpers.dart';
 import 'package:photos_app/common/styles.dart';
 import 'package:photos_app/controllers/home_page_controller.dart';
 import 'package:photos_app/models/friends_list_model_response.dart';
+import 'package:photos_app/models/groups_response_model.dart';
 import 'package:photos_app/models/my_data_model.dart';
 import 'package:photos_app/pages/friends_page/friends_page.dart';
+import 'package:photos_app/pages/home_page/groups_page/groups_page.dart';
 
 import '../../../common/spaces_boxes.dart';
 import '../../../my_application.dart';
@@ -184,17 +189,54 @@ mixin PrivateFolderViewMixin {
               title: Text("Share", style: AppTextStyles.textStyleBoldBodySmall),
               trailingIcon: const Icon(Icons.share),
               onPressed: () async {
-                ///load friends ......
-                FriendsModel? friendModel =
-                    await Get.to(FriendsPage(isForUpdate: true));
-                if (friendModel != null) {
-                  ///share file...
-                  controller.shareFolderWithFriend(
-                      friendModel: friendModel,
-                      contentKey: focusedItem.id!,
-                      showAlert: true,
-                      onSuccess: () {});
-                }
+                AppBottomSheets.showAppAlertBottomSheet(
+                    isFull: false,
+                    context: context,
+                    child: Column(
+                      children: [
+                        vSpace,
+                        Button(
+                            buttonText: 'Share with friends',
+                            onTap: () async {
+                              ///to close bottomsheet
+                              Get.back();
+
+                              ///load friends ......
+                              FriendsModel? friendModel =
+                                  await Get.to(FriendsPage(isForUpdate: true));
+                              if (friendModel != null) {
+                                ///share file...
+                                controller.shareFolderWithFriend(
+                                    friendModel: friendModel,
+                                    contentKey: focusedItem.id!,
+                                    showAlert: true,
+                                    onSuccess: () {});
+                              }
+                            }),
+                        vSpace,
+                        Button(
+                            buttonText: 'Share with groups',
+                            onTap: () async {
+                              ///to close bottomsheet
+                              Get.back();
+
+                              var groupModel = await Get.toNamed(GroupsPage.id,
+                                  arguments: [true]);
+
+                              if (groupModel != null) {
+                                print('share file with group ${groupModel.id}');
+
+                                ///share file...
+                                controller.shareContentWithGroup(
+                                    groupModel: groupModel,
+                                    contentKey: focusedItem.id!,
+                                    showAlert: true,
+                                    onSuccess: () {});
+                              }
+                            }),
+                        vSpace,
+                      ],
+                    ));
               }),
           FocusedMenuItem(
               title: Text("Delete",

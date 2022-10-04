@@ -16,8 +16,6 @@ class PrivateFolderViewPage extends GetView<HomePageController>
 
   @override
   Widget build(BuildContext context) {
-    print("folder stack in private folder view");
-    print(controller.privateFoldersStack.length.toString());
     return WillPopScope(onWillPop: () {
       return controller.closeLastFolder();
     }, child: Obx(() {

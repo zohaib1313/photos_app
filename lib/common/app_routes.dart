@@ -60,7 +60,7 @@ appRoutes() {
           Get.lazyPut<NotificationsController>(() => NotificationsController());
         })),
 
-    ///history///
+    ///groups///
     GetPage(
         name: GroupsPage.id,
         page: () => GroupsPage(),

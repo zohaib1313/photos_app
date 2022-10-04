@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-
+import 'package:dio/dio.dart' as dio;
 import '../common/user_defaults.dart';
 import 'app_apis.dart';
 
@@ -197,7 +197,7 @@ class APIRoute implements APIRouteConfigurable {
         return RequestOptions(
           path: "${ApiConstants.groups}/${body['id']}/",
           headers: headers,
-          data: body,
+          data: dio.FormData.fromMap(body),
           method: APIMethod.put,
         );
       case APIType.deleteGroup:
@@ -208,6 +208,21 @@ class APIRoute implements APIRouteConfigurable {
           method: APIMethod.delete,
         );
 
+      case APIType.shareDataInGroup:
+        return RequestOptions(
+          path: ApiConstants.groupContent,
+          headers: headers,
+          data: body,
+          method: APIMethod.post,
+        );
+
+      case APIType.removeMemberFromGroup:
+        return RequestOptions(
+          path: "${ApiConstants.groupMember}/${body['id']}/",
+          headers: headers,
+          data: body,
+          method: APIMethod.delete,
+        );
       default:
         return RequestOptions(
           path: ApiConstants.loginUser,

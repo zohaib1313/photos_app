@@ -21,6 +21,7 @@ import '../../dio_networking/api_response.dart';
 import '../../dio_networking/api_route.dart';
 import '../../dio_networking/app_apis.dart';
 import '../../models/friends_list_model_response.dart';
+import '../../models/groups_response_model.dart';
 
 mixin PrivateFolderNetworkContentControllerMixin on GetxController {
   int pageToLoad = 1;
@@ -277,6 +278,48 @@ mixin PrivateFolderNetworkContentControllerMixin on GetxController {
             ),
             create: () => APIResponse(decoding: false),
             apiFunction: shareFolderWithFriend)
+        .then((response) {
+      isLoading.value = false;
+
+      if ((response.response?.success ?? false)) {
+        onSuccess();
+        if (showAlert) {
+          AppPopUps.showSnackBar(
+              message: 'Document shard', context: myContext!);
+        }
+      } else {
+        AppPopUps.showSnackBar(
+            message: 'Document sharing failed', context: myContext!);
+      }
+    }).catchError((error) {
+      isLoading.value = false;
+      AppPopUps.showSnackBar(
+          message: 'Document sharing failed $error', context: myContext!);
+
+      return Future.value(null);
+    });
+  }
+
+  void shareContentWithGroup(
+      {required GroupModel groupModel,
+      required int contentKey,
+      required bool showAlert,
+      required onSuccess}) async {
+    Map<String, dynamic> body = {
+      "content_fk": contentKey,
+      "user_fk": UserDefaults.getCurrentUserId(),
+      "group_fk": groupModel.id.toString()
+    };
+
+    isLoading.value = true;
+    APIClient(isCache: false, baseUrl: ApiConstants.baseUrl)
+        .request(
+            route: APIRoute(
+              APIType.shareDataInGroup,
+              body: dio.FormData.fromMap(body),
+            ),
+            create: () => APIResponse(decoding: false),
+            apiFunction: shareContentWithGroup)
         .then((response) {
       isLoading.value = false;
 

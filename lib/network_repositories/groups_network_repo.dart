@@ -1,6 +1,6 @@
-import 'package:get/get.dart';
-import 'package:photos_app/models/groups_response_model.dart';
 import 'package:dio/dio.dart' as dio;
+import 'package:photos_app/models/groups_response_model.dart';
+
 import '../dio_networking/api_client.dart';
 import '../dio_networking/api_response.dart';
 import '../dio_networking/api_route.dart';
@@ -44,6 +44,20 @@ class GroupNetworkRepo {
     return result.response;
   }
 
+  ///add new group
+  static Future<APIResponse<GroupModel>?> updateGroup(
+      {required Map<String, dynamic> data}) async {
+    final result =
+        await APIClient(isCache: false, baseUrl: ApiConstants.baseUrl).request(
+            route: APIRoute(
+              APIType.updateGroup,
+              body: data,
+            ),
+            create: () => APIResponse<GroupModel>(create: () => GroupModel()),
+            apiFunction: updateGroup);
+    return result.response;
+  }
+
   ///delete group
   static Future<APIResponse?> deleteGroup(
       {required Map<String, dynamic> data}) async {
@@ -51,6 +65,20 @@ class GroupNetworkRepo {
         await APIClient(isCache: false, baseUrl: ApiConstants.baseUrl).request(
             route: APIRoute(
               APIType.deleteGroup,
+              body: data,
+            ),
+            create: () => APIResponse(decoding: false),
+            apiFunction: deleteGroup);
+    return result.response;
+  }
+
+  ///delete member from group
+  static Future<APIResponse?> deleteMemberFromGroup(
+      {required Map<String, dynamic> data}) async {
+    final result =
+        await APIClient(isCache: false, baseUrl: ApiConstants.baseUrl).request(
+            route: APIRoute(
+              APIType.removeMemberFromGroup,
               body: data,
             ),
             create: () => APIResponse(decoding: false),

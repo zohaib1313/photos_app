@@ -25,65 +25,21 @@ mixin GroupViewsMinx {
   Widget getGroupItem(
       {required int index,
       required GroupsController controller,
-      required BuildContext context}) {
-    return getFocusedMenu(
-        focusedItem: controller.filteredList.elementAt(index),
-        context: context,
-        controller: controller,
-        child: Card(
-          margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
-          child: Column(
-            children: [
-              NetworkPlainImage(
-                  url:
-                      controller.filteredList.elementAt(index).groupPhoto ?? '',
-                  height: 200.h),
-              Text(controller.filteredList.elementAt(index).groupName ?? '-',
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: AppTextStyles.textStyleBoldTitleLarge),
-              Text(controller.filteredList.elementAt(index).description ?? '-',
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: AppTextStyles.textStyleNormalBodySmall),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const Icon(Icons.person),
-                          Text((controller.filteredList
-                                      .elementAt(index)
-                                      .membersCount ??
-                                  0)
-                              .toString()),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                        child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        const Icon(Icons.attach_file_sharp),
-                        Text((controller.filteredList
-                                    .elementAt(index)
-                                    .groupContent
-                                    ?.length ??
-                                0)
-                            .toString()),
-                      ],
-                    ))
-                  ],
-                ),
-              )
-            ],
-          ),
-        ));
+      required BuildContext context,
+      required bool isForChoosingGroup}) {
+    return isForChoosingGroup
+        ? InkWell(
+            onTap: () {
+              Get.back(result: controller.filteredList.elementAt(index));
+            },
+            child: _itemView(
+                index: index, context: context, controller: controller))
+        : getFocusedMenu(
+            index: index,
+            context: context,
+            controller: controller,
+            child: _itemView(
+                index: index, context: context, controller: controller));
   }
 
   void showAddUpdateBottomSheet(
@@ -93,12 +49,11 @@ mixin GroupViewsMinx {
       controller.groupDescriptionController.clear();
       controller.profileImage.value = null;
     } else {
-      /*controller.groupTitleController.text =
-          controller.filteredItemList.elementAt(index)?.name ?? '';
+      controller.groupTitleController.text =
+          controller.filteredList.elementAt(index).groupName ?? '';
 
       controller.groupDescriptionController.text =
-          controller.filteredItemList.elementAt(index)?.content ?? '';
-    */
+          controller.filteredList.elementAt(index).description ?? '';
     }
     GlobalKey<FormState> formKey = GlobalKey<FormState>();
     AppBottomSheets.showAppAlertBottomSheet(
@@ -124,7 +79,13 @@ mixin GroupViewsMinx {
                         },
                       );
                     },
-                    child: getImageWidget(controller.profileImage),
+                    child: getImageWidget(controller.profileImage,
+                        networkImage: index != null
+                            ? controller.filteredList
+                                    .elementAt(index)
+                                    .groupPhoto ??
+                                ''
+                            : ''),
                   ),
                 );
               }),
@@ -195,6 +156,8 @@ mixin GroupViewsMinx {
           itemCount: groupModel.members?.length ?? 0,
           itemBuilder: (context, index) {
             return getFriendItemCard(
+                controller: controller,
+                groupModel: groupModel,
                 userModel: groupModel.members![index],
                 ifIamAdmin: groupModel.members![index].id.toString() ==
                     UserDefaults.getCurrentUserId());
@@ -205,7 +168,10 @@ mixin GroupViewsMinx {
   }
 
   Widget getFriendItemCard(
-      {required UserModel userModel, required bool ifIamAdmin}) {
+      {required UserModel userModel,
+      required bool ifIamAdmin,
+      required GroupsController controller,
+      required GroupModel groupModel}) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 10.0),
@@ -224,7 +190,14 @@ mixin GroupViewsMinx {
             trailing: ifIamAdmin
                 ? const IgnorePointer()
                 : TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      controller.removeMemberFromGroup(
+                          user: userModel,
+                          ..
+                          onSuccess: () {
+                            groupModel.members?.remove(userModel);
+                          });
+                    },
                     child: Text('Remove',
                         style: AppTextStyles.textStyleBoldBodyMedium))),
       ),
@@ -232,7 +205,7 @@ mixin GroupViewsMinx {
   }
 
   Widget getFocusedMenu(
-      {required GroupModel focusedItem,
+      {required int index,
       required BuildContext context,
       required GroupsController controller,
       required Widget child}) {
@@ -264,22 +237,85 @@ mixin GroupViewsMinx {
               trailingIcon: const Icon(Icons.person),
               onPressed: () {
                 openUsersBottomSheet(
-                    controller: controller, groupModel: focusedItem);
+                    controller: controller,
+                    groupModel: controller.filteredList.elementAt(index));
               }),
           FocusedMenuItem(
               title:
                   Text("Update", style: AppTextStyles.textStyleBoldBodySmall),
               trailingIcon: const Icon(Icons.edit),
-              onPressed: () {}),
+              onPressed: () {
+                showAddUpdateBottomSheet(controller: controller, index: index);
+              }),
           FocusedMenuItem(
               title:
                   Text("Delete", style: AppTextStyles.textStyleBoldBodySmall),
               trailingIcon: Icon(Icons.delete, color: AppColor.redColor),
               onPressed: () {
-                controller.deleteGroup(group: focusedItem);
+                controller.deleteGroup(
+                    group: controller.filteredList.elementAt(index));
               }),
         ],
         onPressed: () {},
         child: child);
   }
+}
+
+_itemView(
+    {required int index,
+    required GroupsController controller,
+    required BuildContext context}) {
+  return Card(
+    margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+    child: Column(
+      children: [
+        NetworkPlainImage(
+            url: controller.filteredList.elementAt(index).groupPhoto ?? '',
+            height: 200.h),
+        Text(controller.filteredList.elementAt(index).groupName ?? '-',
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: AppTextStyles.textStyleBoldTitleLarge),
+        Text(controller.filteredList.elementAt(index).description ?? '-',
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: AppTextStyles.textStyleNormalBodySmall),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            children: [
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.person),
+                    Text((controller.filteredList
+                                .elementAt(index)
+                                .membersCount ??
+                            0)
+                        .toString()),
+                  ],
+                ),
+              ),
+              Expanded(
+                  child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Icon(Icons.attach_file_sharp),
+                  Text((controller.filteredList
+                              .elementAt(index)
+                              .groupContent
+                              ?.length ??
+                          0)
+                      .toString()),
+                ],
+              ))
+            ],
+          ),
+        )
+      ],
+    ),
+  );
 }

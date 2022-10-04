@@ -17,9 +17,9 @@ import '../../../controllers/groups_controller.dart';
 import '../../../my_application.dart';
 
 class GroupsPage extends GetView<GroupsController> with GroupViewsMinx {
-  const GroupsPage({Key? key}) : super(key: key);
+  GroupsPage({Key? key}) : super(key: key);
   static const id = '/GroupsPage';
-
+  bool? isForChoosingGroup = Get.arguments?[0] ?? false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -87,6 +87,7 @@ class GroupsPage extends GetView<GroupsController> with GroupViewsMinx {
                             return getGroupItem(
                                 context: context,
                                 index: index,
+                                isForChoosingGroup: isForChoosingGroup ?? false,
                                 controller: controller);
                           },
                         ),
