@@ -11,7 +11,7 @@ import '../dio_networking/api_route.dart';
 import '../dio_networking/app_apis.dart';
 import '../models/search_user_response_model.dart';
 
-class SearchUserController extends GetxController {
+class SearchFriendsUserController extends GetxController {
   RxBool isLoading = false.obs;
   int pageToLoad = 1;
   bool hasNewPage = false;

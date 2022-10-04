@@ -43,4 +43,18 @@ class GroupNetworkRepo {
             apiFunction: addNewGroup);
     return result.response;
   }
+
+  ///delete group
+  static Future<APIResponse?> deleteGroup(
+      {required Map<String, dynamic> data}) async {
+    final result =
+        await APIClient(isCache: false, baseUrl: ApiConstants.baseUrl).request(
+            route: APIRoute(
+              APIType.deleteGroup,
+              body: data,
+            ),
+            create: () => APIResponse(decoding: false),
+            apiFunction: deleteGroup);
+    return result.response;
+  }
 }

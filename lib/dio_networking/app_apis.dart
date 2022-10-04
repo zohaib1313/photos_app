@@ -37,6 +37,8 @@ enum APIType {
   ///groups
   getAllGroups,
   addNewGroup,
+  deleteGroup,
+  updateGroup,
 }
 
 class ApiConstants {

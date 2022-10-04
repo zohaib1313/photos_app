@@ -1,19 +1,15 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:get/get.dart';
 import 'package:photos_app/models/notes_response_model.dart';
 
 import '../common/app_pop_ups.dart';
-import '../common/extensions.dart';
 import '../common/helpers.dart';
 import '../common/user_defaults.dart';
 import '../dio_networking/api_client.dart';
 import '../dio_networking/api_response.dart';
 import '../dio_networking/api_route.dart';
 import '../dio_networking/app_apis.dart';
-import '../models/reminder_response_model.dart';
-import '../models/user_model.dart';
 import '../my_application.dart';
 
 class NotesController extends GetxController {
@@ -30,20 +26,18 @@ class NotesController extends GetxController {
   bool hasNewPage = false;
 
   ScrollController listViewController = ScrollController();
-
   @override
   void onInit() {
     listViewController.addListener(() {
       if (listViewController.position.extentBefore ==
           listViewController.position.maxScrollExtent) {
-        print('end of the page');
+        debugPrint('end of the page');
         if (hasNewPage) {
           getNotes();
         }
       }
     });
     searchController.addListener(searchFromList);
-
     super.onInit();
   }
 

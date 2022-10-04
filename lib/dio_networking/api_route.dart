@@ -193,6 +193,21 @@ class APIRoute implements APIRouteConfigurable {
           method: APIMethod.post,
         );
 
+      case APIType.updateGroup:
+        return RequestOptions(
+          path: "${ApiConstants.groups}/${body['id']}/",
+          headers: headers,
+          data: body,
+          method: APIMethod.put,
+        );
+      case APIType.deleteGroup:
+        return RequestOptions(
+          path: "${ApiConstants.groups}/${body['id']}/",
+          headers: headers,
+          data: body,
+          method: APIMethod.delete,
+        );
+
       default:
         return RequestOptions(
           path: ApiConstants.loginUser,

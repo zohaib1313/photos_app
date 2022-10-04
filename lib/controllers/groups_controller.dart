@@ -118,4 +118,39 @@ class GroupsController extends GetxController {
     groupList.clear();
     filteredList.clear();
   }
+
+  void deleteGroup({required GroupModel group, bool showAlert = false}) async {
+    AppPopUps.showConfirmDialog(
+        title: 'Confirm',
+        message: 'Are you sure to delete this group',
+        onSubmit: () async {
+          ///to close dialog....
+          Get.back();
+          isLoading.value = true;
+          try {
+            final apiResponse = await GroupNetworkRepo.deleteGroup(
+                data: {'id': group.id.toString()});
+            isLoading.value = false;
+
+            if (apiResponse?.success ?? false) {
+              debugPrint('Group deleted');
+              filteredList.remove(group);
+              if (showAlert) {
+                AppPopUps.showDialogContent(
+                    title: 'Alert',
+                    description: 'No Group found',
+                    dialogType: DialogType.WARNING);
+              }
+            }
+          } catch (e) {
+            isLoading.value = false;
+            if (showAlert) {
+              AppPopUps.showDialogContent(
+                  title: 'Error',
+                  description: e.toString(),
+                  dialogType: DialogType.ERROR);
+            }
+          }
+        });
+  }
 }

@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:photos_app/common/common_widgets.dart';
 import 'package:photos_app/common/spaces_boxes.dart';
-import 'package:photos_app/common/user_defaults.dart';
 import 'package:photos_app/my_application.dart';
-import 'package:photos_app/pages/search_user_page.dart';
 
 import '../../../../common/loading_widget.dart';
 import '../../common/app_alert_bottom_sheet.dart';
 import '../../common/helpers.dart';
 import '../../common/my_search_bar.dart';
 import '../../common/styles.dart';
+import '../../common/user_defaults.dart';
 import '../../controllers/friends_page_controller.dart';
 import '../../models/friends_list_model_response.dart';
+import '../search_friends_user_page.dart';
 
 class FriendsPage extends GetView<FriendsPageController> {
   var isForUpdate = false;
@@ -30,7 +31,7 @@ class FriendsPage extends GetView<FriendsPageController> {
               child: FloatingActionButton(
                 child: const Icon(Icons.add),
                 onPressed: () async {
-                  await Get.toNamed(SearchUserPage.id);
+                  await Get.toNamed(SearchFriendsUserPage.id);
                   controller.friendsList.clear();
                   controller.filteredList.clear();
                   controller.loadFriendsList(
@@ -82,7 +83,7 @@ class FriendsPage extends GetView<FriendsPageController> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text("No Friend Found",
+                          Text("No Record Found",
                               style: AppTextStyles.textStyleBoldBodyMedium),
                           InkWell(
                             onTap: () {
@@ -135,11 +136,22 @@ class FriendsPage extends GetView<FriendsPageController> {
         leading: Padding(
           padding: const EdgeInsets.all(4.0),
           child: NetworkCircularImage(
-              url: controller.filteredList.elementAt(index).friendFk?.photo ??
-                  ''),
+              url: controller.filteredList
+                          .elementAt(index)
+                          .friendFk
+                          ?.id
+                          .toString() ==
+                      UserDefaults.getCurrentUserId()
+                  ? controller.filteredList.elementAt(index).userFk?.photo ?? ''
+                  : controller.filteredList.elementAt(index).friendFk?.photo ??
+                      ''),
         ),
         title: Text(
-          controller.filteredList.elementAt(index).friendFk?.username ?? '-',
+          controller.filteredList.elementAt(index).friendFk?.id.toString() ==
+                  UserDefaults.getCurrentUserId()
+              ? controller.filteredList.elementAt(index).userFk?.username ?? '-'
+              : controller.filteredList.elementAt(index).friendFk?.username ??
+                  '-',
           style: AppTextStyles.textStyleNormalBodyMedium,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
@@ -151,7 +163,6 @@ class FriendsPage extends GetView<FriendsPageController> {
                 onPressed: () {
                   Get.back(result: controller.filteredList.elementAt(index));
                   controller.filteredList.clear();
-
                   controller.friendsList.clear();
                   controller.loadFriendsList(getOnlyFriendsAccepted: false);
                 },
@@ -168,29 +179,67 @@ class FriendsPage extends GetView<FriendsPageController> {
         .friendRequestStatus
         .toString()) {
       case 'pending':
-        return TextButton(
-            onPressed: () {
-              controller.removeFriend(
-                  id: controller.filteredList.elementAt(index).id!,
-                  onSuccess: () {
-                    controller.filteredList.removeAt(index);
-                  });
-            },
-            child: Column(
+
+        ///request has received and you can accept it only...
+        if (controller.filteredList.elementAt(index).friendFk?.id.toString() ==
+            UserDefaults.getCurrentUserId()) {
+          return SizedBox(
+            width: 150,
+            child: Row(
               children: [
-                Text(
-                  'request sent',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: AppTextStyles.textStyleNormalBodyXSmall
-                      .copyWith(color: AppColor.blackColor),
-                ),
-                Text('Cancel',
+                Button(
+                    buttonText: 'Accept',
+                    color: AppColor.greenColor,
+                    //  ...unable to update friend request due to not allowed....
+                    onTap: () {
+                      controller.acceptRequest(
+                          id: controller.filteredList.elementAt(index).id!,
+                          onSuccess: (FriendsModel? f) {
+                            if (f != null) {
+                              controller.filteredList[index] = f;
+                            }
+                          });
+                    }),
+                hSpace,
+                Button(
+                    buttonText: 'Reject',
+                    color: AppColor.redColor,
+                    onTap: () {
+                      controller.removeFriend(
+                          id: controller.filteredList.elementAt(index).id!,
+                          onSuccess: () {
+                            controller.filteredList.removeAt(index);
+                          });
+                    }),
+              ],
+            ),
+          );
+        } else {
+          ///request has been sent by you
+          return TextButton(
+              onPressed: () {
+                controller.removeFriend(
+                    id: controller.filteredList.elementAt(index).id!,
+                    onSuccess: () {
+                      controller.filteredList.removeAt(index);
+                    });
+              },
+              child: Column(
+                children: [
+                  Text(
+                    'request sent',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: AppTextStyles.textStyleBoldBodyMedium),
-              ],
-            ));
+                    style: AppTextStyles.textStyleNormalBodyXSmall
+                        .copyWith(color: AppColor.blackColor),
+                  ),
+                  Text('Cancel',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTextStyles.textStyleBoldBodyMedium),
+                ],
+              ));
+        }
       case 'accept':
         return TextButton(
             onPressed: () {

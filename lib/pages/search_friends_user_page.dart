@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:photos_app/common/app_utils.dart';
-import 'package:photos_app/controllers/search_user_controller.dart';
+import 'package:photos_app/controllers/search_friends_user_controller.dart';
 
 import '../../../../common/loading_widget.dart';
 import '../common/common_widgets.dart';
@@ -9,8 +9,8 @@ import '../common/helpers.dart';
 import '../common/my_search_bar.dart';
 import '../common/styles.dart';
 
-class SearchUserPage extends GetView<SearchUserController> {
-  SearchUserPage({Key? key}) : super(key: key);
+class SearchFriendsUserPage extends GetView<SearchFriendsUserController> {
+  SearchFriendsUserPage({Key? key}) : super(key: key);
   static const id = '/SearchUserPage';
 
   @override
@@ -34,7 +34,7 @@ class SearchUserPage extends GetView<SearchUserController> {
               textController: controller.searchController,
             ),
           ]),
-      body: GetX<SearchUserController>(
+      body: GetX<SearchFriendsUserController>(
         initState: (state) {
           controller.searchController.addListener(() async {
             String query = controller.searchController.text;

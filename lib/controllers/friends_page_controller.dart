@@ -2,10 +2,14 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:photos_app/common/user_defaults.dart';
+import 'package:photos_app/dio_networking/api_client.dart';
 import 'package:photos_app/models/friends_list_model_response.dart';
 import 'package:photos_app/network_repositories/friends_network_repo.dart';
 
 import '../common/app_pop_ups.dart';
+import '../dio_networking/api_response.dart';
+import '../dio_networking/api_route.dart';
+import '../dio_networking/app_apis.dart';
 import '../my_application.dart';
 
 class FriendsPageController extends GetxController {
@@ -157,7 +161,7 @@ class FriendsPageController extends GetxController {
       final apiResponse =
           await FriendsNetworkRepo.changeFriendRequestStatus(data: {
         'id': id,
-        'status': 'accept',
+        'friend_request_status': 'accept',
       });
       isLoading.value = false;
       if (apiResponse?.success ?? false) {
