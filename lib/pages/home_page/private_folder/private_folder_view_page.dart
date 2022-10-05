@@ -68,24 +68,27 @@ class PrivateFolderViewPage extends GetView<HomePageController>
                   ],
                 ),
               if (controller.privateFoldersStack.isNotEmpty)
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: focusMenueForFab(
-                      focusedItemMode: controller.privateFoldersStack.last,
-                      context: context,
-                      controller: controller,
-                      child: const CircleAvatar(
-                        radius: 26,
-                        child: Icon(
-                          Icons.add,
-                          size: 30,
+                if (controller.privateFoldersStack.last.id != null)
+
+                  ///checking useful for opening group content...
+                  Align(
+                    alignment: Alignment.bottomRight,
+                    child: Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: focusMenueForFab(
+                        focusedItemMode: controller.privateFoldersStack.last,
+                        context: context,
+                        controller: controller,
+                        child: const CircleAvatar(
+                          radius: 26,
+                          child: Icon(
+                            Icons.add,
+                            size: 30,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
               if (controller.isLoading.isTrue) LoadingWidget(),
             ],
           ),

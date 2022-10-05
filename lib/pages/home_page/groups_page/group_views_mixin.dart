@@ -1,5 +1,6 @@
 import 'package:focused_menu/focused_menu.dart';
 import 'package:focused_menu/modals.dart';
+import 'package:photos_app/common/app_pop_ups.dart';
 import 'package:photos_app/common/user_defaults.dart';
 import 'package:photos_app/controllers/groups_controller.dart';
 import 'dart:io';
@@ -10,8 +11,10 @@ import 'package:get/get.dart';
 import 'package:photos_app/common/app_alert_bottom_sheet.dart';
 import 'package:photos_app/common/helpers.dart';
 import 'package:photos_app/common/styles.dart';
+import 'package:photos_app/controllers/home_page_controller.dart';
 import 'package:photos_app/models/group_member_response_model.dart';
 import 'package:photos_app/models/groups_response_model.dart';
+import 'package:photos_app/models/my_data_model.dart';
 import 'package:photos_app/models/user_model.dart';
 import 'package:photos_app/pages/home_page/groups_page/search_group_user_page.dart';
 
@@ -251,7 +254,39 @@ mixin GroupViewsMinx {
           FocusedMenuItem(
               title: Text("Open", style: AppTextStyles.textStyleBoldBodySmall),
               trailingIcon: const Icon(Icons.open_in_new),
-              onPressed: () {}),
+              onPressed: () {
+                final list =
+                    controller.filteredList.elementAt(index).groupContent ?? [];
+
+                if (list.isEmpty) {
+                  AppPopUps.showSnackBar(
+                      message: 'No item is shared with this group',
+                      context: context);
+                } else {
+                  ///open folder....
+                  HomePageController homeController =
+                      Get.find<HomePageController>();
+
+                  List<MyDataModel> subList = [];
+                  controller.filteredList
+                      .elementAt(index)
+                      .groupContent
+                      ?.forEach((element) {
+                    if (element.contentFk != null) {
+                      subList.add(element.contentFk!);
+                    }
+                  });
+
+                  ///opening folder......
+                  homeController.privateFoldersStack.clear();
+                  homeController.openFolder(
+                      item: MyDataModel(
+                          name: controller.filteredList
+                              .elementAt(index)
+                              .groupName,
+                          subFolder: subList));
+                }
+              }),
           FocusedMenuItem(
               title:
                   Text("Members", style: AppTextStyles.textStyleBoldBodySmall),
