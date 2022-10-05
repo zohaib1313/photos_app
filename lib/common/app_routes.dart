@@ -9,8 +9,10 @@ import 'package:photos_app/controllers/notification_controller.dart';
 import 'package:photos_app/controllers/profile_page_controller.dart';
 import 'package:photos_app/controllers/reminder_controller.dart';
 import 'package:photos_app/controllers/search_friends_user_controller.dart';
+import 'package:photos_app/controllers/search_group_user_controller.dart';
 import 'package:photos_app/controllers/signup_controller.dart';
 import 'package:photos_app/pages/dashboard_page.dart';
+import 'package:photos_app/pages/home_page/groups_page/search_group_user_page.dart';
 import 'package:photos_app/pages/home_page/notes/notes_page.dart';
 import 'package:photos_app/pages/home_page/reminders/reminders_page.dart';
 import 'package:photos_app/pages/login_page/login_page.dart';
@@ -18,7 +20,7 @@ import 'package:photos_app/pages/notifications/notifications_page.dart';
 import 'package:photos_app/pages/sign_up/sign_up_page.dart';
 import '../controllers/settings_page_controller.dart';
 import '../pages/home_page/groups_page/groups_page.dart';
-import '../pages/search_friends_user_page.dart';
+import '../pages/friends_page/search_friends_user_page.dart';
 
 appRoutes() {
   return <GetPage>[
@@ -66,6 +68,15 @@ appRoutes() {
         page: () => GroupsPage(),
         binding: BindingsBuilder(() {
           Get.lazyPut<GroupsController>(() => GroupsController());
+        })),
+
+    ///search user for groups members
+    GetPage(
+        name: SearchGroupUserPage.id,
+        page: () => SearchGroupUserPage(),
+        binding: BindingsBuilder(() {
+          Get.lazyPut<SearchGroupUserController>(
+              () => SearchGroupUserController());
         })),
 
     ///reminder///

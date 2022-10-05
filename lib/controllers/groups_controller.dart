@@ -5,8 +5,10 @@ import 'package:path/path.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:photos_app/dio_networking/api_response.dart';
 import 'package:photos_app/models/groups_response_model.dart';
 import 'package:photos_app/models/user_model.dart';
+import 'package:photos_app/my_application.dart';
 import 'package:photos_app/network_repositories/groups_network_repo.dart';
 
 import '../common/app_pop_ups.dart';
@@ -126,7 +128,7 @@ class GroupsController extends GetxController {
       final apiResponse =
           await GroupNetworkRepo.loadGroupsFromServer(queryMap: {
         'page': pageToLoad,
-        'admin_fk': UserDefaults.getCurrentUserId(),
+        'member_fk': UserDefaults.getCurrentUserId(),
       });
       isLoading.value = false;
       if (apiResponse?.data != null) {
@@ -134,7 +136,10 @@ class GroupsController extends GetxController {
           pageToLoad++;
         }
 
-        filteredList.addAll(apiResponse?.data?.groupModelList ?? []);
+        ///adding all groups .....
+        apiResponse?.data?.groupModelList?.forEach((element) {
+          filteredList.add(element.groupModel!);
+        });
       } else {
         if (showAlert) {
           AppPopUps.showDialogContent(
@@ -195,7 +200,7 @@ class GroupsController extends GetxController {
 
   void removeMemberFromGroup(
       {required UserModel user, required onSuccess}) async {
-    AppPopUps.showConfirmDialog(
+    /* AppPopUps.showConfirmDialog(
         title: 'Confirm',
         message: 'Are you sure to remove this user',
         onSubmit: () async {
@@ -226,6 +231,30 @@ class GroupsController extends GetxController {
                   dialogType: DialogType.ERROR);
             }
           }
-        });
+        });*/
+    Get.back();
+    AppPopUps.showSnackBar(
+        message: 'Api needs changing..', context: myContext!);
+  }
+
+  void addMemberInGroup(
+      {required GroupModel groupModel,
+      required List<int> groupMemberIdsList,
+      required onSuccess}) async {
+    isLoading.value = true;
+    Map<String, dynamic> map = {
+      "approved": "True",
+      "group_fk": groupModel.id.toString(),
+      "len": groupMemberIdsList.length,
+    };
+    for (var i = 0; i < groupMemberIdsList.length; i++) {
+      map["member_fk[$i]"] = groupMemberIdsList[i];
+    }
+
+    APIResponse? response = await GroupNetworkRepo.addMemberInGroup(data: map);
+    isLoading.value = false;
+    if (response?.success ?? false) {
+      AppPopUps.showSnackBar(message: 'Members added', context: myContext!);
+    }
   }
 }

@@ -95,7 +95,8 @@ class APIClient implements BaseAPIClient {
           return ResponseWrapper.init(create: create, json: responseData);
         }
       default:
-        throw ErrorResponse.fromJson(responseData);
+        throw ErrorResponse(message: 'Something went wrong..');
+//        throw ErrorResponse.fromJson(responseData);
     }
   }
 }

@@ -56,6 +56,7 @@ class HomePage extends GetView<HomePageController> with HomePageViewsMixin {
         initState: (state) {},
         builder: (_) {
           return SafeArea(
+            top: false,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Stack(

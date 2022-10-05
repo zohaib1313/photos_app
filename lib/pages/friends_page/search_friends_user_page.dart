@@ -3,11 +3,11 @@ import 'package:get/get.dart';
 import 'package:photos_app/common/app_utils.dart';
 import 'package:photos_app/controllers/search_friends_user_controller.dart';
 
-import '../../../../common/loading_widget.dart';
-import '../common/common_widgets.dart';
-import '../common/helpers.dart';
-import '../common/my_search_bar.dart';
-import '../common/styles.dart';
+import '../../../../../common/loading_widget.dart';
+import '../../common/common_widgets.dart';
+import '../../common/helpers.dart';
+import '../../common/my_search_bar.dart';
+import '../../common/styles.dart';
 
 class SearchFriendsUserPage extends GetView<SearchFriendsUserController> {
   SearchFriendsUserPage({Key? key}) : super(key: key);
@@ -58,9 +58,7 @@ class SearchFriendsUserPage extends GetView<SearchFriendsUserController> {
                   controller: controller.listViewController,
                   physics: const BouncingScrollPhysics(),
                   itemBuilder: (context, index) {
-                    return ListTile(
-                      title: getUserItemCard(index: index),
-                    );
+                    return getUserItemCard(index: index);
                   },
                 ),
                 if (controller.isLoading.isTrue) LoadingWidget(),

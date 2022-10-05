@@ -40,7 +40,9 @@ enum APIType {
   deleteGroup,
   updateGroup,
   shareDataInGroup,
+  addMemberInGroup,
   removeMemberFromGroup,
+  searchUserForGroup,
 }
 
 class ApiConstants {
@@ -60,5 +62,6 @@ class ApiConstants {
   static const uniqueUser = '/users/unique-username';
   static const groups = '/users/group/';
   static const groupContent = '/users/group-content/';
-  static const groupMember = '/users/group-member';
+  static const groupMember = '/users/group-member/';
+  static const checkMembers = '/users/check-members/';
 }

@@ -6,7 +6,7 @@ class GroupListResponseModel implements Decodeable {
   int? count;
   String? next;
   String? previous;
-  List<GroupModel>? groupModelList;
+  List<GroupResponseModel>? groupModelList;
 
   GroupListResponseModel(
       {this.count, this.next, this.previous, this.groupModelList});
@@ -16,9 +16,9 @@ class GroupListResponseModel implements Decodeable {
     next = json['next'];
     previous = json['previous'];
     if (json['results'] != null) {
-      groupModelList = <GroupModel>[];
+      groupModelList = <GroupResponseModel>[];
       json['results'].forEach((v) {
-        groupModelList!.add(new GroupModel.fromJson(v));
+        groupModelList!.add(new GroupResponseModel.fromJson(v));
       });
     }
   }
@@ -40,11 +40,70 @@ class GroupListResponseModel implements Decodeable {
     next = json['next'];
     previous = json['previous'];
     if (json['results'] != null) {
-      groupModelList = <GroupModel>[];
+      groupModelList = <GroupResponseModel>[];
       json['results'].forEach((v) {
-        groupModelList!.add(new GroupModel.fromJson(v));
+        groupModelList!.add(new GroupResponseModel.fromJson(v));
       });
     }
+    return this;
+  }
+}
+
+class GroupResponseModel implements Decodeable {
+  int? id;
+  bool? approved;
+  String? updatedAt;
+  int? memberFk;
+  GroupModel? groupModel;
+  String? memberName;
+  String? memberPhoto;
+
+  GroupResponseModel(
+      {this.id,
+      this.approved,
+      this.updatedAt,
+      this.memberFk,
+      this.groupModel,
+      this.memberName,
+      this.memberPhoto});
+
+  GroupResponseModel.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    approved = json['approved'];
+    updatedAt = json['updated_at'];
+    memberFk = json['member_fk'];
+    groupModel = json['group_fk'] != null
+        ? new GroupModel.fromJson(json['group_fk'])
+        : null;
+    memberName = json['member_name'];
+    memberPhoto = json['member_photo'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['approved'] = this.approved;
+    data['updated_at'] = this.updatedAt;
+    data['member_fk'] = this.memberFk;
+    if (this.groupModel != null) {
+      data['group_fk'] = this.groupModel!.toJson();
+    }
+    data['member_name'] = this.memberName;
+    data['member_photo'] = this.memberPhoto;
+    return data;
+  }
+
+  @override
+  decode(json) {
+    id = json['id'];
+    approved = json['approved'];
+    updatedAt = json['updated_at'];
+    memberFk = json['member_fk'];
+    groupModel = json['group_fk'] != null
+        ? new GroupModel.fromJson(json['group_fk'])
+        : null;
+    memberName = json['member_name'];
+    memberPhoto = json['member_photo'];
     return this;
   }
 }
@@ -57,7 +116,7 @@ class GroupModel implements Decodeable {
   String? createdAt;
   String? updatedAt;
   UserModel? adminFk;
-  List<GroupContent>? groupContent;
+  List<GroupInfoModel>? groupContent;
   List<UserModel>? members;
   int? membersCount;
 
@@ -84,9 +143,9 @@ class GroupModel implements Decodeable {
         ? new UserModel.fromJson(json['admin_fk'])
         : null;
     if (json['group_content'] != null) {
-      groupContent = <GroupContent>[];
+      groupContent = <GroupInfoModel>[];
       json['group_content'].forEach((v) {
-        groupContent!.add(new GroupContent.fromJson(v));
+        groupContent!.add(new GroupInfoModel.fromJson(v));
       });
     }
     if (json['members'] != null) {
@@ -132,9 +191,9 @@ class GroupModel implements Decodeable {
         ? new UserModel.fromJson(json['admin_fk'])
         : null;
     if (json['group_content'] != null) {
-      groupContent = <GroupContent>[];
+      groupContent = <GroupInfoModel>[];
       json['group_content'].forEach((v) {
-        groupContent!.add(new GroupContent.fromJson(v));
+        groupContent!.add(new GroupInfoModel.fromJson(v));
       });
     }
     if (json['members'] != null) {
@@ -144,11 +203,12 @@ class GroupModel implements Decodeable {
       });
     }
     membersCount = json['members_count'];
+
     return this;
   }
 }
 
-class GroupContent {
+class GroupInfoModel implements Decodeable {
   int? id;
   String? createdAt;
   String? updatedAt;
@@ -156,7 +216,7 @@ class GroupContent {
   int? groupFk;
   MyDataModel? contentFk;
 
-  GroupContent(
+  GroupInfoModel(
       {this.id,
       this.createdAt,
       this.updatedAt,
@@ -164,7 +224,7 @@ class GroupContent {
       this.groupFk,
       this.contentFk});
 
-  GroupContent.fromJson(Map<String, dynamic> json) {
+  GroupInfoModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
@@ -190,5 +250,21 @@ class GroupContent {
       data['content_fk'] = this.contentFk!.toJson();
     }
     return data;
+  }
+
+  @override
+  decode(json) {
+    id = json['id'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+    userFk = json['user_fk'] != null
+        ? new UserModel.fromJson(json['user_fk'])
+        : null;
+    groupFk = json['group_fk'];
+    contentFk = json['content_fk'] != null
+        ? new MyDataModel.fromJson(json['content_fk'])
+        : null;
+
+    return this;
   }
 }

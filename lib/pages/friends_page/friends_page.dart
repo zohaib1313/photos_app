@@ -13,7 +13,7 @@ import '../../common/styles.dart';
 import '../../common/user_defaults.dart';
 import '../../controllers/friends_page_controller.dart';
 import '../../models/friends_list_model_response.dart';
-import '../search_friends_user_page.dart';
+import 'search_friends_user_page.dart';
 
 class FriendsPage extends GetView<FriendsPageController> {
   var isForUpdate = false;

@@ -10,8 +10,10 @@ import 'package:get/get.dart';
 import 'package:photos_app/common/app_alert_bottom_sheet.dart';
 import 'package:photos_app/common/helpers.dart';
 import 'package:photos_app/common/styles.dart';
+import 'package:photos_app/models/group_member_response_model.dart';
 import 'package:photos_app/models/groups_response_model.dart';
 import 'package:photos_app/models/user_model.dart';
+import 'package:photos_app/pages/home_page/groups_page/search_group_user_page.dart';
 
 import '../../../../common/loading_widget.dart';
 import '../../../common/app_utils.dart';
@@ -147,9 +149,21 @@ mixin GroupViewsMinx {
       context: myContext!,
       child: Scaffold(
         floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.add),
-          onPressed: () {
+          child: const Icon(Icons.add),
+          onPressed: () async {
             ///add members in group....
+            var groupMemberList = await Get.toNamed(SearchGroupUserPage.id,
+                arguments: [groupModel.id]);
+            if (groupMemberList != null) {
+              ///to close bottom sheet.....
+              Get.back();
+              printWrapped(
+                  "adding member in group ${groupMemberList.toString()}");
+              controller.addMemberInGroup(
+                  groupModel: groupModel,
+                  groupMemberIdsList: groupMemberList,
+                  onSuccess: () {});
+            }
           },
         ),
         body: ListView.builder(
@@ -193,7 +207,6 @@ mixin GroupViewsMinx {
                     onPressed: () {
                       controller.removeMemberFromGroup(
                           user: userModel,
-                          ..
                           onSuccess: () {
                             groupModel.members?.remove(userModel);
                           });

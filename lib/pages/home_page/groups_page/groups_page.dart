@@ -20,6 +20,7 @@ class GroupsPage extends GetView<GroupsController> with GroupViewsMinx {
   GroupsPage({Key? key}) : super(key: key);
   static const id = '/GroupsPage';
   bool? isForChoosingGroup = Get.arguments?[0] ?? false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

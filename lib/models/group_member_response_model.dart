@@ -1,26 +1,25 @@
 import 'package:photos_app/dio_networking/decodable.dart';
-import 'package:photos_app/models/user_model.dart';
 
-class SearchFriendUserResponseModel implements Decodeable {
-  int? userId;
-  SearchedFriendUserModel? searchedUser;
-  String? status;
+class GroupMemberSearchResponseModel implements Decodeable {
+  int? groupId;
+  GroupMemberModel? member;
+  bool? status;
 
-  SearchFriendUserResponseModel({this.userId, this.searchedUser, this.status});
+  GroupMemberSearchResponseModel({this.groupId, this.member, this.status});
 
-  SearchFriendUserResponseModel.fromJson(Map<String, dynamic> json) {
-    userId = json['user_id'];
-    searchedUser = json['friend'] != null
-        ? new SearchedFriendUserModel.fromJson(json['friend'])
+  GroupMemberSearchResponseModel.fromJson(Map<String, dynamic> json) {
+    groupId = json['group_id'];
+    member = json['member'] != null
+        ? new GroupMemberModel.fromJson(json['member'])
         : null;
     status = json['status'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['user_id'] = this.userId;
-    if (this.searchedUser != null) {
-      data['friend'] = this.searchedUser!.toJson();
+    data['group_id'] = this.groupId;
+    if (this.member != null) {
+      data['member'] = this.member!.toJson();
     }
     data['status'] = this.status;
     return data;
@@ -28,26 +27,26 @@ class SearchFriendUserResponseModel implements Decodeable {
 
   @override
   decode(json) {
-    userId = json['user_id'];
-    searchedUser = json['friend'] != null
-        ? new SearchedFriendUserModel.fromJson(json['friend'])
+    groupId = json['group_id'];
+    member = json['member'] != null
+        ? new GroupMemberModel.fromJson(json['member'])
         : null;
     status = json['status'];
     return this;
   }
 }
 
-class SearchedFriendUserModel {
+class GroupMemberModel {
   int? id;
   String? username;
   String? photo;
   String? firstName;
   String? lastName;
 
-  SearchedFriendUserModel(
+  GroupMemberModel(
       {this.id, this.username, this.photo, this.firstName, this.lastName});
 
-  SearchedFriendUserModel.fromJson(Map<String, dynamic> json) {
+  GroupMemberModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     username = json['username'];
     photo = json['photo'];

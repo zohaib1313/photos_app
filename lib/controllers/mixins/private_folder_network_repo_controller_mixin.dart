@@ -301,7 +301,7 @@ mixin PrivateFolderNetworkContentControllerMixin on GetxController {
   }
 
   void shareContentWithGroup(
-      {required GroupModel groupModel,
+      {required GroupInfoModel groupModel,
       required int contentKey,
       required bool showAlert,
       required onSuccess}) async {

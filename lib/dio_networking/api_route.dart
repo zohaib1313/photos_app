@@ -180,7 +180,7 @@ class APIRoute implements APIRouteConfigurable {
       ///groups
       case APIType.getAllGroups:
         return RequestOptions(
-          path: ApiConstants.groups,
+          path: ApiConstants.groupMember,
           headers: headers,
           queryParameters: body,
           method: APIMethod.get,
@@ -215,14 +215,30 @@ class APIRoute implements APIRouteConfigurable {
           data: body,
           method: APIMethod.post,
         );
+      case APIType.addMemberInGroup:
+        return RequestOptions(
+          path: ApiConstants.groupMember,
+          headers: headers,
+          data: body,
+          method: APIMethod.post,
+        );
 
       case APIType.removeMemberFromGroup:
         return RequestOptions(
-          path: "${ApiConstants.groupMember}/${body['id']}/",
+          path: "${ApiConstants.groupMember}${body['id']}/",
           headers: headers,
           data: body,
           method: APIMethod.delete,
         );
+
+      case APIType.searchUserForGroup:
+        return RequestOptions(
+          path: ApiConstants.checkMembers,
+          headers: headers,
+          queryParameters: body,
+          method: APIMethod.get,
+        );
+
       default:
         return RequestOptions(
           path: ApiConstants.loginUser,
