@@ -189,30 +189,38 @@ mixin GroupViewsMinx {
     return Card(
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 10.0),
-        child: ListTile(
-            contentPadding: const EdgeInsets.all(2),
-            leading: Padding(
-              padding: const EdgeInsets.all(4.0),
-              child: NetworkCircularImage(url: userModel.photo ?? ''),
-            ),
-            title: Text(
-              userModel.username ?? '-',
-              style: AppTextStyles.textStyleNormalBodyMedium,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-            trailing: ifIamAdmin
-                ? const IgnorePointer()
-                : TextButton(
-                    onPressed: () {
-                      controller.removeMemberFromGroup(
-                          user: userModel,
-                          onSuccess: () {
-                            groupModel.members?.remove(userModel);
-                          });
-                    },
-                    child: Text('Remove',
-                        style: AppTextStyles.textStyleBoldBodyMedium))),
+        child: Obx(() {
+          return Stack(
+            children: [
+              ListTile(
+                  contentPadding: const EdgeInsets.all(2),
+                  leading: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: NetworkCircularImage(url: userModel.photo ?? ''),
+                  ),
+                  title: Text(
+                    userModel.username ?? '-',
+                    style: AppTextStyles.textStyleNormalBodyMedium,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  trailing: ifIamAdmin
+                      ? const IgnorePointer()
+                      : TextButton(
+                          onPressed: () {
+                            controller.removeMemberFromGroup(
+                                user: userModel,
+                                groupId: groupModel.id!,
+                                onSuccess: () {
+                                  groupModel.members?.remove(userModel);
+                                });
+                          },
+                          child: Text('Remove',
+                              style: AppTextStyles.textStyleBoldBodyMedium))),
+              if (controller.isLoading.isTrue) LoadingWidget()
+            ],
+          );
+        }),
       ),
     );
   }

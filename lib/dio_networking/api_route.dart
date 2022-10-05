@@ -225,9 +225,9 @@ class APIRoute implements APIRouteConfigurable {
 
       case APIType.removeMemberFromGroup:
         return RequestOptions(
-          path: "${ApiConstants.groupMember}${body['id']}/",
+          path: ApiConstants.groupMember,
           headers: headers,
-          data: body,
+          queryParameters: body,
           method: APIMethod.delete,
         );
 

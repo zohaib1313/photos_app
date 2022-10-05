@@ -143,7 +143,7 @@ class GroupNetworkRepo {
                     body: data,
                   ),
                   create: () => APIResponse(decoding: false),
-                  apiFunction: deleteGroup);
+                  apiFunction: deleteMemberFromGroup);
       return result.response;
     } catch (e) {
       AppPopUps.showDialogContent(

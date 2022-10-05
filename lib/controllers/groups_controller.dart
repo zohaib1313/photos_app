@@ -199,8 +199,11 @@ class GroupsController extends GetxController {
   }
 
   void removeMemberFromGroup(
-      {required UserModel user, required onSuccess}) async {
-    /* AppPopUps.showConfirmDialog(
+      {required UserModel user,
+      required int groupId,
+      required onSuccess,
+      bool showAlert = true}) async {
+    AppPopUps.showConfirmDialog(
         title: 'Confirm',
         message: 'Are you sure to remove this user',
         onSubmit: () async {
@@ -208,17 +211,20 @@ class GroupsController extends GetxController {
           Get.back();
           isLoading.value = true;
           try {
-            final apiResponse = await GroupNetworkRepo.deleteGroup(
-                data: {'id': group.id.toString()});
+            final apiResponse = await GroupNetworkRepo.deleteMemberFromGroup(
+                data: {"member_fk": user.id.toString(), "group_fk": groupId});
             isLoading.value = false;
 
             if (apiResponse?.success ?? false) {
               debugPrint('Group deleted');
-              filteredList.remove(group);
+              AppPopUps.showSnackBar(
+                  message: 'member deleted', context: myContext!);
+              onSuccess();
+            } else {
               if (showAlert) {
                 AppPopUps.showDialogContent(
                     title: 'Alert',
-                    description: 'No Group found',
+                    description: 'User not found',
                     dialogType: DialogType.WARNING);
               }
             }
@@ -231,10 +237,7 @@ class GroupsController extends GetxController {
                   dialogType: DialogType.ERROR);
             }
           }
-        });*/
-    Get.back();
-    AppPopUps.showSnackBar(
-        message: 'Api needs changing..', context: myContext!);
+        });
   }
 
   void addMemberInGroup(
