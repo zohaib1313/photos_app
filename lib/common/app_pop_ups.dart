@@ -36,6 +36,7 @@ class AppPopUps {
                   Navigator.pop(context, false);
                 },
               ),
+              vSpace,
               Button(
                 color: Colors.green,
                 textColor: Colors.white,
@@ -129,7 +130,7 @@ class AppPopUps {
                 Expanded(
                   child: Button(
                     buttonText: 'Ok',
-                    color: AppColor.alphaGrey,
+                    color: AppColor.greenColor,
                     onTap: () {
                       if (controller.text.isNotEmpty) {
                         onSubmit(controller.text.trim());

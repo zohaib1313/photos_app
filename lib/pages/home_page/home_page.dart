@@ -29,7 +29,7 @@ class HomePage extends GetView<HomePageController> with HomePageViewsMixin {
       appBar: myAppBar(
           title: 'Hello, ${UserDefaults.getUserSession()?.username ?? ''}',
           actions: [
-            MyAnimSearchBar(
+            /*  MyAnimSearchBar(
               width: context.width * 0.8,
               color: AppColor.primaryColor,
               iconColor: AppColor.whiteColor,
@@ -40,7 +40,7 @@ class HomePage extends GetView<HomePageController> with HomePageViewsMixin {
               closeSearchOnSuffixTap: true,
               textController: controller.searchController,
             ),
-            hSpace,
+            hSpace,*/
             InkWell(
                 onTap: () {
                   //     Get.toNamed(NotificationsPage.id);
