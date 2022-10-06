@@ -263,7 +263,7 @@ mixin PrivateFolderNetworkContentControllerMixin on GetxController {
       required onSuccess}) async {
     Map<String, dynamic> body = {
       "shared_by_fk": UserDefaults.getCurrentUserId(),
-      "shared_with_fk": friendModel.id,
+      "shared_with_fk": friendModel.friendFk?.id.toString(),
       "content_fk": contentKey
     };
 
@@ -285,23 +285,26 @@ mixin PrivateFolderNetworkContentControllerMixin on GetxController {
         onSuccess();
         if (showAlert) {
           AppPopUps.showSnackBar(
-              message: 'Document shard', context: myContext!);
+              color: Colors.green,
+              message: 'Document shard',
+              context: myContext!);
         }
       } else {
         AppPopUps.showSnackBar(
-            message: 'Document sharing failed', context: myContext!);
+            message:
+                response.response?.responseMessage ?? 'Something went wrong.',
+            context: myContext!);
       }
     }).catchError((error) {
       isLoading.value = false;
-      AppPopUps.showSnackBar(
-          message: 'Document sharing failed $error', context: myContext!);
+      AppPopUps.showSnackBar(message: '$error', context: myContext!);
 
       return Future.value(null);
     });
   }
 
   void shareContentWithGroup(
-      {required GroupInfoModel groupModel,
+      {required GroupModel groupModel,
       required int contentKey,
       required bool showAlert,
       required onSuccess}) async {
@@ -327,7 +330,9 @@ mixin PrivateFolderNetworkContentControllerMixin on GetxController {
         onSuccess();
         if (showAlert) {
           AppPopUps.showSnackBar(
-              message: 'Document shard', context: myContext!);
+              color: Colors.green,
+              message: 'Document shared',
+              context: myContext!);
         }
       } else {
         AppPopUps.showSnackBar(

@@ -28,22 +28,22 @@ class AppPopUps {
               style: AppTextStyles.textStyleNormalBodyMedium,
             ),
             actions: <Widget>[
-              FlatButton(
+              Button(
                 color: Colors.red,
                 textColor: Colors.white,
-                child: const Text('Cancel'),
-                onPressed: () {
+                buttonText: 'Cancel',
+                onTap: () {
                   Navigator.pop(context, false);
                 },
               ),
-              FlatButton(
+              Button(
                 color: Colors.green,
                 textColor: Colors.white,
-                onPressed: onSubmit ??
+                onTap: onSubmit ??
                     () {
                       Navigator.of(context).pop();
                     },
-                child: const Text('Confirm'),
+                buttonText: 'Confirm',
               ),
             ],
           );

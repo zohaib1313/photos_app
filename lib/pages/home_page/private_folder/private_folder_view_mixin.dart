@@ -202,8 +202,8 @@ mixin PrivateFolderViewMixin {
                               Get.back();
 
                               ///load friends ......
-                              FriendsModel? friendModel =
-                                  await Get.to(FriendsPage(isForUpdate: true));
+                              FriendsModel? friendModel = await Get.to(
+                                  FriendsPage(getOnlyFriends: true));
                               if (friendModel != null) {
                                 ///share file...
                                 controller.shareFolderWithFriend(
@@ -219,7 +219,7 @@ mixin PrivateFolderViewMixin {
                             onTap: () async {
                               ///to close bottomsheet
                               Get.back();
-...sharing me masla h
+
                               var groupModel = await Get.toNamed(GroupsPage.id,
                                   arguments: [true]);
 

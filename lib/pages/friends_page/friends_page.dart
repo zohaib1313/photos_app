@@ -16,15 +16,15 @@ import '../../models/friends_list_model_response.dart';
 import 'search_friends_user_page.dart';
 
 class FriendsPage extends GetView<FriendsPageController> {
-  var isForUpdate = false;
+  var getOnlyFriends = false;
 
-  FriendsPage({Key? key, this.isForUpdate = false}) : super(key: key);
+  FriendsPage({Key? key, this.getOnlyFriends = false}) : super(key: key);
   static const id = '/FriendsPage';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: isForUpdate
+      floatingActionButton: getOnlyFriends
           ? const IgnorePointer()
           : Padding(
               padding: const EdgeInsets.only(bottom: 18.0),
@@ -35,7 +35,7 @@ class FriendsPage extends GetView<FriendsPageController> {
                   controller.friendsList.clear();
                   controller.filteredList.clear();
                   controller.loadFriendsList(
-                      showAlert: true, getOnlyFriendsAccepted: isForUpdate);
+                      showAlert: true, getOnlyFriendsAccepted: getOnlyFriends);
                 },
               ),
             ),
@@ -56,7 +56,7 @@ class FriendsPage extends GetView<FriendsPageController> {
             ),
 
             ///if this page is being used for update then remove filtering of list
-            if (!isForUpdate)
+            if (!getOnlyFriends)
               IconButton(
                   icon: const Icon(Icons.filter_alt),
                   onPressed: () {
@@ -69,7 +69,7 @@ class FriendsPage extends GetView<FriendsPageController> {
           WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
             controller.friendsList.clear();
             controller.filteredList.clear();
-            controller.loadFriendsList(getOnlyFriendsAccepted: isForUpdate);
+            controller.loadFriendsList(getOnlyFriendsAccepted: getOnlyFriends);
           });
         },
         builder: (_) {
@@ -91,7 +91,7 @@ class FriendsPage extends GetView<FriendsPageController> {
                               controller.friendsList.clear();
                               controller.loadFriendsList(
                                   showAlert: true,
-                                  getOnlyFriendsAccepted: isForUpdate);
+                                  getOnlyFriendsAccepted: getOnlyFriends);
                             },
                             child: Text(
                               "Refresh",
@@ -108,7 +108,7 @@ class FriendsPage extends GetView<FriendsPageController> {
                           controller.friendsList.clear();
                           controller.loadFriendsList(
                               showAlert: true,
-                              getOnlyFriendsAccepted: isForUpdate);
+                              getOnlyFriendsAccepted: getOnlyFriends);
                           return Future.delayed(const Duration(seconds: 2));
                         },
                         child: ListView.builder(
@@ -156,7 +156,7 @@ class FriendsPage extends GetView<FriendsPageController> {
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
-        trailing: isForUpdate
+        trailing: getOnlyFriends
 
             ///if this page is used for picking up the user then select that user and return to back page....
             ? TextButton(
