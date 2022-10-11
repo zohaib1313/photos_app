@@ -64,4 +64,6 @@ class ApiConstants {
   static const groupContent = '/users/group-content/';
   static const groupMember = '/users/group-member/';
   static const checkMembers = '/users/check-members/';
+
+  static var pushServerKey = '';
 }

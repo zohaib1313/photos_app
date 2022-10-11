@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "221957777152",
+    "project_id": "photos-app-f7cd8",
+    "storage_bucket": "photos-app-f7cd8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:221957777152:android:5cc47ab5bce22d071eb5e5",
+        "android_client_info": {
+          "package_name": "com.beelogix.photos_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "221957777152-uclntr7t71lt2r5su1606upjf3lbe27g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB5A5w_UMS-jPd0D2oBNzCZykP8g39laso"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "221957777152-uclntr7t71lt2r5su1606upjf3lbe27g.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
