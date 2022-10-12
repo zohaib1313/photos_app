@@ -43,6 +43,10 @@ enum APIType {
   addMemberInGroup,
   removeMemberFromGroup,
   searchUserForGroup,
+
+  ///push notification
+  saveDeviceToken,
+  getNotifications,
 }
 
 class ApiConstants {
@@ -64,6 +68,8 @@ class ApiConstants {
   static const groupContent = '/users/group-content/';
   static const groupMember = '/users/group-member/';
   static const checkMembers = '/users/check-members/';
+  static const devices = '/users/devices/';
+  static const notifications = '/users/notifications/';
 
   static var pushServerKey = '';
 }

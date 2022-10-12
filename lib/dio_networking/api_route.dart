@@ -239,6 +239,23 @@ class APIRoute implements APIRouteConfigurable {
           method: APIMethod.get,
         );
 
+      ///push notifications
+
+      case APIType.saveDeviceToken:
+        return RequestOptions(
+          path: ApiConstants.devices,
+          headers: headers,
+          data: body,
+          method: APIMethod.post,
+        );
+      case APIType.getNotifications:
+        return RequestOptions(
+          path: ApiConstants.notifications,
+          headers: headers,
+          queryParameters: body,
+          method: APIMethod.get,
+        );
+
       default:
         return RequestOptions(
           path: ApiConstants.loginUser,

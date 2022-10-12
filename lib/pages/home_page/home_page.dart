@@ -16,6 +16,7 @@ import '../../../../common/loading_widget.dart';
 import '../../common/my_search_bar.dart';
 import '../../common/spaces_boxes.dart';
 import '../../models/shared_data_response_model.dart';
+import '../notifications/notifications_page.dart';
 import 'groups_page/groups_page.dart';
 import 'home_page_views_mixin.dart';
 
@@ -43,10 +44,10 @@ class HomePage extends GetView<HomePageController> with HomePageViewsMixin {
             hSpace,*/
             InkWell(
                 onTap: () {
-                  //     Get.toNamed(NotificationsPage.id);
-                  AwesomeNotification.scheduleNotification(
+                  Get.to(const NotificationsPage());
+                  /*       AwesomeNotification.scheduleNotification(
                       id: 13,
-                      scheduleTime: DateTime.now().add(Duration(seconds: 10)));
+                      scheduleTime: DateTime.now().add(Duration(seconds: 10)));*/
                 },
                 child: const Icon(Icons.notification_important_outlined)),
             hSpace,

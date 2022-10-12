@@ -1,14 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:photos_app/models/notification_model.dart';
+import 'package:photos_app/models/notification_response_model.dart';
 
-import '../../common/app_utils.dart';
 import '../../common/helpers.dart';
 import '../../common/loading_widget.dart';
 import '../../common/styles.dart';
 import '../../controllers/notification_controller.dart';
-import '../../my_application.dart';
 
 class NotificationsPage extends GetView<NotificationsController> {
   const NotificationsPage({Key? key}) : super(key: key);
@@ -18,64 +16,74 @@ class NotificationsPage extends GetView<NotificationsController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: myAppBar(title: 'Notifications', goBack: true),
-      body: SafeArea(
-        child: Container(
-          padding: const EdgeInsets.all(10),
-          child: GetX<NotificationsController>(
-            initState: (state) {},
-            builder: (context) {
-              controller.temp.value;
-              return StreamBuilder(
-                stream: controller.notificationStreamController.stream,
-                builder:
-                    (context, AsyncSnapshot<List<NotificationModel>> snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return LoadingWidget();
-                  }
-
-                  if (snapshot.hasError) {
-                    return Center(
-                      child: Text(
-                        'Something went wrong',
-                        style: AppTextStyles.textStyleBoldBodyMedium,
-                      ),
-                    );
-                  }
-
-                  if ((snapshot.data?.length ?? 0) < 1) {
-                    return Center(
-                      child: Text('No recent notification',
-                          style: AppTextStyles.textStyleBoldBodyMedium),
-                    );
-                  }
-
-                  return ListView.builder(
-                      itemCount: snapshot.data?.length ?? 0,
-                      itemBuilder: (context, index) {
-                        NotificationModel? notificationModel =
-                            snapshot.data?[index];
-                        return Card(
-                          color: (notificationModel?.isRead ?? false)
-                              ? AppColor.alphaGrey
-                              : AppColor.alphaGrey,
-                          elevation: 10,
-                          child: ListTile(
+      body: GetX<NotificationsController>(
+        initState: (state) {},
+        builder: (_) {
+          return SafeArea(
+            child: Stack(
+              children: [
+                ((controller.isLoading.value == false &&
+                        controller.filteredList.isEmpty))
+                    ? Center(
+                        child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text("No Record Found",
+                              style: AppTextStyles.textStyleBoldBodyMedium),
+                          InkWell(
                             onTap: () {
-                              ///click on the notification....
+                              controller.clearLists();
+                              controller.loadNotifications(showAlert: true);
                             },
-                            contentPadding: const EdgeInsets.all(15),
-                            title: Text(notificationModel?.title ?? ''),
-                            subtitle: Text(notificationModel?.body ?? ''),
-                            trailing: Text(AppUtils.readTimestamp(
-                                DateTime.now().millisecondsSinceEpoch)),
+                            child: Text(
+                              "Refresh",
+                              style: AppTextStyles.textStyleBoldBodyMedium
+                                  .copyWith(
+                                      decoration: TextDecoration.underline),
+                            ),
                           ),
-                        );
-                      });
-                },
-              );
-            },
-          ),
-        ),
+                        ],
+                      ))
+                    : RefreshIndicator(
+                        onRefresh: () {
+                          controller.clearLists();
+                          controller.loadNotifications(showAlert: true);
+                          return Future.delayed(const Duration(seconds: 2));
+                        },
+                        child: ListView.builder(
+                          itemCount: controller.filteredList.length,
+                          controller: controller.listViewController,
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            return gtNotificationItem(
+                                model:
+                                    controller.filteredList.elementAt(index));
+                          },
+                        ),
+                      ),
+                if (controller.isLoading.isTrue) LoadingWidget(),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget gtNotificationItem({required NotificationModel model}) {
+    return Card(
+      child: ListTile(
+        title: Text(model.title ?? '',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: AppTextStyles.textStyleBoldBodyXSmall),
+        subtitle: Text(model.title ?? '',
+            maxLines: 3,
+            overflow: TextOverflow.ellipsis,
+            style: AppTextStyles.textStyleNormalBodyXSmall),
+        trailing:
+            Text(formatDateTime(DateTime.tryParse(model.createdAt ?? ''))),
       ),
     );
   }

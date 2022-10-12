@@ -50,6 +50,7 @@ appRoutes() {
           Get.put(FriendsPageController());
           Get.put(ProfilePageController());
           Get.put(SettingsPageController());
+          Get.put(NotificationsController());
         },
       ),
     ),

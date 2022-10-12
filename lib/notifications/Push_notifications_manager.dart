@@ -5,10 +5,12 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:photos_app/common/user_defaults.dart';
 
 import '../common/helpers.dart';
 import '../dio_networking/app_apis.dart';
-import '../models/notification_model.dart';
+import '../models/notification_response_model.dart';
+import '../network_repositories/notification_repo.dart';
 
 class PushNotificationsManager {
   PushNotificationsManager._();
@@ -50,32 +52,43 @@ class PushNotificationsManager {
           ) ??
           false;
     }
+
+    String userId = UserDefaults.getCurrentUserId() ?? '';
     String? token = await _firebaseMessaging.getToken();
+
     printWrapped("FCM TOKEN= ${token.toString()}");
-    /* String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
-    if ((userId).isNotEmpty) {
-      await FirebaseFirestore.instance
-          .collection(FirebasePathNodes.users)
-          .doc(userId)
-          .set({"deviceToken": token}, SetOptions(merge: true));
-      printWrapped("FCM TOKEN= ****token updated");
-    }
-    _firebaseMessaging.onTokenRefresh.listen((newToken) async {
-      printWrapped("FCM TOKEN REfresh=== ${newToken}");
-      if ((userId).isNotEmpty) {
-        await FirebaseFirestore.instance
-            .collection(FirebasePathNodes.users)
-            .doc(userId)
-            .set({"deviceToken": newToken}, SetOptions(merge: true));
+
+    if (((userId).isNotEmpty) && (token ?? '').isNotEmpty) {
+      final apiResponse = await NotificationRepo.saveDeviceToken(data: {
+        "receiver_id": userId,
+        "device_token": token,
+        "device_id": await NotificationRepo.getUniqueDeviceId()
+      });
+      if (apiResponse?.success ?? false) {
+        printWrapped("FCM TOKEN== ****token updated");
       }
-    });*/
+    }
+
+    _firebaseMessaging.onTokenRefresh.listen((newToken) async {
+      printWrapped("FCM TOKEN refreshed == $newToken");
+      if ((userId).isNotEmpty) {
+        final apiResponse = await NotificationRepo.saveDeviceToken(data: {
+          "receiver_id": userId,
+          "device_token": newToken,
+          "device_id": await NotificationRepo.getUniqueDeviceId()
+        });
+        if (apiResponse?.success ?? false) {
+          printWrapped("FCM TOKEN== ****token updated");
+        }
+      }
+    });
 
     _listenToNotifications();
   }
 
   void _listenToNotifications() {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-      printWrapped("Notification received ${message.notification.toString()}");
+      printWrapped("Notification received ${message.toMap().toString()}");
       _demoNotification(message);
     });
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
@@ -100,7 +113,7 @@ sendPushNotification(
       "to": toDeviceId,
       // "ceoTbCODQ96_r3XdkVKtCn:APA91bGp5kDevP1wkbX2TFF980soSFXLIvfxQVuaV7ZTje_vvQqsOh1vcx6RB0QccyHnJGSAduLnY8kYLWIchp71FswWgupThLtDtaETUq3iIJDFYcuhLx9VWj4RwIbMnXHdyq-sxzlt",
       "notification": notificationModel
-          .toMap() /* {"title": "Portugal vs. Denmark", "body": "great match!"}*/
+          .toJson() /* {"title": "Portugal vs. Denmark", "body": "great match!"}*/
     });
     request.headers.addAll(headers);
 
