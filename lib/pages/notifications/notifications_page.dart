@@ -73,17 +73,27 @@ class NotificationsPage extends GetView<NotificationsController> {
 
   Widget gtNotificationItem({required NotificationModel model}) {
     return Card(
-      child: ListTile(
-        title: Text(model.title ?? '',
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: AppTextStyles.textStyleBoldBodyXSmall),
-        subtitle: Text(model.title ?? '',
-            maxLines: 3,
-            overflow: TextOverflow.ellipsis,
-            style: AppTextStyles.textStyleNormalBodyXSmall),
-        trailing:
-            Text(formatDateTime(DateTime.tryParse(model.createdAt ?? ''))),
+      child: Dismissible(
+        key: UniqueKey(),
+        background: const Icon(
+          Icons.delete,
+          color: Colors.red,
+        ),
+        onDismissed: (direction) {
+          controller.deleteNotification(notification: model);
+        },
+        child: ListTile(
+          title: Text(model.title ?? '',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTextStyles.textStyleBoldBodyXSmall),
+          subtitle: Text(model.title ?? '',
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
+              style: AppTextStyles.textStyleNormalBodyXSmall),
+          trailing:
+              Text(formatDateTime(DateTime.tryParse(model.createdAt ?? ''))),
+        ),
       ),
     );
   }

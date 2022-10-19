@@ -46,7 +46,10 @@ enum APIType {
 
   ///push notification
   saveDeviceToken,
+  getDeviceToken,
+  updateDeviceToken,
   getNotifications,
+  deleteNotification,
 }
 
 class ApiConstants {
@@ -54,7 +57,7 @@ class ApiConstants {
       'https://rsjlawang.com/assets/images/lightbox/image-3.jpg';
   static const googleApiKey = 'AIzaSyC0-5OqwY75sPwoncSujsbkJD6wDU7BvOw';
   static const baseUrl = "https://memory-app34.herokuapp.com/";
-  static const imageUrlBase = "https://memory-app34.herokuapp.com";
+  static const baseUrlNoSlash = "https://memory-app34.herokuapp.com";
   static const loginUser = '/users/login';
   static const users = 'users/user/';
   static const reminder = '/users/reminder/';

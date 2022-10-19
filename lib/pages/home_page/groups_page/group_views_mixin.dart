@@ -75,7 +75,11 @@ mixin GroupViewsMinx {
                 return Center(
                   child: GestureDetector(
                     onTap: () async {
+                      controller.isLoading.value = true;
                       AppUtils.showPicker(
+                        onBottomSheetClosed: () {
+                          controller.isLoading.value = false;
+                        },
                         context: myContext!,
                         onComplete: (File? file) {
                           if (file != null) {

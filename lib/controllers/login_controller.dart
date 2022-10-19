@@ -2,6 +2,7 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:photos_app/models/user_model.dart';
+import 'package:photos_app/notifications/Push_notifications_manager.dart';
 import 'package:uuid/uuid.dart';
 import 'dart:async';
 import 'dart:convert' show json;
@@ -50,13 +51,15 @@ class LoginController extends GetxController {
       printWrapped("registering user response ${userModel.toString()}");
 
       if (userModel != null) {
+        ///to save fcm token....
+        PushNotificationsManager().init();
         await UserDefaults.saveUserSession(userModel);
         completion(userModel);
         Get.offAndToNamed(DashboardPage.id);
       } else {
         AppPopUps.showDialogContent(
             title: 'Error',
-            description: 'Failed to signin',
+            description: 'Failed to sign in',
             dialogType: DialogType.ERROR);
       }
     }).catchError((error) {

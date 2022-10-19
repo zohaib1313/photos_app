@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:photos_app/common/app_utils.dart';
+import 'package:photos_app/common/common_widgets.dart';
 import 'package:photos_app/common/helpers.dart';
 import 'package:photos_app/common/styles.dart';
 import 'package:photos_app/common/user_defaults.dart';
 import 'package:photos_app/controllers/home_page_controller.dart';
+import 'package:photos_app/controllers/notification_controller.dart';
 import 'package:photos_app/models/my_data_model.dart';
-import 'package:photos_app/notifications/awsome_notification.dart';
 import 'package:photos_app/pages/home_page/notes/notes_page.dart';
 import 'package:photos_app/pages/home_page/reminders/reminders_page.dart';
 import 'package:photos_app/pages/home_page/shared_folder/shared_folder_view_page.dart';
 
 import '../../../../common/loading_widget.dart';
-import '../../common/my_search_bar.dart';
 import '../../common/spaces_boxes.dart';
 import '../../models/shared_data_response_model.dart';
 import '../notifications/notifications_page.dart';
@@ -28,31 +27,28 @@ class HomePage extends GetView<HomePageController> with HomePageViewsMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: myAppBar(
-          title: 'Hello, ${UserDefaults.getUserSession()?.username ?? ''}',
-          actions: [
-            /*  MyAnimSearchBar(
-              width: context.width * 0.8,
-              color: AppColor.primaryColor,
-              iconColor: AppColor.whiteColor,
-              onSuffixTap: () {
-                AppUtils.unFocusKeyboard();
-                controller.searchController.clear();
-              },
-              closeSearchOnSuffixTap: true,
-              textController: controller.searchController,
-            ),
-            hSpace,*/
-            InkWell(
+        title: 'Hello, ${UserDefaults.getUserSession()?.username ?? ''}',
+        actions: [
+          Padding(
+            padding: const EdgeInsets.all(4),
+            child: Obx(() {
+              return NamedIcon(
+                text: '',
+                iconData: Icons.notifications,
+                notificationCount: Get.find<NotificationsController>()
+                    .notificationsCount
+                    .value,
                 onTap: () {
                   Get.to(const NotificationsPage());
                   /*       AwesomeNotification.scheduleNotification(
-                      id: 13,
-                      scheduleTime: DateTime.now().add(Duration(seconds: 10)));*/
+                        id: 13,
+                        scheduleTime: DateTime.now().add(Duration(seconds: 10)));*/
                 },
-                child: const Icon(Icons.notification_important_outlined)),
-            hSpace,
-            hSpace,
-          ]),
+              );
+            }),
+          ),
+        ],
+      ),
       body: GetX<HomePageController>(
         initState: (state) {},
         builder: (_) {

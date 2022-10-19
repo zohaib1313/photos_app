@@ -7,6 +7,8 @@ import 'package:photos_app/controllers/settings_page_controller.dart';
 import 'package:photos_app/pages/login_page/login_page.dart';
 import '../../../../common/loading_widget.dart';
 import '../../common/spaces_boxes.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 class SettingsPage extends GetView<SettingsPageController> {
   SettingsPage({Key? key}) : super(key: key);
@@ -62,6 +64,7 @@ class SettingsPage extends GetView<SettingsPageController> {
                             icon: Icon(Icons.logout_outlined),
                             title: "Logout",
                             onTap: () {
+                              FirebaseMessaging.instance.deleteToken();
                               UserDefaults.clearAll();
                               Get.offAndToNamed(LoginPage.id);
                             }),

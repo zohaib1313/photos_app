@@ -17,6 +17,8 @@ class NotificationsController extends GetxController {
   RxList<NotificationModel> filteredList = <NotificationModel>[].obs;
   ScrollController listViewController = ScrollController();
 
+  RxInt notificationsCount = 0.obs;
+
   @override
   void onInit() {
     clearLists();
@@ -39,6 +41,9 @@ class NotificationsController extends GetxController {
 
         ///adding all groups .....
         apiResponse?.data?.notificationList?.forEach((element) {
+          if (!(element.isRead ?? false)) {
+            notificationsCount++;
+          }
           filteredList.add(element);
         });
       } else {
@@ -62,5 +67,14 @@ class NotificationsController extends GetxController {
 
   void clearLists() {
     filteredList.clear();
+  }
+
+  void deleteNotification({required NotificationModel notification}) async {
+    try {
+      final apiResponse = await NotificationRepo.deleteNotification(
+          data: {'id': notification.id});
+    } catch (e) {
+      debugPrint(e.toString());
+    }
   }
 }

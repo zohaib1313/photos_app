@@ -10,6 +10,7 @@ import 'package:path/path.dart';
 import 'package:photos_app/common/app_pop_ups.dart';
 import 'package:photos_app/common/app_utils.dart';
 import 'package:photos_app/common/constants.dart';
+import 'package:photos_app/common/helpers.dart';
 import 'package:photos_app/models/my_data_model.dart';
 import 'package:photos_app/models/my_data_response_model.dart';
 import 'package:photos_app/my_application.dart';
@@ -37,6 +38,9 @@ mixin PrivateFolderNetworkContentControllerMixin on GetxController {
     String filePath = '',
     required onSuccess,
   }) async {
+    printWrapped('fileee nameee');
+    printWrapped(name);
+
     Map<String, dynamic> body = {
       "name": name,
       "type": (filePath != '') ? 'file' : 'folder',
@@ -158,12 +162,15 @@ mixin PrivateFolderNetworkContentControllerMixin on GetxController {
   void addNewFile(
       {required MyDataModel item, required BuildContext context}) async {
     try {
+      isLoading.value = true;
       AppUtils.showPicker(
+          onBottomSheetClosed: () {
+            isLoading.value = false;
+          },
           context: context,
           onComplete: (File? file) {
             if (file != null) {
               isLoading.value = true;
-
               addNewFolderFile(
                   name: basename(file.path),
                   parentId: item.id.toString(),
@@ -251,8 +258,12 @@ mixin PrivateFolderNetworkContentControllerMixin on GetxController {
   }
 
   openFile({required MyDataModel item}) {
-    if (!(item.type == 'folder') && item.name != null) {
-      // AppUtils.openFile(File(item.name ?? ''));
+    if ((item.type == 'file') && item.docFile != null) {
+      AppUtils.downloadAndOpenFile(
+          url: item.docFile,
+          isLoading: (isLoading) {
+            this.isLoading.value = isLoading;
+          });
     }
   }
 

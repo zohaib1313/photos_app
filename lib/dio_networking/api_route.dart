@@ -248,12 +248,33 @@ class APIRoute implements APIRouteConfigurable {
           data: body,
           method: APIMethod.post,
         );
+      case APIType.getDeviceToken:
+        return RequestOptions(
+          path: ApiConstants.devices,
+          headers: headers,
+          queryParameters: body,
+          method: APIMethod.get,
+        );
+      case APIType.updateDeviceToken:
+        return RequestOptions(
+          path: "${ApiConstants.devices}/${body['id']}/",
+          headers: headers,
+          data: dio.FormData.fromMap(body),
+          method: APIMethod.put,
+        );
       case APIType.getNotifications:
         return RequestOptions(
           path: ApiConstants.notifications,
           headers: headers,
           queryParameters: body,
           method: APIMethod.get,
+        );
+      case APIType.deleteNotification:
+        return RequestOptions(
+          path: "${ApiConstants.notifications}/${body['id']}/",
+          headers: headers,
+          data: body,
+          method: APIMethod.delete,
         );
 
       default:

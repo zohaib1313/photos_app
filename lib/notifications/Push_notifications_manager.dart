@@ -88,7 +88,7 @@ class PushNotificationsManager {
 
   void _listenToNotifications() {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-      printWrapped("Notification received ${message.toMap().toString()}");
+      printWrapped("Notification received \n${message.toMap().toString()}");
       _demoNotification(message);
     });
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);

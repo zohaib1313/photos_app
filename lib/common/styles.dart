@@ -3,7 +3,7 @@ import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppColor {
-  static var primaryColor = Color(0xff0d88ea);
+  static var primaryColor = Color(0xff014493);
   static var primaryBlueDarkColor = Color(0xff0070cc);
   static var blackColor = Color(0xff1C2340);
   static var greenColor = Color(0xff2CC78C);

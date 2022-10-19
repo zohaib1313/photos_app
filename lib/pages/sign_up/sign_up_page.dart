@@ -49,6 +49,9 @@ class SignupPage extends GetView<SignupController> with SignupWidgetsMixin {
                               GestureDetector(
                                 onTap: () async {
                                   AppUtils.showPicker(
+                                    onBottomSheetClosed: () {
+                                      //  controller.isLoading.value = false;
+                                    },
                                     context: context,
                                     onComplete: (File? file) {
                                       if (file != null) {

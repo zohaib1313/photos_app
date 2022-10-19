@@ -47,6 +47,8 @@ import '../dio_networking/api_response.dart';
 import '../dio_networking/api_route.dart';
 import '../dio_networking/app_apis.dart';
 import 'helpers.dart';
+import 'package:open_file/open_file.dart';
+import 'package:path_provider/path_provider.dart';
 
 class AppUtils {
   static Future<List<PlatformFile>?> pickMultipleFiles() async {
@@ -63,26 +65,23 @@ class AppUtils {
     }
   }
 
-  static void openFile(File file) async {
-    final String filePath = file.absolute.path;
-    /* final Uri uri = Uri.file(filePath);
-    printWrapped(file.path);*/
-/*
-    printWrapped("xxxxx");
-
-    printWrapped(file.absolute.path);
-*/ /*printWrapped('opening file');
-
-    if (!File(uri.toFilePath()).existsSync()) {
-      printWrapped('uri doesn exists');
-      AppPopUps.showSnackBar(
-          message: 'File does not exists', context: myContext!);
-    }*/ /*
-    if (!await launchUrl(uri)) {
-      printWrapped('failed to launc url');
-
-      AppPopUps.showSnackBar(message: "Can't open file", context: myContext!);
-    }*/
+  static void downloadAndOpenFile({String? url, required isLoading}) async {
+    if ((url ?? '').isNotEmpty) {
+      isLoading(true);
+      url = ApiConstants.baseUrlNoSlash + url!;
+      print('downloading url :=  $url');
+      File? file = await downloadFile(url: url);
+      isLoading(false);
+      if (file != null) {
+        print('file open path: ${file.path}');
+        OpenFile.open(file.path);
+      } else {
+        AppPopUps.showSnackBar(
+            message: 'Failed to open file', context: myContext!);
+      }
+    } else {
+      AppPopUps.showSnackBar(message: 'Empty file', context: myContext!);
+    }
   }
 
   static String readTimestamp(int timestamp) {
@@ -119,7 +118,10 @@ class AppUtils {
     FocusScope.of(context).requestFocus(FocusNode());
   }
 
-  static void showPicker({required BuildContext context, onComplete}) {
+  static void showPicker(
+      {required BuildContext context,
+      onComplete,
+      required onBottomSheetClosed}) {
     showModalBottomSheet(
         context: context,
         builder: (BuildContext x) {
@@ -145,17 +147,53 @@ class AppUtils {
                   onTap: () async {
                     _pickImage(
                         source: 1,
-                        onCompletedd: (File file) {
+                        onCompletedd: (File? file) {
                           onComplete(file);
                         });
 
                     Navigator.of(context).pop();
                   },
                 ),
+                ListTile(
+                  leading: const Icon(Icons.file_copy),
+                  title: const Text('File'),
+                  onTap: () async {
+                    _pickFile(onCompletedd: (File? file) {
+                      onComplete(file);
+                    });
+                    Navigator.of(context).pop();
+                  },
+                ),
               ],
             ),
           );
-        });
+        }).whenComplete(onBottomSheetClosed);
+  }
+
+  static void _pickFile(
+      {required Null Function(File? file) onCompletedd}) async {
+    try {
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+          /* allowedExtensions: ['jpg', 'pdf', 'doc','.mp3','.mp4'],
+          allowMultiple: false,
+          type: FileType.custom,*/
+          allowCompression: true,
+          onFileLoading: (FilePickerStatus status) {
+            if (status == FilePickerStatus.done) {}
+          });
+
+      if (result != null) {
+        print("result not empty file pick");
+        onCompletedd(File(result.files.single.path!));
+      } else {
+        onCompletedd(null);
+        Get.log('No file selected.');
+        return null;
+      }
+    } catch (e) {
+      onCompletedd(null);
+      Get.log(e.toString(), isError: true);
+    }
   }
 
   static void _pickImage({required int source, required onCompletedd}) async {
@@ -166,10 +204,12 @@ class AppUtils {
       if (pickedFile != null) {
         onCompletedd(File(pickedFile.path));
       } else {
+        onCompletedd(null);
         Get.log('No image selected.');
         return null;
       }
     } catch (e) {
+      onCompletedd(null);
       Get.log(e.toString(), isError: true);
     }
   }
@@ -239,6 +279,25 @@ class AppUtils {
       if (kDebugMode) {
         print(e);
       }
+    }
+  }
+
+  static Future<File?> downloadFile({required String url}) async {
+    try {
+      final appStorage = await getApplicationDocumentsDirectory();
+      final name = url.split('/').last;
+      final file = File('${appStorage.path}/$name');
+      final response = await dio.Dio().get(url,
+          options: dio.Options(
+              responseType: dio.ResponseType.bytes,
+              followRedirects: false,
+              receiveTimeout: 0));
+      final ref = file.openSync(mode: FileMode.write);
+      ref.writeFromSync(response.data);
+      await ref.close();
+      return file;
+    } catch (e) {
+      print(e);
     }
   }
 }
