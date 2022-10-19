@@ -24,8 +24,8 @@ class ProfilePageController extends GetxController {
 
   TextEditingController emailController = TextEditingController();
   TextEditingController userAgeController = TextEditingController();
-  TextEditingController userCountryController = TextEditingController();
-  TextEditingController userCityController = TextEditingController();
+/*  TextEditingController userCountryController = TextEditingController();
+  TextEditingController userCityController = TextEditingController();*/
   TextEditingController userPhoneNumberController = TextEditingController();
 
   RxBool isUpdateModeOn = false.obs;
@@ -40,8 +40,8 @@ class ProfilePageController extends GetxController {
     firstNameController.text = userModel?.firstName ?? '-';
     emailController.text = userModel?.email ?? '-';
     userAgeController.text = userModel?.age ?? '-';
-    userCountryController.text = userModel?.country ?? '-';
-    userCityController.text = userModel?.city ?? '-';
+/*    userCountryController.text = userModel?.country ?? '-';
+    userCityController.text = userModel?.city ?? '-';*/
     userPhoneNumberController.text = userModel?.phoneNumber ?? '-';
   }
 
@@ -54,8 +54,8 @@ class ProfilePageController extends GetxController {
       "first_name": firstNameController.text.trim(),
       "last_name": lastNameController.text.trim(),
       "phone_number": userPhoneNumberController.text.trim(),
-      "city": userCityController.text.trim(),
-      "country": userCountryController.text.trim(),
+      /*     "city": userCityController.text.trim(),
+      "country": userCountryController.text.trim(),*/
       "age": userAgeController.text.trim(),
     };
 

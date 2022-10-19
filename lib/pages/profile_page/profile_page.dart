@@ -86,9 +86,10 @@ class ProfilePage extends GetView<ProfilePageController>
                                 validate: true,
                                 enabled: controller.isUpdateModeOn.value,
                                 hintText: 'Age',
+                                inputType: TextInputType.number,
                                 controller: controller.userAgeController),
                             vSpace,
-                            getTextField(
+                            /* getTextField(
                                 validate: true,
                                 enabled: controller.isUpdateModeOn.value,
                                 hintText: 'Country',
@@ -100,6 +101,7 @@ class ProfilePage extends GetView<ProfilePageController>
                                 hintText: 'City',
                                 controller: controller.userCityController),
                             vSpace,
+                         */
                             getTextField(
                                 validate: true,
                                 enabled: controller.isUpdateModeOn.value,
