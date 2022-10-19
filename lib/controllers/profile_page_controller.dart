@@ -24,6 +24,7 @@ class ProfilePageController extends GetxController {
 
   TextEditingController emailController = TextEditingController();
   TextEditingController userAgeController = TextEditingController();
+
 /*  TextEditingController userCountryController = TextEditingController();
   TextEditingController userCityController = TextEditingController();*/
   TextEditingController userPhoneNumberController = TextEditingController();
