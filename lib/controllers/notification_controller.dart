@@ -67,6 +67,7 @@ class NotificationsController extends GetxController {
   }
 
   void clearLists() {
+    notificationsCount.value = filteredList.length;
     filteredList.clear();
   }
 

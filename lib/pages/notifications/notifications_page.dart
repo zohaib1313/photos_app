@@ -17,7 +17,11 @@ class NotificationsPage extends GetView<NotificationsController> {
     return Scaffold(
       appBar: myAppBar(title: 'Notifications', goBack: true),
       body: GetX<NotificationsController>(
-        initState: (state) {},
+        initState: (state) {
+          controller.clearLists();
+          controller.loadNotifications();
+          printWrapped('notification page init state called ');
+        },
         builder: (_) {
           return SafeArea(
             child: Stack(
