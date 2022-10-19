@@ -13,6 +13,7 @@ import 'package:photos_app/network_repositories/groups_network_repo.dart';
 
 import '../common/app_pop_ups.dart';
 import '../common/user_defaults.dart';
+import '../network_repositories/notification_repo.dart';
 
 class GroupsController extends GetxController {
   RxBool isLoading = false.obs;
@@ -257,6 +258,20 @@ class GroupsController extends GetxController {
     APIResponse? response = await GroupNetworkRepo.addMemberInGroup(data: map);
     isLoading.value = false;
     if (response?.success ?? false) {
+      ///sending notification to each newly added member
+
+      UserModel? user = UserDefaults.getUserSession();
+      for (var memberId in groupMemberIdsList) {
+        Future.delayed(const Duration(seconds: 2), () {
+          NotificationRepo.sendNotification(
+              senderId: user!.id.toString(),
+              receiverId: memberId.toString(),
+              title: 'Added in group',
+              body:
+                  '${user.firstName ?? ''} added you in a group ${groupModel.groupName}');
+        });
+      }
+
       AppPopUps.showSnackBar(message: 'Members added', context: myContext!);
     }
   }

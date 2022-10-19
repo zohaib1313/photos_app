@@ -71,47 +71,4 @@ class SearchGroupUserController extends GetxController {
       filteredItemList.addAll(response.data ?? []);
     }
   }
-
-  void sendFriendRequest({required String? friendId}) {
-    FocusManager.instance.primaryFocus?.unfocus();
-    isLoading.value = true;
-
-    Map<String, dynamic> data = {
-      "friend_fk[0]": friendId,
-      "user_fk": UserDefaults.getCurrentUserId(),
-      "len": '1',
-    };
-    APIClient(isCache: false, baseUrl: ApiConstants.baseUrl)
-        .request(
-            needToAuthenticate: true,
-            route: APIRoute(
-              APIType.sendFriendRequest,
-              body: data,
-            ),
-            create: () => APIResponse(decoding: false),
-            apiFunction: sendFriendRequest)
-        .then((response) async {
-      isLoading.value = false;
-
-      if ((response.response?.success ?? false)) {
-        AppPopUps.showDialogContent(
-            title: 'success',
-            description: 'Friend request sent',
-            dialogType: DialogType.SUCCES);
-      } else {
-        AppPopUps.showDialogContent(
-            title: 'Alert',
-            description: response.response?.responseMessage ?? '',
-            dialogType: DialogType.WARNING);
-      }
-    }).catchError((error) {
-      print(error);
-      isLoading.value = false;
-      AppPopUps.showDialogContent(
-          title: 'Error',
-          description: error.toString(),
-          dialogType: DialogType.ERROR);
-      return Future.value(null);
-    });
-  }
 }

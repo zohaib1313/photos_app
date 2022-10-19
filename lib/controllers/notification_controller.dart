@@ -38,6 +38,7 @@ class NotificationsController extends GetxController {
         if (apiResponse?.data?.next != null) {
           pageToLoad++;
         }
+        notificationsCount.value = 0;
 
         ///adding all groups .....
         apiResponse?.data?.notificationList?.forEach((element) {

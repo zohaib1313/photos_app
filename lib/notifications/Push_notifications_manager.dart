@@ -15,6 +15,9 @@ import '../network_repositories/notification_repo.dart';
 class PushNotificationsManager {
   PushNotificationsManager._();
 
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+
   factory PushNotificationsManager() => _instance;
 
   static final PushNotificationsManager _instance =
@@ -93,13 +96,34 @@ class PushNotificationsManager {
     });
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   }
-}
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
-/////////////////////////////////
-sendPushNotification(
+  Future<void> _demoNotification(RemoteMessage message) async {
+    var androidPlatformChannelSpecifics = const AndroidNotificationDetails(
+        "channel_id", 'channel_name',
+        channelDescription: 'channel_description',
+        importance: Importance.max,
+        priority: Priority.high,
+        playSound: true,
+        showWhen: true,
+        icon: "@mipmap/ic_launcher");
+
+    var iOSChannelSpecifics = const DarwinNotificationDetails(
+      presentAlert: true,
+      presentSound: true,
+    );
+    var platformChannelSpecifics = NotificationDetails(
+        android: androidPlatformChannelSpecifics, iOS: iOSChannelSpecifics);
+
+    String titleString = message.notification?.title ?? "";
+    String messageString = message.notification?.body ?? '';
+
+    await flutterLocalNotificationsPlugin.show(Random().nextInt(10),
+        titleString, messageString, platformChannelSpecifics,
+        payload: 'test');
+  }
+
+  static void sendNotificationServer() async {}
+/*sendPushNotification(
     {required String? toDeviceId,
     required NotificationModel notificationModel}) async {
   if (toDeviceId != null) {
@@ -113,7 +137,7 @@ sendPushNotification(
       "to": toDeviceId,
       // "ceoTbCODQ96_r3XdkVKtCn:APA91bGp5kDevP1wkbX2TFF980soSFXLIvfxQVuaV7ZTje_vvQqsOh1vcx6RB0QccyHnJGSAduLnY8kYLWIchp71FswWgupThLtDtaETUq3iIJDFYcuhLx9VWj4RwIbMnXHdyq-sxzlt",
       "notification": notificationModel
-          .toJson() /* {"title": "Portugal vs. Denmark", "body": "great match!"}*/
+          .toJson() */ /* {"title": "Portugal vs. Denmark", "body": "great match!"}*/ /*
     });
     request.headers.addAll(headers);
 
@@ -129,7 +153,7 @@ sendPushNotification(
       printWrapped(response.reasonPhrase.toString());
     }
   }
-}
+}*/
 
 /*void _saveNotificationToFirebase({required NotificationModel model}) {
   FirebaseFirestore.instance
@@ -138,31 +162,9 @@ sendPushNotification(
       .set(model.toMap());
 }*/
 
-Future<void> _demoNotification(RemoteMessage message) async {
-  var androidPlatformChannelSpecifics = const AndroidNotificationDetails(
-      "channel_id", 'channel_name',
-      channelDescription: 'channel_description',
-      importance: Importance.max,
-      priority: Priority.high,
-      playSound: true,
-      showWhen: true,
-      icon: "@mipmap/ic_launcher");
-
-  var iOSChannelSpecifics = const DarwinNotificationDetails(
-    presentAlert: true,
-    presentSound: true,
-  );
-  var platformChannelSpecifics = NotificationDetails(
-      android: androidPlatformChannelSpecifics, iOS: iOSChannelSpecifics);
-
-  String titleString = message.notification?.title ?? "";
-  String messageString = message.notification?.body ?? '';
-
-  await flutterLocalNotificationsPlugin.show(Random().nextInt(10), titleString,
-      messageString, platformChannelSpecifics,
-      payload: 'test');
 }
 
+///this must be top level global method....
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // If you're going to use other Firebase services in the background, such as Firestore,
   // make sure you call `initializeApp` before using other Firebase services.

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:flutter/widgets.dart';
 import 'package:photos_app/common/helpers.dart';
 import 'package:photos_app/dio_networking/api_route.dart';
 import 'package:photos_app/models/device_token_response_model.dart';
@@ -11,11 +12,40 @@ import '../dio_networking/app_apis.dart';
 import '../models/notification_response_model.dart';
 
 class NotificationRepo {
-/*  static final NotificationRepo _singleton = NotificationRepo._internal();
+  NotificationRepo._();
+
+  static final NotificationRepo _singleton = NotificationRepo._();
 
   factory NotificationRepo() {
     return _singleton;
-  }*/
+  }
+
+  static Future<APIResponse?> sendNotification(
+      {required String senderId,
+      required String receiverId,
+      required String title,
+      required String body}) async {
+    try {
+      printWrapped('sending notification');
+      final result =
+          await APIClient(isCache: false, baseUrl: ApiConstants.baseUrl)
+              .request(
+                  route: APIRoute(
+                    APIType.sendNotification,
+                    body: {
+                      'receiver': receiverId,
+                      'sender': senderId,
+                      'title': title,
+                      'body': body,
+                    },
+                  ),
+                  create: () => APIResponse(decoding: false),
+                  apiFunction: sendNotification);
+      return result.response;
+    } catch (e) {
+      return null;
+    }
+  }
 
   static Future<APIResponse<NotificationsResponseModel>?> getNotificationList(
       {required Map<String, dynamic> data}) async {
@@ -32,6 +62,7 @@ class NotificationRepo {
                   apiFunction: getNotificationList);
       return result.response;
     } catch (e) {
+      debugPrint(e.toString());
       return null;
     }
   }
@@ -95,6 +126,7 @@ class NotificationRepo {
     } catch (e) {
       return null;
     }
+    return null;
   }
 
   static Future<APIResponse<DeviceTokensResponseModel>?> getDevicesToken(

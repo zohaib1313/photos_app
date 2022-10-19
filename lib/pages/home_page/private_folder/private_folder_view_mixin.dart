@@ -104,7 +104,7 @@ mixin PrivateFolderViewMixin {
                       ),
                       /*if (item.type == 'folder')*/
                       Text(
-                        '(id=${item.id})',
+                        '(${item.type})',
                         style: AppTextStyles.textStyleNormalBodyXSmall,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,

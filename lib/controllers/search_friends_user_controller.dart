@@ -10,6 +10,7 @@ import '../dio_networking/api_response.dart';
 import '../dio_networking/api_route.dart';
 import '../dio_networking/app_apis.dart';
 import '../models/search_user_response_model.dart';
+import '../network_repositories/notification_repo.dart';
 
 class SearchFriendsUserController extends GetxController {
   RxBool isLoading = false.obs;
@@ -80,13 +81,14 @@ class SearchFriendsUserController extends GetxController {
     });
   }
 
-  void sendFriendRequest({required String? friendId}) {
+  void sendFriendRequest({required SearchedFriendUserModel? searchUserModel}) {
     FocusManager.instance.primaryFocus?.unfocus();
     isLoading.value = true;
 
+    UserModel? user = UserDefaults.getUserSession();
     Map<String, dynamic> data = {
-      "friend_fk[0]": friendId,
-      "user_fk": UserDefaults.getCurrentUserId(),
+      "friend_fk[0]": searchUserModel?.id,
+      "user_fk": user?.id.toString(),
       "len": '1',
     };
     APIClient(isCache: false, baseUrl: ApiConstants.baseUrl)
@@ -102,6 +104,12 @@ class SearchFriendsUserController extends GetxController {
       isLoading.value = false;
 
       if ((response.response?.success ?? false)) {
+        ///Sending notification....
+        NotificationRepo.sendNotification(
+            senderId: user!.id.toString(),
+            receiverId: searchUserModel!.id!.toString(),
+            title: 'Friend request received',
+            body: '${user.firstName ?? ''} sent you friend request.');
         AppPopUps.showDialogContent(
             title: 'success',
             description: 'Friend request sent',

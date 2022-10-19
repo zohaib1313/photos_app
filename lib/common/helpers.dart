@@ -14,7 +14,7 @@ void printWrapped(String text) {
 }
 
 String formatDateTime(DateTime? dateTime) {
-  return DateFormat('dd-MM-yyyy hh:mm a').format(dateTime ?? DateTime.now());
+  return DateFormat('dd-MM-yyyy\n hh:mm a').format(dateTime ?? DateTime.now());
 }
 
 /// Sets the hour and minute of a [DateTime] from a [TimeOfDay].

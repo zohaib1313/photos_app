@@ -87,6 +87,7 @@ class SignupPage extends GetView<SignupController> with SignupWidgetsMixin {
                                   controller: controller.lastNameController),
                               vSpace,
                               getTextField(
+                                  inputType: TextInputType.number,
                                   hintText: 'Age',
                                   validate: true,
                                   controller: controller.ageController),
@@ -103,7 +104,7 @@ class SignupPage extends GetView<SignupController> with SignupWidgetsMixin {
                                     return value?.toValidEmail();
                                   }),
                               vSpace,
-                              getTextField(
+                              /* getTextField(
                                   hintText: 'City',
                                   controller: controller.cityController,
                                   validate: true),
@@ -112,6 +113,7 @@ class SignupPage extends GetView<SignupController> with SignupWidgetsMixin {
                                   hintText: 'Country',
                                   controller: controller.countryController,
                                   validate: true),
+                           */
                               vSpace,
                               getTextField(
                                   inputType: TextInputType.phone,

@@ -87,7 +87,7 @@ class NotificationsPage extends GetView<NotificationsController> {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: AppTextStyles.textStyleBoldBodyXSmall),
-          subtitle: Text(model.title ?? '',
+          subtitle: Text(model.body ?? '',
               maxLines: 3,
               overflow: TextOverflow.ellipsis,
               style: AppTextStyles.textStyleNormalBodyXSmall),

@@ -13,6 +13,7 @@ import 'package:photos_app/common/constants.dart';
 import 'package:photos_app/common/helpers.dart';
 import 'package:photos_app/models/my_data_model.dart';
 import 'package:photos_app/models/my_data_response_model.dart';
+import 'package:photos_app/models/user_model.dart';
 import 'package:photos_app/my_application.dart';
 import 'package:photos_app/pages/home_page/private_folder/private_folder_view_page.dart';
 
@@ -23,6 +24,7 @@ import '../../dio_networking/api_route.dart';
 import '../../dio_networking/app_apis.dart';
 import '../../models/friends_list_model_response.dart';
 import '../../models/groups_response_model.dart';
+import '../../network_repositories/notification_repo.dart';
 
 mixin PrivateFolderNetworkContentControllerMixin on GetxController {
   int pageToLoad = 1;
@@ -272,8 +274,10 @@ mixin PrivateFolderNetworkContentControllerMixin on GetxController {
       required int contentKey,
       bool showAlert = false,
       required onSuccess}) async {
+    UserModel? user = UserDefaults.getUserSession();
+
     Map<String, dynamic> body = {
-      "shared_by_fk": UserDefaults.getCurrentUserId(),
+      "shared_by_fk": user!.id.toString(),
       "shared_with_fk": friendModel.friendFk?.id.toString(),
       "content_fk": contentKey
     };
@@ -294,6 +298,13 @@ mixin PrivateFolderNetworkContentControllerMixin on GetxController {
 
       if ((response.response?.success ?? false)) {
         onSuccess();
+
+        NotificationRepo.sendNotification(
+            senderId: user.id.toString(),
+            receiverId: friendModel.friendFk!.id.toString(),
+            title: 'Document received',
+            body: '${user.firstName ?? ''} shared a document with you.');
+
         if (showAlert) {
           AppPopUps.showSnackBar(
               color: Colors.green,
@@ -302,8 +313,7 @@ mixin PrivateFolderNetworkContentControllerMixin on GetxController {
         }
       } else {
         AppPopUps.showSnackBar(
-            message:
-                response.response?.responseMessage ?? 'Something went wrong.',
+            message: response.response?.responseMessage ?? 'Faild to share.',
             context: myContext!);
       }
     }).catchError((error) {
@@ -319,9 +329,11 @@ mixin PrivateFolderNetworkContentControllerMixin on GetxController {
       required int contentKey,
       required bool showAlert,
       required onSuccess}) async {
+    UserModel? user = UserDefaults.getUserSession();
+
     Map<String, dynamic> body = {
       "content_fk": contentKey,
-      "user_fk": UserDefaults.getCurrentUserId(),
+      "user_fk": user!.id.toString(),
       "group_fk": groupModel.id.toString()
     };
 
@@ -339,6 +351,20 @@ mixin PrivateFolderNetworkContentControllerMixin on GetxController {
 
       if ((response.response?.success ?? false)) {
         onSuccess();
+
+        ///sending notification to each member of the group....
+        groupModel.members?.forEach((element) {
+          Future.delayed(const Duration(seconds: 2), () {
+            if (element.id != user.id) {
+              NotificationRepo.sendNotification(
+                  senderId: user.id.toString(),
+                  receiverId: element.id.toString(),
+                  title: 'Document received',
+                  body: '${user.firstName ?? ''} shared a document with you.');
+            }
+          });
+        });
+
         if (showAlert) {
           AppPopUps.showSnackBar(
               color: Colors.green,
@@ -347,7 +373,9 @@ mixin PrivateFolderNetworkContentControllerMixin on GetxController {
         }
       } else {
         AppPopUps.showSnackBar(
-            message: 'Document sharing failed', context: myContext!);
+            message:
+                response.response?.responseMessage ?? 'Document sharing failed',
+            context: myContext!);
       }
     }).catchError((error) {
       isLoading.value = false;

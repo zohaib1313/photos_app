@@ -64,8 +64,8 @@ class SignupController extends GetxController {
       "first_name": firstNameController.text.trim(),
       "last_name": lastNameController.text.trim(),
       "phone_number": phoneController.text.trim(),
-      "city": cityController.text.trim(),
-      "country": countryController.text.trim(),
+      /*  "city": cityController.text.trim(),
+      "country": countryController.text.trim(),*/
       "age": ageController.text.trim(),
       "user_type": 1,
     });
@@ -90,7 +90,8 @@ class SignupController extends GetxController {
       } else {
         AppPopUps.showDialogContent(
             title: 'Error',
-            description: 'Failed to signup',
+            description:
+                response.response?.responseMessage ?? 'Failed to signup',
             dialogType: DialogType.ERROR);
       }
     }).catchError((error) {

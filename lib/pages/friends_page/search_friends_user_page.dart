@@ -100,11 +100,9 @@ class SearchFriendsUserPage extends GetView<SearchFriendsUserController> {
                 child: TextButton(
                     onPressed: () {
                       controller.sendFriendRequest(
-                          friendId: controller.filteredItemList
+                          searchUserModel: controller.filteredItemList
                               .elementAt(index)
-                              ?.searchedUser
-                              ?.id
-                              .toString());
+                              ?.searchedUser);
                     },
                     child: Text('Send Request',
                         style: AppTextStyles.textStyleBoldBodyMedium)),

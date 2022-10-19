@@ -4,7 +4,9 @@ import 'package:get/get.dart';
 import 'package:photos_app/common/user_defaults.dart';
 import 'package:photos_app/dio_networking/api_client.dart';
 import 'package:photos_app/models/friends_list_model_response.dart';
+import 'package:photos_app/models/user_model.dart';
 import 'package:photos_app/network_repositories/friends_network_repo.dart';
+import 'package:photos_app/network_repositories/notification_repo.dart';
 
 import '../common/app_pop_ups.dart';
 import '../dio_networking/api_response.dart';
@@ -154,17 +156,26 @@ class FriendsPageController extends GetxController {
     }
   }
 
-  void acceptRequest({required int id, required onSuccess}) async {
+  void acceptRequest(
+      {required FriendsModel friendModel, required onSuccess}) async {
     isLoading.value = true;
     try {
+      UserModel? user = UserDefaults.getUserSession();
+
       ///if (friend_fk == current user) id it means these request are received...
       final apiResponse =
           await FriendsNetworkRepo.changeFriendRequestStatus(data: {
-        'id': id,
+        'id': friendModel.id.toString(),
         'friend_request_status': 'accept',
       });
       isLoading.value = false;
       if (apiResponse?.success ?? false) {
+        ///sending notification.......
+        NotificationRepo.sendNotification(
+            senderId: user!.id.toString(),
+            receiverId: friendModel.userFk!.id!.toString(),
+            title: 'Friend request accepted',
+            body: '${user.firstName ?? ''} accepted your friend request.');
         onSuccess(apiResponse?.data);
       } else {
         AppPopUps.showSnackBar(

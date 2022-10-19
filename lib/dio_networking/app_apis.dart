@@ -46,6 +46,7 @@ enum APIType {
 
   ///push notification
   saveDeviceToken,
+  sendNotification,
   getDeviceToken,
   updateDeviceToken,
   getNotifications,

@@ -52,14 +52,15 @@ class LoginController extends GetxController {
 
       if (userModel != null) {
         ///to save fcm token....
-        PushNotificationsManager().init();
         await UserDefaults.saveUserSession(userModel);
         completion(userModel);
+        PushNotificationsManager().init();
         Get.offAndToNamed(DashboardPage.id);
       } else {
         AppPopUps.showDialogContent(
             title: 'Error',
-            description: 'Failed to sign in',
+            description:
+                response.response?.responseMessage ?? 'Failed to sign in',
             dialogType: DialogType.ERROR);
       }
     }).catchError((error) {

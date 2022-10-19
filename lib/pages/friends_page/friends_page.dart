@@ -187,30 +187,37 @@ class FriendsPage extends GetView<FriendsPageController> {
             width: 150,
             child: Row(
               children: [
-                Button(
-                    buttonText: 'Accept',
-                    color: AppColor.greenColor,
-                    //  ...unable to update friend request due to not allowed....
-                    onTap: () {
-                      controller.acceptRequest(
-                          id: controller.filteredList.elementAt(index).id!,
-                          onSuccess: (FriendsModel? f) {
-                            if (f != null) {
-                              controller.filteredList[index] = f;
-                            }
-                          });
-                    }),
+                Flexible(
+                  child: Button(
+                      padding: 2,
+                      buttonText: 'Accept',
+                      color: AppColor.greenColor,
+                      //  ...unable to update friend request due to not allowed....
+                      onTap: () {
+                        controller.acceptRequest(
+                            friendModel:
+                                controller.filteredList.elementAt(index),
+                            onSuccess: (FriendsModel? f) {
+                              if (f != null) {
+                                controller.filteredList[index] = f;
+                              }
+                            });
+                      }),
+                ),
                 hSpace,
-                Button(
-                    buttonText: 'Reject',
-                    color: AppColor.redColor,
-                    onTap: () {
-                      controller.removeFriend(
-                          id: controller.filteredList.elementAt(index).id!,
-                          onSuccess: () {
-                            controller.filteredList.removeAt(index);
-                          });
-                    }),
+                Flexible(
+                  child: Button(
+                      padding: 2,
+                      buttonText: 'Reject',
+                      color: AppColor.redColor,
+                      onTap: () {
+                        controller.removeFriend(
+                            id: controller.filteredList.elementAt(index).id!,
+                            onSuccess: () {
+                              controller.filteredList.removeAt(index);
+                            });
+                      }),
+                ),
               ],
             ),
           );
@@ -350,33 +357,6 @@ class FriendsPage extends GetView<FriendsPageController> {
                   Text(
                       "${friendsList.elementAt(index).friendFk?.username ?? ''} sent you request",
                       style: AppTextStyles.textStyleNormalBodyXSmall),
-                  vSpace,
-                  Row(
-                    children: [
-                      Button(
-                          buttonText: 'Accept',
-                          color: AppColor.greenColor,
-                          //  ...unable to update friend request due to not allowed....
-                          onTap: () {
-                            controller.acceptRequest(
-                                id: friendsList.elementAt(index).id!,
-                                onSuccess: (FriendsModel? f) {
-                                  if (f != null) friendsList[0] = f;
-                                });
-                          }),
-                      hSpace,
-                      Button(
-                          buttonText: 'Reject',
-                          color: AppColor.redColor,
-                          onTap: () {
-                            controller.removeFriend(
-                                id: friendsList.elementAt(index).id!,
-                                onSuccess: () {
-                                  controller.filteredList.removeAt(index);
-                                });
-                          }),
-                    ],
-                  )
                 ],
               ),
             ),
