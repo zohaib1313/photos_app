@@ -10,6 +10,8 @@ import '../../common/spaces_boxes.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
+import '../notifications/notifications_page.dart';
+
 class SettingsPage extends GetView<SettingsPageController> {
   SettingsPage({Key? key}) : super(key: key);
   static const id = '/SettingsPage';
@@ -33,7 +35,9 @@ class SettingsPage extends GetView<SettingsPageController> {
                         _getRowItem(
                             icon: Icon(Icons.notification_important_outlined),
                             title: "Notifications",
-                            onTap: () {}),
+                            onTap: () {
+                              Get.to(const NotificationsPage());
+                            }),
                         vSpace,
                         _getRowItem(
                             icon: Icon(Icons.color_lens_outlined),

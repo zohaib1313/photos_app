@@ -165,7 +165,11 @@ mixin PrivateFolderViewMixin {
                               controller.openFolder(item: focusedItem);
                             })
                       }
-                    : controller.openFile(item: focusedItem);
+                    : controller.openFile(
+                        item: focusedItem,
+                        isLoading: (isLoading) {
+                          controller.isLoading.value = isLoading;
+                        });
               }),
           /*  if (item.type == 'folder')
             FocusedMenuItem(

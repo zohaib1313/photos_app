@@ -259,13 +259,9 @@ mixin PrivateFolderNetworkContentControllerMixin on GetxController {
     return Future.value(privateFoldersStack.isEmpty);
   }
 
-  openFile({required MyDataModel item}) {
+  openFile({required MyDataModel item, required isLoading}) {
     if ((item.type == 'file') && item.docFile != null) {
-      AppUtils.downloadAndOpenFile(
-          url: item.docFile,
-          isLoading: (isLoading) {
-            this.isLoading.value = isLoading;
-          });
+      AppUtils.downloadAndOpenFile(url: item.docFile, isLoading: isLoading);
     }
   }
 
@@ -313,7 +309,7 @@ mixin PrivateFolderNetworkContentControllerMixin on GetxController {
         }
       } else {
         AppPopUps.showSnackBar(
-            message: response.response?.responseMessage ?? 'Faild to share.',
+            message: response.response?.responseMessage ?? 'Failed to share.',
             context: myContext!);
       }
     }).catchError((error) {
