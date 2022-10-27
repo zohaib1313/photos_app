@@ -35,7 +35,7 @@ class SharedReceivedFolderViewPage extends GetView<HomePageController> {
                     Container(
                       padding: const EdgeInsets.all(6),
                       color: AppColor.alphaGrey,
-                      child: Text(' Folder',
+                      child: Text(' Back',
                           style: AppTextStyles.textStyleNormalBodyXSmall),
                     ),
                     vSpace,
@@ -51,20 +51,6 @@ class SharedReceivedFolderViewPage extends GetView<HomePageController> {
                                 controller.sharedReceivedFolderStack[index];
                             return InkWell(
                               onTap: () {
-                                /*    print(sharedModel.contentFk?.id);
-                                  controller.loadPrivateFolder(
-                                      model: MyDataModel(
-                                          id: sharedModel.contentFk?.id),
-                                      subListItem:
-                                          (List<MyDataModel>? dataModel) {
-                                        if (dataModel != null) {
-                                          ///clearing folder stack
-
-                                          sharedModel.contentFk!.subFolder
-                                              .addAll(dataModel);
-
-                                        }
-                                      });*/
                                 if (sharedModel.contentFk?.type == 'folder') {
                                   controller.privateFoldersStack.clear();
                                   controller.openFolder(
@@ -151,12 +137,4 @@ class SharedReceivedFolderViewPage extends GetView<HomePageController> {
       );
     }));
   }
-
-/* _getPath() {
-    String path = '';
-    for (final element in controller.sharedFolderStack) {
-      path = "$path/${element.name}";
-    }
-    return path;
-  }*/
 }
